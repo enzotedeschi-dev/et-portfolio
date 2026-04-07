@@ -1,0 +1,98 @@
+/* ============================================
+   CONTACT — Footer / CTA section
+   ============================================ */
+
+.contact {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.contact__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.contact__heading {
+  font-size: var(--text-3xl);
+  font-weight: 600;
+}
+
+.contact__subtext {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  max-width: 500px;
+}
+
+.contact__email {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.contact__email::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--color-text-primary);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.contact__email:hover::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.contact__socials {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-sm);
+}
+
+.contact__social-link {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  transition: color var(--duration-fast) ease;
+}
+
+.contact__social-link:hover {
+  color: var(--color-text-primary);
+}
+
+/* Footer bottom */
+.footer {
+  padding: var(--space-md) var(--container-padding);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    gap: var(--space-xs);
+    text-align: center;
+  }
+}
+
+.footer__text {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}

@@ -1,0 +1,74 @@
+/* ============================================
+   DISCIPLINES — Skills/competences grid
+   ============================================ */
+
+.disciplines__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--color-border);
+  border: 1px solid var(--color-border);
+}
+
+@media (max-width: 768px) {
+  .disciplines__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* CARD */
+
+.discipline-card {
+  background: var(--color-bg);
+  padding: var(--space-lg) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  cursor: default;
+  transition: background var(--duration-normal) var(--ease-out-expo);
+}
+
+.discipline-card:hover {
+  background: var(--color-bg-elevated);
+}
+
+.discipline-card__number {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 2rem + 3vw, 4rem);
+  font-weight: 700;
+  color: var(--color-border-light);
+  line-height: 1;
+}
+
+.discipline-card__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.discipline-card__description {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  max-width: 400px;
+}
+
+.discipline-card__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: var(--space-sm);
+}
+
+.discipline-card__tool {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  padding: 4px 10px;
+  border: 1px solid var(--color-border-light);
+  border-radius: 3px;
+}

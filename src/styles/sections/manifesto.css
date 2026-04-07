@@ -1,0 +1,72 @@
+/* ============================================
+   MANIFESTO — Cinematic statement with CTAs
+   ============================================ */
+
+.manifesto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.manifesto__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.manifesto__kicker {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+  visibility: hidden;
+}
+
+.manifesto__line {
+  width: 60px;
+  height: 1px;
+  background: var(--color-border-light);
+  margin-bottom: var(--space-md);
+  transform-origin: center;
+  visibility: hidden;
+}
+
+.manifesto__text {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  max-width: 800px;
+  text-align: center;
+  visibility: hidden;
+  margin-bottom: var(--space-lg);
+}
+
+.manifesto__text .split-word-inner {
+  transition: color 0.3s ease;
+}
+
+.manifesto__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  visibility: hidden;
+}
+
+@media (max-width: 600px) {
+  .manifesto__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .manifesto__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
