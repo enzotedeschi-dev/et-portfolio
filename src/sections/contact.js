@@ -1,13 +1,6 @@
-/**
- * Contact Section — CTA + social links + footer
- */
-
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { fadeInUp } from "../animations/scrollAnimations.js";
 import { $$ } from "../utils/dom.js";
-
-gsap.registerPlugin(ScrollTrigger);
+import { t } from "../i18n/i18n.js";
 
 export function renderContact() {
   const currentYear = new Date().getFullYear();
@@ -15,10 +8,9 @@ export function renderContact() {
   return `
     <section class="contact" id="contact">
       <div class="contact__content">
-        <h2 class="contact__heading">Let's work together</h2>
+        <h2 class="contact__heading">${t("contact.heading", "Let's work together")}</h2>
         <p class="contact__subtext">
-          Got a project in mind, a collaboration idea, or just want to say hi? 
-          I'm always open to new opportunities.
+          ${t("contact.subtext", "Got a project in mind, a collaboration idea, or just want to say hi? I'm always open to new opportunities.")}
         </p>
         <a href="mailto:tedeschi.enzo@outlook.it" class="contact__email">tedeschi.enzo@outlook.it</a>
         <div class="contact__socials">
@@ -28,8 +20,8 @@ export function renderContact() {
       </div>
     </section>
     <footer class="footer">
-      <span class="footer__text">© ${currentYear} Enzo Tedeschi</span>
-      <span class="footer__text">Designed & built by me</span>
+      <span class="footer__text">© ${currentYear} ${t("contact.footer.copyright", "Enzo Tedeschi")}</span>
+      <span class="footer__text">${t("contact.footer.credit", "Designed & built by me")}</span>
     </footer>
   `;
 }

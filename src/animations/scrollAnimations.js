@@ -1,11 +1,9 @@
 /**
- * Scroll Animations — Reusable GSAP ScrollTrigger utilities
+ * Scroll Animations
  */
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 /**
  * Fade in + slide up on scroll
@@ -101,7 +99,7 @@ export function lineGrow(element, options = {}) {
 }
 
 /**
- * Lazy video autoplay — plays video when it enters viewport
+ * Lazy video autoplay 
  */
 export function lazyVideoPlay(videoElements) {
   videoElements.forEach((video) => {
@@ -118,7 +116,7 @@ export function lazyVideoPlay(videoElements) {
 }
 
 /**
- * Cinematic section header entrance — label slides, title scales up
+ * Cinematic section header entrance 
  */
 export function cinematicHeader(headerEl, options = {}) {
   const { start = "top 82%" } = options;
@@ -161,7 +159,7 @@ export function cinematicHeader(headerEl, options = {}) {
 }
 
 /**
- * Scrub-based parallax on elements — moves slower/faster than scroll
+ * Scrub-based parallax on elements 
  */
 export function scrubParallax(elements, options = {}) {
   const { yPercent = -15, start = "top bottom", end = "bottom top" } = options;
@@ -194,7 +192,7 @@ export function scrubParallax(elements, options = {}) {
 }
 
 /**
- * Scale-in reveal — element scales from small to full size on scroll
+ * Scale-in reveal
  */
 export function scaleReveal(element, options = {}) {
   const {

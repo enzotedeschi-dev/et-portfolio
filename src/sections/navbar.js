@@ -1,26 +1,26 @@
-/**
- * Navbar
- */
-
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { $, $$ } from "../utils/dom.js";
 import { stopScroll, startScroll } from "../animations/smoothScroll.js";
+import { t, getLocale } from "../i18n/i18n.js";
 
-gsap.registerPlugin(ScrollTrigger);
-
-const NAV_LINKS = [
-  { label: "VFX", href: "#vfx" },
-  { label: "Development", href: "#development" },
-  { label: "Photography", href: "#photography" },
-  { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
-];
+function getNavLinks() {
+  return [
+    { label: t("nav.vfx", "VFX"), href: "#vfx" },
+    { label: t("nav.development", "Development"), href: "#development" },
+    { label: t("nav.about", "About"), href: "#about" },
+    { label: t("nav.contact", "Contact"), href: "#contact" },
+  ];
+}
 
 export function renderNavbar() {
   return `
     <nav class="navbar" id="navbar">
       <a href="#" class="navbar__logo">ET</a>
+      <div class="navbar__lang" id="lang-toggle">
+        <button class="navbar__lang-btn${getLocale() === "en" ? " navbar__lang-btn--active" : ""}" data-lang="en">EN</button>
+        <button class="navbar__lang-btn${getLocale() === "it" ? " navbar__lang-btn--active" : ""}" data-lang="it">IT</button>
+      </div>
       <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle menu" aria-controls="nav-overlay" aria-expanded="false">
         <span class="navbar__toggle-line"></span>
         <span class="navbar__toggle-line"></span>
@@ -30,7 +30,7 @@ export function renderNavbar() {
 
     <div class="nav-overlay" id="nav-overlay">
       <ul class="nav-overlay__list">
-        ${NAV_LINKS.map(
+        ${getNavLinks().map(
           (link, i) => `
           <li>
             <a href="${link.href}" class="nav-overlay__link">

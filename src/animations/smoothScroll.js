@@ -1,13 +1,6 @@
-/**
- * Smooth Scroll — Lenis setup
- * Provides buttery smooth scrolling for the cinematic feel
- */
-
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 let lenis = null;
 
@@ -20,7 +13,6 @@ export function initSmoothScroll() {
     touchMultiplier: 2,
   });
 
-  // Sync Lenis with GSAP ScrollTrigger
   lenis.on("scroll", ScrollTrigger.update);
 
   gsap.ticker.add((time) => {

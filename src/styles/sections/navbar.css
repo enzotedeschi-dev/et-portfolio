@@ -42,6 +42,41 @@
   opacity: 0.7;
 }
 
+/* Language toggle pill */
+.navbar__lang {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-border-light);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: var(--space-sm);
+}
+
+.navbar__lang-btn {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  padding: 5px 12px;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition:
+    color var(--duration-fast) ease,
+    background var(--duration-fast) ease;
+}
+
+.navbar__lang-btn:hover {
+  color: var(--color-text-secondary);
+}
+
+.navbar__lang-btn--active {
+  color: var(--color-text-primary);
+  background: rgba(240, 236, 228, 0.08);
+}
+
 /* Hamburger button */
 .navbar__toggle {
   position: relative;

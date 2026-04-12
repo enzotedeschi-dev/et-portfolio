@@ -1,27 +1,25 @@
 /**
- * Manifesto Section — Cinematic statement with CTA
+ * Manifesto Section 
  */
 
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { animateScrollText } from "../animations/textReveal.js";
 import { $, $$ } from "../utils/dom.js";
-
-gsap.registerPlugin(ScrollTrigger);
+import { t } from "../i18n/i18n.js";
 
 export function renderManifesto() {
   return `
     <section class="manifesto" id="manifesto">
       <div class="container container--narrow">
         <div class="manifesto__inner">
-          <span class="manifesto__kicker gs-reveal">The Vision</span>
+          <span class="manifesto__kicker gs-reveal">${t("manifesto.kicker", "The Vision")}</span>
           <div class="manifesto__line gs-reveal"></div>
           <p class="manifesto__text gs-reveal">
-            I blend visual effects, code, and cinematography into experiences that feel alive — bridging the gap between technical precision and creative vision.
+            ${t("manifesto.text", "I blend visual effects, code, and cinematography into experiences that feel alive \u2014 bridging the gap between technical precision and creative vision.")}
           </p>
           <div class="manifesto__actions gs-reveal">
-            <a href="#vfx" class="btn btn--primary">See my work <span class="btn__arrow">&rarr;</span></a>
-            <a href="#disciplines" class="btn btn--outline">What I do</a>
+            <a href="#vfx" class="btn btn--primary">${t("manifesto.cta.work", "See my work")} <span class="btn__arrow">&rarr;</span></a>
+            <a href="#disciplines" class="btn btn--outline">${t("manifesto.cta.what", "What I do")}</a>
           </div>
         </div>
       </div>
@@ -44,7 +42,6 @@ export function initManifesto() {
     start: "top 75%",
   });
 
-  // Kicker fade in
   if (kicker) {
     gsap.from(kicker, {
       opacity: 0,
@@ -62,7 +59,6 @@ export function initManifesto() {
     });
   }
 
-  // Line grow
   if (line) {
     gsap.from(line, {
       scaleX: 0,
@@ -79,7 +75,6 @@ export function initManifesto() {
     });
   }
 
-  // Buttons fade in
   if (actions) {
     gsap.from(actions, {
       opacity: 0,

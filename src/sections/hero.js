@@ -1,15 +1,8 @@
-/**
- * Hero Section — Cinematic text reveal with "Enzo Tedeschi" + tagline
- * Video background with dark overlay, vignette, and mouse-following glow
- */
-
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { animateHeroText } from "../animations/textReveal.js";
 import { $ } from "../utils/dom.js";
+import { t } from "../i18n/i18n.js";
 import heroVideo from "../assets/breakdownastronauta.mp4";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export function renderHero() {
   return `
@@ -22,14 +15,14 @@ export function renderHero() {
       <div class="hero-vignette"></div>
       <div class="hero__content">
         <h1 class="hero__name gs-reveal">Enzo Tedeschi</h1>
-        <p class="hero__tagline gs-reveal">Where code meets cinema</p>
+        <p class="hero__tagline gs-reveal">${t("hero.tagline", "Where code meets cinema")}</p>
         <div class="hero__cta">
-          <a href="#manifesto" class="btn btn--outline">Explore <span class="btn__arrow">&darr;</span></a>
+          <a href="#manifesto" class="btn btn--outline">${t("hero.cta", "Explore")} <span class="btn__arrow">&darr;</span></a>
         </div>
       </div>
       <div class="hero__scroll-indicator">
         <div class="hero__scroll-line"></div>
-        <span class="hero__scroll-text">Scroll</span>
+        <span class="hero__scroll-text">${t("hero.scroll", "Scroll")}</span>
       </div>
     </section>
   `;
@@ -40,14 +33,11 @@ export function initHero() {
   const tagline = $(".hero__tagline");
   const scrollIndicator = $(".hero__scroll-indicator");
 
-  // Speed up the hero video
   const video = $(".hero-video");
   if (video) video.playbackRate = 1.8;
 
-  // Master timeline for hero entrance
   const tl = gsap.timeline({ delay: 0.5 });
 
-  // Animate name — chars reveal
   tl.add(() => {
     animateHeroText(name, {
       type: "chars",
@@ -58,7 +48,6 @@ export function initHero() {
     });
   });
 
-  // Animate tagline — words reveal, slightly delayed
   tl.add(() => {
     animateHeroText(tagline, {
       type: "words",
@@ -69,7 +58,6 @@ export function initHero() {
     });
   }, "-=0.5");
 
-  // Fade in CTA button
   const heroCta = $(".hero__cta");
   if (heroCta) {
     gsap.set(heroCta, { opacity: 0, y: 20 });
@@ -85,7 +73,6 @@ export function initHero() {
     );
   }
 
-  // Fade in scroll indicator
   tl.to(
     scrollIndicator,
     {
@@ -96,7 +83,6 @@ export function initHero() {
     "-=0.6",
   );
 
-  // Parallax scroll indicator — fades out as user scrolls
   gsap.to(scrollIndicator, {
     opacity: 0,
     y: -20,
@@ -109,12 +95,10 @@ export function initHero() {
     },
   });
 
-  // ─── Scroll-driven cinematic exit ───
 
   const videoWrap = $(".hero-video-wrap");
   const darken = $(".hero-video-darken");
 
-  // 1) Video parallax zoom + blur
   if (videoWrap) {
     gsap.to(videoWrap, {
       scale: 1.15,
@@ -129,7 +113,6 @@ export function initHero() {
     });
   }
 
-  // 2) Progressive darkening on scroll
   if (darken) {
     gsap.to(darken, {
       opacity: 0.7,
@@ -143,9 +126,7 @@ export function initHero() {
     });
   }
 
-  // 3) Name + Tagline exit — reverse of entrance, registered after entrance completes
   tl.add(() => {
-    // Name chars: entrance was y:80 → 0, so exit is 0 → y:80
     const nameChars = name ? name.querySelectorAll(".split-char") : [];
     if (nameChars.length) {
       gsap.to(nameChars, {
@@ -162,7 +143,6 @@ export function initHero() {
       });
     }
 
-    // Tagline words: entrance was y:30 → 0, so exit is 0 → y:30
     const taglineWords = tagline
       ? tagline.querySelectorAll(".split-word-inner")
       : [];
@@ -181,7 +161,6 @@ export function initHero() {
       });
     }
 
-    // CTA: entrance was y:20, opacity:0 → visible, so exit reverses
     if (heroCta) {
       gsap.to(heroCta, {
         y: 20,

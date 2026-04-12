@@ -1,5 +1,5 @@
 /**
- * Photography Section — Photo projects with grid gallery
+ * Photography Section
  */
 
 import { gsap } from "gsap";
@@ -56,7 +56,6 @@ export function renderPhotography() {
 }
 
 export function initPhotography() {
-  // Cinematic section header
   const header = $(".photo-section .section-header");
   if (header) cinematicHeader(header);
 

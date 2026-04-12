@@ -14,6 +14,8 @@ import autosortImg from "../assets/autosort/autosort.png";
 import renderProfumo1 from "../assets/profumo/renderprofumo1.jpg";
 import renderProfumo2 from "../assets/profumo/renderprofumo2.jpg";
 import renderProfumo3 from "../assets/profumo/renderprofumo3.jpg";
+import profumoVideo from "../assets/Finalprofumo2compresso1.mp4";
+import gccarVideo from "../assets/gccar.mp4";
 import houseModel from "../assets/house/house3dmodelcompressed.glb?url";
 
 export const projects = {
@@ -113,7 +115,17 @@ export const projects = {
         description:
           "Product visualization — modeled and rendered in Blender with procedural materials.",
         tags: ["Blender", "3D Rendering"],
+        video: profumoVideo,
         images: [renderProfumo1, renderProfumo2, renderProfumo3],
+      },
+      {
+        id: "3d-gccar",
+        title: "GC Car",
+        description:
+          "Automotive visualization — modeled and rendered in Blender.",
+        tags: ["Blender", "3D Rendering"],
+        video: gccarVideo,
+        images: [],
       },
     ],
   },

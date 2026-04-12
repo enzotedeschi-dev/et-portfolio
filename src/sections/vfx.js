@@ -1,19 +1,19 @@
 /**
- * VFX Section — Projects with integrated breakdowns
+ * VFX Section 
  */
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   fadeInUp,
+  staggerIn,
   cinematicHeader,
   scaleReveal,
 } from "../animations/scrollAnimations.js";
 import { $, $$ } from "../utils/dom.js";
+import { t } from "../i18n/i18n.js";
 import { projects } from "../data/projects.js";
 import { initModelViewer } from "../three/viewer.js";
-
-gsap.registerPlugin(ScrollTrigger);
 
 function renderBreakdown(breakdown) {
   if (!breakdown) return "";
@@ -21,7 +21,7 @@ function renderBreakdown(breakdown) {
   return `
     <button class="vfx-breakdown__toggle" aria-expanded="false">
       <span class="vfx-breakdown__toggle-icon"></span>
-      View Breakdown
+      ${t("vfx.breakdown.toggle", "View Breakdown")}
     </button>
     <div class="vfx-breakdown__content">
       <div class="vfx-breakdown__inner">
@@ -32,15 +32,15 @@ function renderBreakdown(breakdown) {
                 ? `<img src="${breakdown.before}" alt="Before" class="vfx-breakdown__img" loading="lazy" decoding="async" />`
                 : `<span>${breakdown.type === "side-by-side" ? "Before" : "Raw"}</span>`
             }
-            <span class="vfx-breakdown__label">Before</span>
+            <span class="vfx-breakdown__label">${t("vfx.breakdown.before", "Before")}</span>
           </div>
           <div class="vfx-breakdown__panel">
             ${
               breakdown.after
                 ? `<img src="${breakdown.after}" alt="After" class="vfx-breakdown__img" loading="lazy" decoding="async" />`
-                : `<span>${breakdown.type === "side-by-side" ? "After" : "Final"}</span>`
+                : `<span>${breakdown.type === "side-by-side" ? t("vfx.breakdown.after", "After") : "Final"}</span>`
             }
-            <span class="vfx-breakdown__label">After</span>
+            <span class="vfx-breakdown__label">${t("vfx.breakdown.after", "After")}</span>
           </div>
         </div>
         ${
@@ -71,8 +71,8 @@ export function renderVfx() {
     <section class="vfx-section" id="vfx">
       <div class="container">
         <div class="section-header">
-          <span class="section-label">01 / Visual Effects</span>
-          <h2 class="section-title">VFX</h2>
+          <span class="section-label">${t("vfx.label", "01 / Visual Effects")}</span>
+          <h2 class="section-title">${t("vfx.title", "VFX")}</h2>
         </div>
         ${vfxProjects
           .map(
@@ -87,8 +87,8 @@ export function renderVfx() {
             </div>
             <div class="vfx-project__info">
               <div>
-                <h3 class="vfx-project__title">${project.title}</h3>
-                <p class="vfx-project__description">${project.description}</p>
+                <h3 class="vfx-project__title">${t(`vfx.${project.id}.title`, project.title)}</h3>
+                <p class="vfx-project__description">${t(`vfx.${project.id}.description`, project.description)}</p>
               </div>
               <div class="vfx-project__tags">
                 ${project.tags.map((tag) => `<span class="vfx-project__tag">${tag}</span>`).join("")}
@@ -115,18 +115,18 @@ function renderModeling() {
   return `
     <div class="modeling-subsection">
       <div class="modeling-header">
-        <span class="section-label">3D Modeling</span>
-        <h2 class="modeling-title">Explore in 3D</h2>
+        <span class="section-label">${t("modeling.label", "3D Modeling")}</span>
+        <h2 class="modeling-title">${t("modeling.title", "Explore in 3D")}</h2>
       </div>
 
       <div class="modeling-showcase">
         <div class="modeling-showcase__info">
-          <h3 class="modeling-showcase__name">${viewer.title}</h3>
-          <p class="modeling-showcase__desc">${viewer.description}</p>
+          <h3 class="modeling-showcase__name">${t("modeling.viewer.title", viewer.title)}</h3>
+          <p class="modeling-showcase__desc">${t("modeling.viewer.description", viewer.description)}</p>
           <div class="vfx-project__tags">
             ${viewer.tags.map((tag) => `<span class="vfx-project__tag">${tag}</span>`).join("")}
           </div>
-          <p class="modeling-showcase__hint">Drag to rotate · Ctrl + scroll to zoom</p>
+          <p class="modeling-showcase__hint">${t("modeling.viewer.hint", "Drag to rotate \u00b7 Ctrl + scroll to zoom")}</p>
         </div>
         <div class="modeling-viewer" id="model-viewer-${viewer.id}" data-model="${viewer.model}"></div>
       </div>
@@ -135,14 +135,35 @@ function renderModeling() {
         renders.length > 0
           ? `
         <div class="modeling-renders">
-          <h3 class="modeling-renders__title">Renders</h3>
+          <h3 class="modeling-renders__title">${t("modeling.renders.title", "Renders")}</h3>
+
+          <div class="modeling-renders__videos-row">
+            ${renders
+              .filter((p) => p.video)
+              .map(
+                (project) => `
+              <div class="modeling-renders__video-col">
+                <div class="modeling-renders__video-wrap">
+                  <video class="modeling-renders__video" src="${project.video}" muted loop playsinline preload="metadata"></video>
+                  <button class="modeling-renders__play-btn" aria-label="Play video">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" stroke="currentColor" stroke-width="2" opacity="0.6"/><path d="M19 15l14 9-14 9V15z" fill="currentColor"/></svg>
+                  </button>
+                </div>
+                <h4 class="modeling-renders__video-label">${t(`modeling.renders.${project.id}.title`, project.title)}</h4>
+              </div>
+            `,
+              )
+              .join("")}
+          </div>
+
           ${renders
+            .filter((p) => p.images.length > 0)
             .map(
               (project) => `
             <div class="modeling-renders__project">
               <div class="modeling-renders__info">
-                <h4 class="modeling-renders__name">${project.title}</h4>
-                <p class="modeling-renders__desc">${project.description}</p>
+                <h4 class="modeling-renders__name">${t(`modeling.renders.${project.id}.title`, project.title)}</h4>
+                <p class="modeling-renders__desc">${t(`modeling.renders.${project.id}.description`, project.description)}</p>
                 <div class="vfx-project__tags">
                   ${project.tags.map((tag) => `<span class="vfx-project__tag">${tag}</span>`).join("")}
                 </div>
@@ -170,12 +191,19 @@ function renderModeling() {
   `;
 }
 
+function safePlay(video) {
+  const p = video.play();
+  if (p !== undefined) p.catch(() => {});
+}
+
+function safePause(video) {
+  video.pause();
+}
+
 export function initVfx() {
-  // Cinematic section header
   const header = $(".vfx-section .section-header");
   if (header) cinematicHeader(header);
 
-  // Stagger project entrance
   const vfxProjects = $$(".vfx-project");
   vfxProjects.forEach((project) => {
     fadeInUp(project, {
@@ -186,7 +214,6 @@ export function initVfx() {
     });
   });
 
-  // Breakdown toggle
   const toggles = $$(".vfx-breakdown__toggle");
   toggles.forEach((toggle) => {
     toggle.addEventListener("click", (e) => {
@@ -212,7 +239,6 @@ export function initVfx() {
     });
   });
 
-  // Video scale reveal + autoplay on scroll
   const videos = $$(".vfx-project__video");
   videos.forEach((video) => {
     scaleReveal(video.closest(".vfx-project__media"), {
@@ -226,14 +252,13 @@ export function initVfx() {
       trigger: video,
       start: "top 90%",
       end: "bottom 10%",
-      onEnter: () => video.play(),
-      onLeave: () => video.pause(),
-      onEnterBack: () => video.play(),
-      onLeaveBack: () => video.pause(),
+      onEnter: () => safePlay(video),
+      onLeave: () => safePause(video),
+      onEnterBack: () => safePlay(video),
+      onLeaveBack: () => safePause(video),
     });
   });
 
-  // 3D Modeling viewer — scale reveal + lazy init
   const viewerContainers = $$(".modeling-viewer");
   viewerContainers.forEach((container) => {
     scaleReveal(container, {
@@ -256,12 +281,43 @@ export function initVfx() {
     });
   });
 
-  // Modeling subsection cinematic entrance
   const modelingSubs = $$(".modeling-subsection");
   modelingSubs.forEach((sub) => {
     fadeInUp(sub, {
       y: 60,
       duration: 1,
+      ease: "power3.out",
+      start: "top 85%",
+    });
+  });
+
+  const playBtns = $$(".modeling-renders__play-btn");
+  playBtns.forEach((btn) => {
+    const wrap = btn.closest(".modeling-renders__video-wrap");
+    const video = wrap.querySelector(".modeling-renders__video");
+
+    btn.addEventListener("click", () => {
+      if (video.paused) {
+        safePlay(video);
+        wrap.classList.add("modeling-renders__video-wrap--playing");
+      } else {
+        safePause(video);
+        wrap.classList.remove("modeling-renders__video-wrap--playing");
+      }
+    });
+
+    video.addEventListener("click", () => {
+      safePause(video);
+      wrap.classList.remove("modeling-renders__video-wrap--playing");
+    });
+  });
+
+  const renderProjects = $$(".modeling-renders__project");
+  renderProjects.forEach((project) => {
+    staggerIn(project, ".modeling-renders__item", {
+      y: 40,
+      duration: 0.8,
+      stagger: 0.1,
       ease: "power3.out",
       start: "top 85%",
     });

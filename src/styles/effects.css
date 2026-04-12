@@ -2,41 +2,6 @@
    EFFECTS — Visual depth, grain, glows, grids
    ============================================ */
 
-/* --- Film Grain Overlay --- */
-.grain-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0.04;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 256px 256px;
-  animation: grainShift 0.5s steps(6) infinite;
-}
-
-@keyframes grainShift {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-  10% {
-    transform: translate(-5%, -10%);
-  }
-  30% {
-    transform: translate(3%, -15%);
-  }
-  50% {
-    transform: translate(12%, 9%);
-  }
-  70% {
-    transform: translate(9%, 4%);
-  }
-  90% {
-    transform: translate(-1%, 7%);
-  }
-}
-
 /* --- Hero Video Background --- */
 .hero-video-wrap {
   position: absolute;
@@ -96,89 +61,6 @@
   );
 }
 
-/* --- Ambient Glow Orbs --- */
-.ambient-orbs {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.ambient-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  will-change: transform, opacity;
-}
-
-.ambient-orb--1 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(
-    circle,
-    rgba(100, 80, 160, 0.1) 0%,
-    transparent 70%
-  );
-  top: 20%;
-  left: -10%;
-}
-
-.ambient-orb--2 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(
-    circle,
-    rgba(60, 120, 180, 0.08) 0%,
-    transparent 70%
-  );
-  top: 60%;
-  right: -5%;
-}
-
-.ambient-orb--3 {
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(
-    circle,
-    rgba(240, 236, 228, 0.04) 0%,
-    transparent 70%
-  );
-  bottom: 10%;
-  left: 30%;
-}
-
-/* --- Dot Grid Background --- */
-.dot-grid-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.dot-grid-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(
-    circle,
-    rgba(240, 236, 228, 0.06) 1px,
-    transparent 1px
-  );
-  background-size: 32px 32px;
-  mask-image: radial-gradient(
-    ellipse 70% 60% at 50% 50%,
-    black 20%,
-    transparent 100%
-  );
-  -webkit-mask-image: radial-gradient(
-    ellipse 70% 60% at 50% 50%,
-    black 20%,
-    transparent 100%
-  );
-}
-
 /* --- Gradient Section Dividers --- */
 .section-glow-divider {
   position: relative;
@@ -186,22 +68,6 @@
   width: 100%;
   background: var(--color-border);
   pointer-events: none;
-}
-
-/* --- Subtle scanlines texture --- */
-.lines-texture {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.025;
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 3px,
-    rgba(240, 236, 228, 0.4) 3px,
-    rgba(240, 236, 228, 0.4) 4px
-  );
 }
 
 /* Ensure relative positioning on sections that use bg effects */

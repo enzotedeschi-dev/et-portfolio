@@ -1,9 +1,6 @@
-/**
- * Development Section — Project cards with iframe or image preview
- */
-
 import { staggerIn, cinematicHeader } from "../animations/scrollAnimations.js";
 import { $ } from "../utils/dom.js";
+import { t } from "../i18n/i18n.js";
 import { projects } from "../data/projects.js";
 
 function renderPreview(project) {
@@ -32,8 +29,8 @@ export function renderDevelopment() {
     <section class="dev-section" id="development">
       <div class="container">
         <div class="section-header">
-          <span class="section-label">02 / Code</span>
-          <h2 class="section-title">Development</h2>
+          <span class="section-label">${t("dev.label", "02 / Code")}</span>
+          <h2 class="section-title">${t("dev.title", "Development")}</h2>
         </div>
         <div class="dev-projects__grid">
           ${devProjects
@@ -43,13 +40,13 @@ export function renderDevelopment() {
               ${renderPreview(project)}
               <div class="dev-card__body">
                 <h3 class="dev-card__title">${project.title}</h3>
-                <p class="dev-card__description">${project.description}</p>
+                <p class="dev-card__description">${t(`dev.${project.id}.description`, project.description)}</p>
                 <div class="dev-card__stack">
                   ${project.stack.map((tech) => `<span class="dev-card__tech">${tech}</span>`).join("")}
                 </div>
                 <div class="dev-card__links">
-                  ${project.url ? `<a href="${project.url}" class="dev-card__link" target="_blank" rel="noopener">Visit site ↗</a>` : ""}
-                  ${project.github ? `<a href="${project.github}" class="dev-card__link" target="_blank" rel="noopener">GitHub ↗</a>` : ""}
+                  ${project.url ? `<a href="${project.url}" class="dev-card__link" target="_blank" rel="noopener">${t("dev.visit", "Visit site \u2197")}</a>` : ""}
+                  ${project.github ? `<a href="${project.github}" class="dev-card__link" target="_blank" rel="noopener">${t("dev.github", "GitHub \u2197")}</a>` : ""}
                 </div>
               </div>
             </article>
@@ -63,7 +60,6 @@ export function renderDevelopment() {
 }
 
 export function initDevelopment() {
-  // Cinematic section header
   const header = $(".dev-section .section-header");
   if (header) cinematicHeader(header);
 

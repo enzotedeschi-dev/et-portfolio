@@ -6,8 +6,6 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-gsap.registerPlugin(ScrollTrigger)
-
 /**
  * Split text element into individual spans for animation
  * @param {HTMLElement} element
@@ -83,7 +81,7 @@ export function splitText(element, type = 'chars') {
 }
 
 /**
- * Animate hero text — chars reveal from bottom with stagger
+ * Animate hero text
  */
 export function animateHeroText(element, options = {}) {
   const {
@@ -109,7 +107,7 @@ export function animateHeroText(element, options = {}) {
 }
 
 /**
- * Animate text on scroll — words fade in as user scrolls
+ * Animate text on scroll
  */
 export function animateScrollText(element, options = {}) {
   const {

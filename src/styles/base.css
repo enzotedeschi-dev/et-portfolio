@@ -111,7 +111,12 @@ button {
   background: none;
   border: none;
   cursor: pointer;
-  outline: none;
+}
+
+/* Accessible focus ring — only visible for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 3px;
 }
 
 /* Lists */

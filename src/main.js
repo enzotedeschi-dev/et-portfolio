@@ -1,9 +1,7 @@
-/**
- * ET Portfolio — Main Entry Point
- * Enzo Tedeschi — Creative Developer & Visual Artist
- */
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
-// Styles
 import "./styles/base.css";
 import "./styles/layout.css";
 import "./styles/sections/navbar.css";
@@ -15,22 +13,29 @@ import "./styles/sections/about.css";
 import "./styles/sections/contact.css";
 import "./styles/sections/modeling.css";
 import "./styles/effects.css";
+import "./styles/cursor.css";
+import "./styles/preloader.css";
+import "./styles/scrollProgress.css";
 
-// Smooth scroll
+import { initI18n, setLocale, getLocale } from "./i18n/i18n.js";
+
 import { initSmoothScroll } from "./animations/smoothScroll.js";
 
-// Sections — render
+import { initCustomCursor } from "./animations/cursor.js";
+
+import { createPreloader, playIntro } from "./animations/preloader.js";
+
+import { initScrollProgress } from "./animations/scrollProgress.js";
+
 import { renderNavbar, initNavbar } from "./sections/navbar.js";
 import { renderHero, initHero } from "./sections/hero.js";
 import { renderManifesto, initManifesto } from "./sections/manifesto.js";
 import { renderDisciplines, initDisciplines } from "./sections/disciplines.js";
 import { renderVfx, initVfx } from "./sections/vfx.js";
 import { renderDevelopment, initDevelopment } from "./sections/development.js";
-import { renderPhotography, initPhotography } from "./sections/photography.js";
 import { renderAbout, initAbout } from "./sections/about.js";
 import { renderContact, initContact } from "./sections/contact.js";
 
-// DOM
 import { $ } from "./utils/dom.js";
 
 function render() {
@@ -48,27 +53,60 @@ function render() {
     divider,
     renderDevelopment(),
     divider,
-    renderPhotography(),
-    divider,
     renderAbout(),
     divider,
     renderContact(),
   ].join("");
 }
 
+let globalInitDone = false;
+
 function init() {
-  initSmoothScroll();
+  if (!globalInitDone) {
+    initSmoothScroll();
+    initCustomCursor();
+    initScrollProgress();
+    globalInitDone = true;
+  }
   initNavbar();
   initHero();
   initManifesto();
   initDisciplines();
   initVfx();
   initDevelopment();
-  initPhotography();
   initAbout();
   initContact();
+  initLangToggle();
 }
 
-// Boot
+function initLangToggle() {
+  const langToggle = document.getElementById("lang-toggle");
+  if (!langToggle) return;
+
+  langToggle.addEventListener("click", (e) => {
+    const btn = e.target.closest(".navbar__lang-btn");
+    if (!btn) return;
+
+    const lang = btn.dataset.lang;
+    if (lang === getLocale()) return;
+
+    const scrollY = window.scrollY;
+
+    setLocale(lang);
+
+    ScrollTrigger.getAll().forEach((st) => st.kill());
+
+    render();
+    init();
+
+    window.scrollTo(0, scrollY);
+  });
+}
+
+initI18n();
+const preloader = createPreloader();
 render();
-init();
+
+playIntro(preloader).then(() => {
+  init();
+});
