@@ -9,25 +9,25 @@ function getDisciplines() {
       number: "01",
       title: t("disciplines.vfx.title", "Visual Effects"),
       description: t("disciplines.vfx.description", "Compositing, 3D integration, simulations, and digital environments. Turning the impossible into photorealistic."),
-      tools: ["After Effects", "Nuke", "Houdini", "Cinema 4D"],
+      tools: ["Nuke", "Blender", "Autodesk Maya", "After Effects", "PFTrack"],
     },
     {
       number: "02",
       title: t("disciplines.dev.title", "Development"),
       description: t("disciplines.dev.description", "Full-stack development, creative coding, and interactive experiences. Clean code that powers bold ideas."),
-      tools: ["JavaScript", "Python", "Three.js", "GSAP"],
+      tools: ["Python", "JavaScript", "Node.js", "Three.js", "GSAP"],
     },
     {
       number: "03",
       title: t("disciplines.web.title", "Web Design"),
       description: t("disciplines.web.description", "High-end websites with motion, rhythm, and purpose. Every pixel and interaction is intentional."),
-      tools: ["HTML/CSS", "Figma", "Vite", "Responsive"],
+      tools: ["HTML", "CSS", "Vite", "React", "Tailwind"],
     },
     {
       number: "04",
       title: t("disciplines.photo.title", "Photo & Video"),
       description: t("disciplines.photo.description", "Cinematic storytelling through the lens. From concept to color grade, every frame tells a story."),
-      tools: ["Premiere Pro", "DaVinci", "Lightroom", "Sony"],
+      tools: ["Premiere Pro", "DaVinci", "Lightroom", "Sony", "Canon"],
     },
   ];
 }

@@ -25,20 +25,10 @@ export const projects = {
       title: "Astronaut Breakdown",
       description:
         "Full VFX breakdown of an astronaut composite — tracking, keying, and environment integration.",
-      tags: ["After Effects", "Nuke", "Mocha"],
+      tags: ["Nuke", "Blender", "DaVinci Resolve", "PFTrack"],
       video: astronautaVideo,
       poster: null,
-      breakdown: {
-        type: "side-by-side",
-        before: null,
-        after: null,
-        steps: [
-          "Plate prep",
-          "Tracking & Roto",
-          "CG Integration",
-          "Final composite",
-        ],
-      },
+      breakdown: null,
     },
     {
       id: "vfx-2",
