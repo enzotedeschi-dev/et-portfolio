@@ -14,6 +14,8 @@ import { $, $$ } from "../utils/dom.js";
 import { t } from "../i18n/i18n.js";
 import { projects } from "../data/projects.js";
 import { initModelViewer } from "../three/viewer.js";
+import modelAngle1 from "../assets/modello3dmobile/angolo1.png";
+import modelAngle2 from "../assets/modello3dmobile/angolo2.png";
 
 function renderBreakdown(breakdown) {
   if (!breakdown) return "";
@@ -126,9 +128,20 @@ function renderModeling() {
           <div class="vfx-project__tags">
             ${viewer.tags.map((tag) => `<span class="vfx-project__tag">${tag}</span>`).join("")}
           </div>
-          <p class="modeling-showcase__hint">${t("modeling.viewer.hint", "Drag to rotate \u00b7 Ctrl + scroll to zoom")}</p>
+          <p class="modeling-showcase__hint modeling-showcase__hint--desktop">${t("modeling.viewer.hint", "Drag to rotate \u00b7 Ctrl + scroll to zoom")}</p>
+          <p class="modeling-showcase__hint modeling-showcase__hint--mobile">${t("modeling.viewer.hintMobile", "Swipe to browse views")}</p>
         </div>
-        <div class="modeling-viewer" id="model-viewer-${viewer.id}" data-model="${viewer.model}"></div>
+        <div class="modeling-viewer modeling-viewer--desktop" id="model-viewer-${viewer.id}" data-model="${viewer.model}"></div>
+        <div class="modeling-carousel modeling-carousel--mobile">
+          <div class="modeling-carousel__track">
+            <img src="${modelAngle1}" alt="${viewer.title} — angle 1" class="modeling-carousel__img" loading="lazy" decoding="async" />
+            <img src="${modelAngle2}" alt="${viewer.title} — angle 2" class="modeling-carousel__img" loading="lazy" decoding="async" />
+          </div>
+          <div class="modeling-carousel__dots">
+            <button class="modeling-carousel__dot modeling-carousel__dot--active" data-index="0" aria-label="View 1"></button>
+            <button class="modeling-carousel__dot" data-index="1" aria-label="View 2"></button>
+          </div>
+        </div>
       </div>
 
       ${
@@ -259,26 +272,57 @@ export function initVfx() {
     });
   });
 
-  const viewerContainers = $$(".modeling-viewer");
-  viewerContainers.forEach((container) => {
-    scaleReveal(container, {
-      scale: 0.9,
-      duration: 1.4,
-      ease: "power3.out",
-      start: "top 90%",
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
+
+  if (!isMobile) {
+    const viewerContainers = $$(".modeling-viewer--desktop");
+    viewerContainers.forEach((container) => {
+      scaleReveal(container, {
+        scale: 0.9,
+        duration: 1.4,
+        ease: "power3.out",
+        start: "top 90%",
+      });
+      let initialized = false;
+      ScrollTrigger.create({
+        trigger: container,
+        start: "top 95%",
+        once: true,
+        onEnter: () => {
+          if (!initialized) {
+            initialized = true;
+            initModelViewer(container, container.dataset.model);
+          }
+        },
+      });
     });
-    let initialized = false;
-    ScrollTrigger.create({
-      trigger: container,
-      start: "top 95%",
-      once: true,
-      onEnter: () => {
-        if (!initialized) {
-          initialized = true;
-          initModelViewer(container, container.dataset.model);
+  }
+
+  $$(".modeling-carousel").forEach((carousel) => {
+    const track = carousel.querySelector(".modeling-carousel__track");
+    const dots = carousel.querySelectorAll(".modeling-carousel__dot");
+    let current = 0;
+
+    dots.forEach((dot) => {
+      dot.addEventListener("click", () => {
+        current = Number(dot.dataset.index);
+        track.style.transform = `translateX(-${current * 100}%)`;
+        dots.forEach((d) => d.classList.remove("modeling-carousel__dot--active"));
+        dot.classList.add("modeling-carousel__dot--active");
+      });
+    });
+
+    let startX = 0;
+    track.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener("touchend", (e) => {
+      const diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) {
+        const next = diff > 0 ? Math.min(current + 1, dots.length - 1) : Math.max(current - 1, 0);
+        if (next !== current) {
+          dots[next].click();
         }
-      },
-    });
+      }
+    }, { passive: true });
   });
 
   const modelingSubs = $$(".modeling-subsection");

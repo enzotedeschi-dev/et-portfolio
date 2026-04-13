@@ -7,68 +7,59 @@ import { MeshoptDecoder } from "meshoptimizer";
 export function initModelViewer(containerEl, modelPath) {
   if (!containerEl) return null;
 
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
-
   const width = containerEl.clientWidth;
   const height = containerEl.clientHeight;
 
-  let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({
-      antialias: !isMobile,
-      alpha: false,
-      powerPreference: isMobile ? "low-power" : "high-performance",
-    });
-  } catch (e) {
-    containerEl.innerHTML = '<div class="modeling-viewer__fallback"><span>3D not supported on this device</span></div>';
-    return null;
-  }
-
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x0a0a0a);
-  if (!isMobile) scene.fog = new THREE.FogExp2(0x0a0a0a, 0.03);
+  scene.fog = new THREE.FogExp2(0x0a0a0a, 0.03);
 
   const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 200);
   camera.position.z = 3;
 
+  const renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    alpha: false,
+    powerPreference: "high-performance",
+  });
   renderer.setSize(width, height);
-  renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 1.2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.0;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.shadowMap.enabled = false;
   containerEl.appendChild(renderer.domElement);
 
-  renderer.domElement.addEventListener("webglcontextlost", (e) => {
-    e.preventDefault();
-    containerEl.innerHTML = '<div class="modeling-viewer__fallback"><span>3D context lost — try reloading</span></div>';
-  });
-
-  const grid = new THREE.GridHelper(10, isMobile ? 10 : 20, 0x333333, 0x1a1a1a);
+  const grid = new THREE.GridHelper(10, 20, 0x333333, 0x1a1a1a);
   grid.material.opacity = 0.4;
   grid.material.transparent = true;
   scene.add(grid);
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, isMobile ? 0.3 : 0.1);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
   scene.add(ambientLight);
 
   const keyLight = new THREE.DirectionalLight(0xffe4b5, 2.5);
   keyLight.position.set(5, 10, 4);
   scene.add(keyLight);
 
-  if (!isMobile) {
-    const spotLight = new THREE.SpotLight(0xffd59e, 2.0, 20, Math.PI * 0.3, 0.7, 1);
-    spotLight.position.set(3, 7, 5);
-    scene.add(spotLight);
+  const spotLight = new THREE.SpotLight(
+    0xffd59e,
+    2.0,
+    20,
+    Math.PI * 0.3,
+    0.7,
+    1,
+  );
+  spotLight.position.set(3, 7, 5);
+  scene.add(spotLight);
 
-    const fillLight = new THREE.DirectionalLight(0x8ab4f8, 0.6);
-    fillLight.position.set(-5, 4, 3);
-    scene.add(fillLight);
+  const fillLight = new THREE.DirectionalLight(0x8ab4f8, 0.6);
+  fillLight.position.set(-5, 4, 3);
+  scene.add(fillLight);
 
-    const rimLight = new THREE.DirectionalLight(0xadc8ff, 1.5);
-    rimLight.position.set(-2, 6, -6);
-    scene.add(rimLight);
-  }
+  const rimLight = new THREE.DirectionalLight(0xadc8ff, 1.5);
+  rimLight.position.set(-2, 6, -6);
+  scene.add(rimLight);
 
   const hemiLight = new THREE.HemisphereLight(0x2a3a5c, 0x0a0a0a, 0.4);
   scene.add(hemiLight);

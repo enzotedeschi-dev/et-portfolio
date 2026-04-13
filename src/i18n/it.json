@@ -40,6 +40,7 @@
   "modeling.viewer.title": "Modello Architettonico",
   "modeling.viewer.description": "Modello architettonico dettagliato costruito da zero in Autodesk Maya — geometria, materiali e assemblaggio scena.",
   "modeling.viewer.hint": "Trascina per ruotare · Ctrl + scroll per zoomare",
+  "modeling.viewer.hintMobile": "Scorri per sfogliare le viste",
   "modeling.renders.title": "Render",
   "modeling.renders.3d-profumo.title": "Bottiglia di Profumo",
   "modeling.renders.3d-profumo.description": "Visualizzazione prodotto — modellato e renderizzato in Blender con materiali procedurali.",
