@@ -63,6 +63,22 @@
     0 0 120px rgba(0, 0, 0, 0.3);
 }
 
+.modeling-viewer__fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--color-bg-elevated);
+}
+
+.modeling-viewer__fallback span {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
 .modeling-viewer canvas {
   display: block;
   width: 100%;
