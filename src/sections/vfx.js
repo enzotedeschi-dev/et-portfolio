@@ -83,7 +83,10 @@ export function renderVfx() {
             <div class="vfx-project__media">
               ${
                 project.video
-                  ? `<video class="vfx-project__video" src="${project.video}" muted loop playsinline poster="${project.poster || ""}"></video>`
+                  ? `<video class="vfx-project__video" src="${project.video}" muted loop playsinline poster="${project.poster || ""}"></video>
+                     <button class="video-fullscreen-btn" aria-label="Fullscreen">
+                       <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3h5M3 3v5M17 3h-5M17 3v5M3 17h5M3 17v-5M17 17h-5M17 17v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                     </button>`
                   : `<div class="vfx-project__placeholder">Video placeholder — ${project.title}</div>`
               }
             </div>
@@ -157,7 +160,7 @@ function renderModeling() {
                 (project) => `
               <div class="modeling-renders__video-col">
                 <div class="modeling-renders__video-wrap">
-                  <video class="modeling-renders__video" src="${project.video}" muted loop playsinline preload="metadata"></video>
+                  <video class="modeling-renders__video" src="${project.video}" muted loop playsinline preload="metadata" poster="${project.poster || ''}"></video>
                   <button class="modeling-renders__play-btn" aria-label="Play video">
                     <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" stroke="currentColor" stroke-width="2" opacity="0.6"/><path d="M19 15l14 9-14 9V15z" fill="currentColor"/></svg>
                   </button>
@@ -364,6 +367,17 @@ export function initVfx() {
       stagger: 0.1,
       ease: "power3.out",
       start: "top 85%",
+    });
+  });
+
+  $$(".video-fullscreen-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const container = btn.closest(".vfx-project__media") || btn.closest(".modeling-renders__video-wrap");
+      const video = container.querySelector("video");
+      if (video) {
+        if (video.requestFullscreen) video.requestFullscreen();
+        else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
+      }
     });
   });
 }

@@ -16,6 +16,8 @@ import renderProfumo2 from "../assets/profumo/renderprofumo2.jpg";
 import renderProfumo3 from "../assets/profumo/renderprofumo3.jpg";
 import profumoVideo from "../assets/Finalprofumo2compresso1.mp4";
 import gccarVideo from "../assets/gccar.mp4";
+import profumoPoster from "../assets/renderprofumoposter.jpg";
+import gccarPoster from "../assets/cgcarposter.jpg";
 import houseModel from "../assets/house/house3dmodelcompressed.glb?url";
 
 export const projects = {
@@ -106,6 +108,7 @@ export const projects = {
           "Product visualization — modeled and rendered in Blender with procedural materials.",
         tags: ["Blender", "3D Rendering"],
         video: profumoVideo,
+        poster: profumoPoster,
         images: [renderProfumo1, renderProfumo2, renderProfumo3],
       },
       {
@@ -115,6 +118,7 @@ export const projects = {
           "Automotive visualization — modeled and rendered in Blender.",
         tags: ["Blender", "3D Rendering"],
         video: gccarVideo,
+        poster: gccarPoster,
         images: [],
       },
     ],

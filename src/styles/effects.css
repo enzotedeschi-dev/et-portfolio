@@ -70,6 +70,35 @@
   pointer-events: none;
 }
 
+/* --- Video Fullscreen Button --- */
+.video-fullscreen-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease, background 0.3s ease, color 0.3s ease;
+}
+
+.vfx-project__media:hover .video-fullscreen-btn,
+.modeling-renders__video-wrap--playing .video-fullscreen-btn {
+  opacity: 1;
+}
+
+.video-fullscreen-btn:hover {
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+}
+
 /* Ensure relative positioning on sections that use bg effects */
 .disciplines,
 .dev-section,
