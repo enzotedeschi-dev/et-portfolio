@@ -89,10 +89,6 @@ npm run preview
 
 **Enzo Tedeschi**
 
-- Website: [enzotedeschi.studio](https://www.enzotedeschi.studio/)
-- GitHub: [enzotedeschi-dev](https://github.com/enzotedeschi-dev)
-- Instagram: [@enzotedeschi](https://www.instagram.com/enzotedeschi/)
-
 ---
 
 ## License
