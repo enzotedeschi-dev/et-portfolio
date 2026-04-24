@@ -44,8 +44,8 @@
   "modeling.renders.title": "Render",
   "modeling.renders.3d-profumo.title": "Bottiglia di Profumo",
   "modeling.renders.3d-profumo.description": "Visualizzazione prodotto — modellato e renderizzato in Blender con materiali procedurali.",
-  "modeling.renders.3d-gccar.title": "GC Car",
-  "modeling.renders.3d-gccar.description": "Visualizzazione automotive — modellato e renderizzato in Blender.",
+  "modeling.renders.3d-flipfluids.title": "Perfume Commercial Breakdown",
+  "modeling.renders.3d-flipfluids.description": "Breakdown commercial con simulazione FLIP Fluids in Blender.",
 
   "dev.label": "02 / Codice",
   "dev.title": "Sviluppo",

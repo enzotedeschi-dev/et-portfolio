@@ -15,9 +15,9 @@ import renderProfumo1 from "../assets/profumo/renderprofumo1.jpg";
 import renderProfumo2 from "../assets/profumo/renderprofumo2.jpg";
 import renderProfumo3 from "../assets/profumo/renderprofumo3.jpg";
 import profumoVideo from "../assets/Finalprofumo2compresso1.mp4";
-import gccarVideo from "../assets/gccar.mp4";
+import flipFluidsVideo from "../assets/output_ULTRA_LIGHT.mp4";
 import profumoPoster from "../assets/renderprofumoposter.jpg";
-import gccarPoster from "../assets/cgcarposter.jpg";
+import flipFluidsPoster from "../assets/frame_leucasiabreakdown_14.png";
 import houseModel from "../assets/house/house3dmodelcompressed.glb?url";
 
 export const projects = {
@@ -112,13 +112,13 @@ export const projects = {
         images: [renderProfumo1, renderProfumo2, renderProfumo3],
       },
       {
-        id: "3d-gccar",
-        title: "GC Car",
+        id: "3d-flipfluids",
+        title: "Perfume Commercial Breakdown",
         description:
-          "Automotive visualization — modeled and rendered in Blender.",
-        tags: ["Blender", "3D Rendering"],
-        video: gccarVideo,
-        poster: gccarPoster,
+          "Commercial breakdown with FLIP Fluids simulation in Blender.",
+        tags: ["Blender", "FLIP Fluids", "Simulation"],
+        video: flipFluidsVideo,
+        poster: flipFluidsPoster,
         images: [],
       },
     ],
