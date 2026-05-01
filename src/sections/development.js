@@ -13,6 +13,13 @@ function renderPreview(project) {
     `;
   }
   if (project.preview === "image" && project.screenshot) {
+    if (project.url) {
+      return `
+        <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="dev-card__preview">
+          <img src="${project.screenshot}" alt="${project.title}" class="dev-card__img" loading="lazy" decoding="async" />
+        </a>
+      `;
+    }
     return `
       <div class="dev-card__preview">
         <img src="${project.screenshot}" alt="${project.title}" class="dev-card__img" loading="lazy" decoding="async" />

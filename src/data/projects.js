@@ -10,11 +10,13 @@ import keyingVideo from "../assets/videos/greenscreencomp/keying.mp4";
 import keyingBefore from "../assets/videos/greenscreencomp/before.png";
 import keyingAfter from "../assets/videos/greenscreencomp/after.png";
 import autosortImg from "../assets/autosort/autosort.png";
+import legrandtabouImg from "../assets/dev/legrandtabou-site.png";
+import imediatopImg from "../assets/dev/imediatop-site.png";
 
 import renderProfumo1 from "../assets/profumo/renderprofumo1.jpg";
 import renderProfumo2 from "../assets/profumo/renderprofumo2.jpg";
 import renderProfumo3 from "../assets/profumo/renderprofumo3.jpg";
-import profumoVideo from "../assets/Finalprofumo2compresso1.mp4";
+import profumoVideo from "../assets/videoprofumocompressodefinitivo.mp4";
 import flipFluidsVideo from "../assets/output_ULTRA_LIGHT.mp4";
 import profumoPoster from "../assets/renderprofumoposter.jpg";
 import flipFluidsPoster from "../assets/frame_leucasiabreakdown_14.png";
@@ -67,16 +69,18 @@ export const projects = {
       stack: ["HTML", "CSS", "JavaScript"],
       url: "https://www.legrandtabou.it/",
       github: null,
-      preview: "iframe",
+      preview: "image",
+      screenshot: legrandtabouImg,
     },
     {
       id: "dev-2",
-      title: "iMedia Top",
-      description: "Website design and development for iMedia Top.",
+      title: "iMediaTop",
+      description: "Website design and development for iMediaTop.",
       stack: ["HTML", "CSS", "JavaScript"],
       url: "https://www.imediatop.it/",
       github: null,
-      preview: "iframe",
+      preview: "image",
+      screenshot: imediatopImg,
     },
     {
       id: "dev-3",

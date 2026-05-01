@@ -2,6 +2,10 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
+import "@fontsource-variable/inter";
+import "@fontsource-variable/inter/wght-italic.css";
+import "@fontsource-variable/space-grotesk";
+
 import "./styles/base.css";
 import "./styles/layout.css";
 import "./styles/sections/navbar.css";
@@ -42,8 +46,7 @@ function render() {
   const app = $("#app");
   const divider = '<div class="section-glow-divider" aria-hidden="true"></div>';
 
-  app.innerHTML = [
-    renderNavbar(),
+  const mainContent = [
     renderHero(),
     renderManifesto(),
     divider,
@@ -57,6 +60,8 @@ function render() {
     divider,
     renderContact(),
   ].join("");
+
+  app.innerHTML = `${renderNavbar()}<main>${mainContent}</main>`;
 }
 
 let globalInitDone = false;

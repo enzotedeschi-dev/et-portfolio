@@ -16,8 +16,8 @@
   --color-accent: #f0ece4;
 
   /* Typography */
-  --font-heading: "Space Grotesk", sans-serif;
-  --font-body: "Inter", sans-serif;
+  --font-heading: "Space Grotesk Variable", "Space Grotesk", sans-serif;
+  --font-body: "Inter Variable", "Inter", sans-serif;
 
   /* Font sizes — fluid scale */
   --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
@@ -192,6 +192,30 @@ p {
 
 .btn:hover .btn__arrow {
   transform: translateX(4px);
+}
+
+/* Reduced motion — disable animations and scroll-driven effects */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .gs-reveal,
+  .hero__name,
+  .hero__tagline,
+  .manifesto__kicker,
+  .manifesto__line,
+  .manifesto__text,
+  .manifesto__actions {
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /* Hide scrollbar but keep functionality (Lenis) */

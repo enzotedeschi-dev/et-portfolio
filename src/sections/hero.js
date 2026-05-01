@@ -2,6 +2,7 @@ import { gsap } from "gsap";
 import { animateHeroText } from "../animations/textReveal.js";
 import { $ } from "../utils/dom.js";
 import { t } from "../i18n/i18n.js";
+import { prefersReducedMotion } from "../utils/motion.js";
 import heroVideo from "../assets/breakdownastronauta.mp4";
 
 export function renderHero() {
@@ -35,6 +36,13 @@ export function initHero() {
 
   const video = $(".hero-video");
   if (video) video.playbackRate = 1.8;
+
+  if (prefersReducedMotion()) {
+    if (name) name.style.visibility = "visible";
+    if (tagline) tagline.style.visibility = "visible";
+    if (scrollIndicator) scrollIndicator.style.opacity = "1";
+    return;
+  }
 
   const tl = gsap.timeline({ delay: 0.5 });
 
@@ -94,7 +102,6 @@ export function initHero() {
       scrub: true,
     },
   });
-
 
   const videoWrap = $(".hero-video-wrap");
   const darken = $(".hero-video-darken");

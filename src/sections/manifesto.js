@@ -1,5 +1,5 @@
 /**
- * Manifesto Section 
+ * Manifesto Section
  */
 
 import { gsap } from "gsap";
@@ -15,7 +15,7 @@ export function renderManifesto() {
           <span class="manifesto__kicker gs-reveal">${t("manifesto.kicker", "The Vision")}</span>
           <div class="manifesto__line gs-reveal"></div>
           <p class="manifesto__text gs-reveal">
-            ${t("manifesto.text", "I blend visual effects, code, and cinematography into experiences that feel alive \u2014 bridging the gap between technical precision and creative vision.")}
+            ${t("manifesto.text", "I blend visual effects, code, and cinematography into experiences that feel alive, bridging the gap between technical precision and creative vision.")}
           </p>
           <div class="manifesto__actions gs-reveal">
             <a href="#vfx" class="btn btn--primary">${t("manifesto.cta.work", "See my work")} <span class="btn__arrow">&rarr;</span></a>

@@ -21,6 +21,20 @@ export function initSmoothScroll() {
 
   gsap.ticker.lagSmoothing(0);
 
+  document.addEventListener("click", (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    const href = link.getAttribute("href");
+    if (!href || href === "#") return;
+
+    const target = document.querySelector(href);
+    if (!target) return;
+
+    e.preventDefault();
+    lenis.scrollTo(target, { offset: 0, duration: 1.4 });
+  });
+
   return lenis;
 }
 

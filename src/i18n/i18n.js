@@ -21,6 +21,7 @@ export function initI18n() {
     locale = browserLang === "it" ? "it" : "en";
   }
   translations = locale === "it" ? itTranslations : {};
+  document.documentElement.lang = locale;
 }
 
 /**
@@ -46,4 +47,5 @@ export function setLocale(lang) {
   locale = lang;
   translations = locale === "it" ? itTranslations : {};
   localStorage.setItem("et-locale", lang);
+  document.documentElement.lang = locale;
 }
