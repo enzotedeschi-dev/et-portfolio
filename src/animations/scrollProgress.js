@@ -13,30 +13,24 @@ export function initScrollProgress() {
   const track = bar.querySelector(".scroll-progress__track");
   const glow = bar.querySelector(".scroll-progress__glow");
 
-  gsap.to(track, {
-    scaleX: 1,
-    ease: "none",
+  const progressTl = gsap.timeline({
     scrollTrigger: {
       trigger: document.documentElement,
       start: "top top",
       end: "bottom bottom",
       scrub: 0.3,
+      invalidateOnRefresh: true,
     },
   });
 
-  gsap.to(glow, {
-    opacity: 1,
-    ease: "none",
-    scrollTrigger: {
-      trigger: document.documentElement,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: 0.3,
-      onUpdate: (self) => {
-        glow.style.transform = `translateX(calc(${self.progress * 100}vw - 120px))`;
-      },
-    },
-  });
+  progressTl
+    .fromTo(track, { scaleX: 0 }, { scaleX: 1, ease: "none" }, 0)
+    .fromTo(
+      glow,
+      { x: -120, opacity: 0 },
+      { x: () => window.innerWidth, opacity: 1, ease: "none" },
+      0,
+    );
 
   ScrollTrigger.create({
     trigger: document.documentElement,
