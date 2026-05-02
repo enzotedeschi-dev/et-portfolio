@@ -109,7 +109,6 @@ export function initHero() {
   if (videoWrap) {
     gsap.to(videoWrap, {
       scale: 1.15,
-      filter: "blur(6px)",
       ease: "none",
       scrollTrigger: {
         trigger: ".hero",

@@ -33,8 +33,7 @@ export function initScrollProgress() {
       end: "bottom bottom",
       scrub: 0.3,
       onUpdate: (self) => {
-        const progress = self.progress;
-        glow.style.left = `calc(${progress * 100}% - 120px)`;
+        glow.style.transform = `translateX(calc(${self.progress * 100}vw - 120px))`;
       },
     },
   });

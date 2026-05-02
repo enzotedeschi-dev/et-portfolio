@@ -12,26 +12,17 @@ export function initCustomCursor() {
   document.body.appendChild(dot);
   document.body.appendChild(ring);
 
-  let mouseX = -100;
-  let mouseY = -100;
+  const ringX = gsap.quickTo(ring, "x", { duration: 0.15, ease: "power2.out" });
+  const ringY = gsap.quickTo(ring, "y", { duration: 0.15, ease: "power2.out" });
 
   document.addEventListener("mousemove", (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-
-    gsap.set(dot, { x: mouseX, y: mouseY });
+    gsap.set(dot, { x: e.clientX, y: e.clientY });
+    ringX(e.clientX);
+    ringY(e.clientY);
   });
 
-  gsap.ticker.add(() => {
-    gsap.to(ring, {
-      x: mouseX,
-      y: mouseY,
-      duration: 0.15,
-      ease: "power2.out",
-    });
-  });
-
-  const hoverTargets = "a, button, .btn, .discipline-card, .dev-card, .vfx-project__media, .modeling-renders__item, .modeling-renders__video-wrap, .navbar__toggle, input, textarea";
+  const hoverTargets =
+    "a, button, .btn, .discipline-card, .dev-card, .vfx-project__media, .modeling-renders__item, .modeling-renders__video-wrap, .navbar__toggle, input, textarea";
 
   document.addEventListener("mouseover", (e) => {
     if (e.target.closest(hoverTargets)) {

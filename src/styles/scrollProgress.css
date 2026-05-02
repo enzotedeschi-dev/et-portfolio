@@ -22,7 +22,7 @@
   will-change: transform;
   background: linear-gradient(
     90deg,
-    rgba(240, 236, 228, 0.0) 0%,
+    rgba(240, 236, 228, 0) 0%,
     rgba(240, 236, 228, 0.6) 40%,
     rgba(240, 236, 228, 1) 100%
   );
@@ -32,13 +32,12 @@
 .scroll-progress__glow {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
   width: 120px;
   height: 6px;
-  transform: scaleX(0);
-  transform-origin: left center;
+  transform: translateX(-120px);
   opacity: 0;
-  will-change: opacity;
+  will-change: transform, opacity;
   background: radial-gradient(
     ellipse at right center,
     rgba(240, 236, 228, 0.4) 0%,
