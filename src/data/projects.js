@@ -12,6 +12,7 @@ import keyingAfter from "../assets/videos/greenscreencomp/after.png";
 import autosortImg from "../assets/autosort/autosort.png";
 import legrandtabouImg from "../assets/dev/legrandtabou-site.png";
 import imediatopImg from "../assets/dev/imediatop-site.png";
+import trullidigiuliaImg from "../assets/dev/trullidigiulia_site.png";
 
 import renderProfumo1 from "../assets/profumo/renderprofumo1.jpg";
 import renderProfumo2 from "../assets/profumo/renderprofumo2.jpg";
@@ -21,6 +22,15 @@ import flipFluidsVideo from "../assets/output_ULTRA_LIGHT.mp4";
 import profumoPoster from "../assets/renderprofumoposter.jpg";
 import flipFluidsPoster from "../assets/frame_leucasiabreakdown_14.png";
 import houseModel from "../assets/house/house3dmodelcompressed.glb?url";
+
+import productPhoto1 from "../assets/photos/fotoprofumi1_def_compressed.jpg";
+import productPhoto2 from "../assets/photos/fotoprofumi3_compressed.jpg";
+import productPhoto3 from "../assets/photos/fotoprofumi4_def_compressed.jpg";
+import naturePhoto1 from "../assets/photos/IMG_7849-2-refined_compressed.jpg";
+import naturePhoto2 from "../assets/photos/IMG_8031-compressed.jpg";
+import naturePhoto3 from "../assets/photos/IMG_8172-compressed.jpg";
+import naturePhoto4 from "../assets/photos/IMG_8252-compressed.jpg";
+import naturePhoto5 from "../assets/photos/Ninfe_compressed.jpg";
 
 export const projects = {
   vfx: [
@@ -83,6 +93,16 @@ export const projects = {
       screenshot: imediatopImg,
     },
     {
+      id: "dev-4",
+      title: "Trulli di Giulia",
+      description: "Website design and development for Trulli di Giulia.",
+      stack: ["HTML", "CSS", "JavaScript"],
+      url: "https://www.trullidigiulia.com/",
+      github: null,
+      preview: "image",
+      screenshot: trullidigiuliaImg,
+    },
+    {
       id: "dev-3",
       title: "AutoSort",
       description:
@@ -130,25 +150,24 @@ export const projects = {
 
   photography: [
     {
-      id: "photo-1",
-      title: "Urban Fragments",
-      description: "A study of light, geometry, and solitude in the city.",
-      images: [null, null, null],
-      camera: "Sony A7III",
+      id: "photo-products",
+      title: "Products",
+      description:
+        "Product photography — sculpting form, texture, and presence with light, both in studio and on location.",
+      images: [productPhoto1, productPhoto2, productPhoto3],
     },
     {
-      id: "photo-2",
-      title: "Portraits in Contrast",
-      description: "High contrast black and white portraiture.",
-      images: [null, null],
-      camera: "Sony A7III",
-    },
-    {
-      id: "photo-3",
-      title: "After Hours",
-      description: "Night photography exploring neon, shadows, and stillness.",
-      images: [null, null, null, null],
-      camera: "Sony A7III",
+      id: "photo-nature",
+      title: "Nature & Wildlife",
+      description:
+        "Quiet observations from the outdoors — patience, instinct, and the right frame.",
+      images: [
+        naturePhoto2,
+        naturePhoto1,
+        naturePhoto3,
+        naturePhoto4,
+        naturePhoto5,
+      ],
     },
   ],
 };

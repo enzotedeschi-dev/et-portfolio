@@ -227,13 +227,14 @@
 /* --- Development Section --- */
 .dev-projects__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: var(--space-md);
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
 }
 
-@media (max-width: 480px) {
+@media (max-width: 720px) {
   .dev-projects__grid {
     grid-template-columns: 1fr;
+    gap: var(--space-md);
   }
 }
 
@@ -343,61 +344,6 @@
 
 .dev-card__link:hover {
   color: var(--color-text-primary);
-}
-
-/* --- Photography Section --- */
-.photo-project {
-  margin-bottom: var(--space-xl);
-}
-
-.photo-project__title {
-  font-size: var(--text-xl);
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.photo-project__description {
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--space-sm);
-}
-
-.photo-project__meta {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-md);
-}
-
-.photo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 4px;
-}
-
-.photo-grid__item {
-  aspect-ratio: 3 / 2;
-  background: var(--color-bg-elevated);
-  border-radius: 2px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-muted);
-  font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: opacity var(--duration-fast) ease;
-}
-
-.photo-grid__item:hover {
-  opacity: 0.8;
-}
-
-.photo-grid__item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 /* --- Websites Section --- */

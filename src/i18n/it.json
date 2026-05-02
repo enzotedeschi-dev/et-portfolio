@@ -51,9 +51,21 @@
   "dev.title": "Sviluppo",
   "dev.dev-1.description": "Design e sviluppo del sito web di Le Grand Tabou.",
   "dev.dev-2.description": "Design e sviluppo del sito web di iMediaTop.",
+  "dev.dev-4.description": "Design e sviluppo del sito web di Trulli di Giulia.",
   "dev.dev-3.description": "Organizzatore di file basato sull'IA — analizza le directory e classifica automaticamente i file in cartelle.",
   "dev.visit": "Visita il sito ↗",
   "dev.github": "GitHub ↗",
+
+  "photo.label": "03 / Obiettivo",
+  "photo.title": "Fotografia",
+  "photo.photo-products.title": "Prodotti",
+  "photo.photo-products.description": "Fotografia di prodotto — modellare forma, materia e presenza con la luce, in studio e in esterni.",
+  "photo.photo-nature.title": "Natura e fauna",
+  "photo.photo-nature.description": "Osservazioni silenziose dall'esterno — pazienza, istinto e l'inquadratura giusta.",
+  "photo.lightbox.label": "Visualizzatore foto",
+  "photo.lightbox.close": "Chiudi",
+  "photo.lightbox.prev": "Precedente",
+  "photo.lightbox.next": "Successiva",
 
   "about.label": "Chi sono",
   "about.title": "Chi sono",
@@ -73,6 +85,7 @@
 
   "nav.vfx": "VFX",
   "nav.development": "Sviluppo",
+  "nav.photography": "Fotografia",
   "nav.about": "Chi sono",
   "nav.contact": "Contatti"
 }

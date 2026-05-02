@@ -8,6 +8,7 @@ function getNavLinks() {
   return [
     { label: t("nav.vfx", "VFX"), href: "#vfx" },
     { label: t("nav.development", "Development"), href: "#development" },
+    { label: t("nav.photography", "Photography"), href: "#photography" },
     { label: t("nav.about", "About"), href: "#about" },
     { label: t("nav.contact", "Contact"), href: "#contact" },
   ];
@@ -30,15 +31,17 @@ export function renderNavbar() {
 
     <div class="nav-overlay" id="nav-overlay">
       <ul class="nav-overlay__list">
-        ${getNavLinks().map(
-          (link, i) => `
+        ${getNavLinks()
+          .map(
+            (link, i) => `
           <li>
             <a href="${link.href}" class="nav-overlay__link">
               <span class="nav-overlay__number">${String(i + 1).padStart(2, "0")}</span>${link.label}
             </a>
           </li>
         `,
-        ).join("")}
+          )
+          .join("")}
       </ul>
     </div>
   `;

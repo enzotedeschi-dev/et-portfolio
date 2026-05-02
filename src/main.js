@@ -16,6 +16,7 @@ import "./styles/sections/projects.css";
 import "./styles/sections/about.css";
 import "./styles/sections/contact.css";
 import "./styles/sections/modeling.css";
+import "./styles/sections/photography.css";
 import "./styles/effects.css";
 import "./styles/cursor.css";
 import "./styles/preloader.css";
@@ -37,6 +38,7 @@ import { renderManifesto, initManifesto } from "./sections/manifesto.js";
 import { renderDisciplines, initDisciplines } from "./sections/disciplines.js";
 import { renderVfx, initVfx } from "./sections/vfx.js";
 import { renderDevelopment, initDevelopment } from "./sections/development.js";
+import { renderPhotography, initPhotography } from "./sections/photography.js";
 import { renderAbout, initAbout } from "./sections/about.js";
 import { renderContact, initContact } from "./sections/contact.js";
 
@@ -55,6 +57,8 @@ function render() {
     renderVfx(),
     divider,
     renderDevelopment(),
+    divider,
+    renderPhotography(),
     divider,
     renderAbout(),
     divider,
@@ -79,6 +83,7 @@ function init() {
   initDisciplines();
   initVfx();
   initDevelopment();
+  initPhotography();
   initAbout();
   initContact();
   initLangToggle();
