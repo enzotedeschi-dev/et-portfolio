@@ -1,5 +1,5 @@
 /**
- * VFX Section 
+ * VFX Section
  */
 
 import { gsap } from "gsap";
@@ -160,7 +160,7 @@ function renderModeling() {
                 (project) => `
               <div class="modeling-renders__video-col">
                 <div class="modeling-renders__video-wrap">
-                  <video class="modeling-renders__video" src="${project.video}" muted loop playsinline preload="metadata" poster="${project.poster || ''}"></video>
+                  <video class="modeling-renders__video" src="${project.video}" muted loop playsinline preload="metadata" poster="${project.poster || ""}"></video>
                   <button class="modeling-renders__play-btn" aria-label="Play video">
                     <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" stroke="currentColor" stroke-width="2" opacity="0.6"/><path d="M19 15l14 9-14 9V15z" fill="currentColor"/></svg>
                   </button>
@@ -257,13 +257,6 @@ export function initVfx() {
 
   const videos = $$(".vfx-project__video");
   videos.forEach((video) => {
-    scaleReveal(video.closest(".vfx-project__media"), {
-      scale: 0.94,
-      duration: 1.2,
-      ease: "power3.out",
-      start: "top 88%",
-    });
-
     ScrollTrigger.create({
       trigger: video,
       start: "top 90%",
@@ -275,7 +268,9 @@ export function initVfx() {
     });
   });
 
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
+  const isMobile =
+    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+    window.innerWidth < 768;
 
   if (!isMobile) {
     const viewerContainers = $$(".modeling-viewer--desktop");
@@ -310,22 +305,37 @@ export function initVfx() {
       dot.addEventListener("click", () => {
         current = Number(dot.dataset.index);
         track.style.transform = `translateX(-${current * 100}%)`;
-        dots.forEach((d) => d.classList.remove("modeling-carousel__dot--active"));
+        dots.forEach((d) =>
+          d.classList.remove("modeling-carousel__dot--active"),
+        );
         dot.classList.add("modeling-carousel__dot--active");
       });
     });
 
     let startX = 0;
-    track.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
-    track.addEventListener("touchend", (e) => {
-      const diff = startX - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 40) {
-        const next = diff > 0 ? Math.min(current + 1, dots.length - 1) : Math.max(current - 1, 0);
-        if (next !== current) {
-          dots[next].click();
+    track.addEventListener(
+      "touchstart",
+      (e) => {
+        startX = e.touches[0].clientX;
+      },
+      { passive: true },
+    );
+    track.addEventListener(
+      "touchend",
+      (e) => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) {
+          const next =
+            diff > 0
+              ? Math.min(current + 1, dots.length - 1)
+              : Math.max(current - 1, 0);
+          if (next !== current) {
+            dots[next].click();
+          }
         }
-      }
-    }, { passive: true });
+      },
+      { passive: true },
+    );
   });
 
   const modelingSubs = $$(".modeling-subsection");
@@ -372,7 +382,9 @@ export function initVfx() {
 
   $$(".video-fullscreen-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const container = btn.closest(".vfx-project__media") || btn.closest(".modeling-renders__video-wrap");
+      const container =
+        btn.closest(".vfx-project__media") ||
+        btn.closest(".modeling-renders__video-wrap");
       const video = container.querySelector("video");
       if (video) {
         if (video.requestFullscreen) video.requestFullscreen();

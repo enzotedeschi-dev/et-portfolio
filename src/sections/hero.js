@@ -134,51 +134,35 @@ export function initHero() {
 
   tl.add(() => {
     const nameChars = name ? name.querySelectorAll(".split-char") : [];
-    if (nameChars.length) {
-      gsap.to(nameChars, {
-        y: 80,
-        opacity: 0,
-        stagger: 0.04,
-        ease: "power3.inOut",
-        scrollTrigger: {
-          trigger: ".hero",
-          start: "10% top",
-          end: "50% top",
-          scrub: true,
-        },
-      });
-    }
-
     const taglineWords = tagline
       ? tagline.querySelectorAll(".split-word-inner")
       : [];
-    if (taglineWords.length) {
-      gsap.to(taglineWords, {
-        y: 30,
-        opacity: 0,
-        stagger: 0.08,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".hero",
-          start: "10% top",
-          end: "45% top",
-          scrub: true,
-        },
-      });
-    }
 
+    const exitTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "10% top",
+        end: "50% top",
+        scrub: true,
+      },
+    });
+
+    if (nameChars.length) {
+      exitTl.to(
+        nameChars,
+        { y: 80, opacity: 0, stagger: 0.04, ease: "power3.inOut" },
+        0,
+      );
+    }
+    if (taglineWords.length) {
+      exitTl.to(
+        taglineWords,
+        { y: 30, opacity: 0, stagger: 0.08, ease: "none", duration: 0.9 },
+        0,
+      );
+    }
     if (heroCta) {
-      gsap.to(heroCta, {
-        y: 20,
-        opacity: 0,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".hero",
-          start: "10% top",
-          end: "40% top",
-          scrub: true,
-        },
-      });
+      exitTl.to(heroCta, { y: 20, opacity: 0, ease: "none", duration: 0.8 }, 0);
     }
   });
 }

@@ -51,7 +51,7 @@ export function initManifesto() {
       scrollTrigger: {
         trigger: kicker,
         start: "top 80%",
-        toggleActions: "play none none none",
+        once: true,
       },
       onStart: () => {
         kicker.style.visibility = "visible";
@@ -67,7 +67,7 @@ export function initManifesto() {
       scrollTrigger: {
         trigger: line,
         start: "top 80%",
-        toggleActions: "play none none none",
+        once: true,
       },
       onStart: () => {
         line.style.visibility = "visible";
@@ -85,7 +85,7 @@ export function initManifesto() {
       scrollTrigger: {
         trigger: actions,
         start: "top 85%",
-        toggleActions: "play none none none",
+        once: true,
       },
       onStart: () => {
         actions.style.visibility = "visible";

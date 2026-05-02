@@ -117,19 +117,22 @@ export function initNavbar() {
     });
   });
 
+  let isHidden = false;
+  const setHidden = (next) => {
+    if (next === isHidden) return;
+    isHidden = next;
+    navbar.classList.toggle("navbar--hidden", next);
+  };
+
   ScrollTrigger.create({
     start: "top top",
     end: "max",
     onUpdate: (self) => {
       const scrollY = self.scroll();
       if (scrollY > 100) {
-        if (scrollY > lastScroll && !isOpen) {
-          navbar.classList.add("navbar--hidden");
-        } else {
-          navbar.classList.remove("navbar--hidden");
-        }
+        setHidden(scrollY > lastScroll && !isOpen);
       } else {
-        navbar.classList.remove("navbar--hidden");
+        setHidden(false);
       }
       lastScroll = scrollY;
     },

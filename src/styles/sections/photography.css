@@ -9,6 +9,8 @@
 /* --- Category block --- */
 .photo-category {
   margin-bottom: clamp(72px, 8vw, 128px);
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 900px;
 }
 
 .photo-category:last-child {

@@ -8,25 +8,37 @@ function getDisciplines() {
     {
       number: "01",
       title: t("disciplines.vfx.title", "Visual Effects"),
-      description: t("disciplines.vfx.description", "Compositing, 3D integration, simulations, and digital environments. Turning the impossible into photorealistic."),
+      description: t(
+        "disciplines.vfx.description",
+        "Compositing, 3D integration, simulations, and digital environments. Turning the impossible into photorealistic.",
+      ),
       tools: ["Nuke", "Blender", "Autodesk Maya", "After Effects", "PFTrack"],
     },
     {
       number: "02",
       title: t("disciplines.dev.title", "Development"),
-      description: t("disciplines.dev.description", "Full-stack development, creative coding, and interactive experiences. Clean code that powers bold ideas."),
+      description: t(
+        "disciplines.dev.description",
+        "Full-stack development, creative coding, and interactive experiences. Clean code that powers bold ideas.",
+      ),
       tools: ["Python", "JavaScript", "Node.js", "Three.js", "GSAP"],
     },
     {
       number: "03",
       title: t("disciplines.web.title", "Web Design"),
-      description: t("disciplines.web.description", "High-end websites with motion, rhythm, and purpose. Every pixel and interaction is intentional."),
+      description: t(
+        "disciplines.web.description",
+        "High-end websites with motion, rhythm, and purpose. Every pixel and interaction is intentional.",
+      ),
       tools: ["HTML", "CSS", "Vite", "React", "Tailwind"],
     },
     {
       number: "04",
       title: t("disciplines.photo.title", "Photo & Video"),
-      description: t("disciplines.photo.description", "Cinematic storytelling through the lens. From concept to color grade, every frame tells a story."),
+      description: t(
+        "disciplines.photo.description",
+        "Cinematic storytelling through the lens. From concept to color grade, every frame tells a story.",
+      ),
       tools: ["Premiere Pro", "DaVinci", "Lightroom", "Sony", "Canon"],
     },
   ];
@@ -41,8 +53,9 @@ export function renderDisciplines() {
           <h2 class="section-title">${t("disciplines.title", "Disciplines")}</h2>
         </div>
         <div class="disciplines__grid">
-          ${getDisciplines().map(
-            (d) => `
+          ${getDisciplines()
+            .map(
+              (d) => `
             <div class="discipline-card">
               <span class="discipline-card__number">${d.number}</span>
               <h3 class="discipline-card__title">${d.title}</h3>
@@ -52,7 +65,8 @@ export function renderDisciplines() {
               </div>
             </div>
           `,
-          ).join("")}
+            )
+            .join("")}
         </div>
       </div>
     </section>
@@ -76,7 +90,7 @@ export function initDisciplines() {
       scrollTrigger: {
         trigger: card,
         start: "top 85%",
-        toggleActions: "play none none none",
+        once: true,
       },
       delay: i * 0.1,
     });

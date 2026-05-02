@@ -122,7 +122,7 @@ export function animateScrollText(element, options = {}) {
     scrollTrigger: {
       trigger: element,
       start,
-      toggleActions: "play none none none",
+      once: true,
     },
   });
 }

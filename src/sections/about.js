@@ -49,7 +49,7 @@ export function initAbout() {
       scrollTrigger: {
         trigger: photo,
         start: "top 80%",
-        toggleActions: "play none none none",
+        once: true,
       },
     });
   }
@@ -64,7 +64,7 @@ export function initAbout() {
       scrollTrigger: {
         trigger: heading,
         start: "top 85%",
-        toggleActions: "play none none none",
+        once: true,
       },
     });
   }
@@ -79,7 +79,7 @@ export function initAbout() {
     scrollTrigger: {
       trigger: bios[0],
       start: "top 85%",
-      toggleActions: "play none none none",
+      once: true,
     },
   });
 
@@ -93,7 +93,7 @@ export function initAbout() {
     scrollTrigger: {
       trigger: details[0],
       start: "top 88%",
-      toggleActions: "play none none none",
+      once: true,
     },
   });
 }

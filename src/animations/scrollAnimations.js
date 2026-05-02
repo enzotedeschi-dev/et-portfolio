@@ -28,7 +28,7 @@ export function fadeInUp(elements, options = {}) {
     scrollTrigger: {
       trigger: elements[0] || elements,
       start,
-      toggleActions: "play none none none",
+      once: true,
     },
   });
 }
@@ -56,7 +56,7 @@ export function staggerIn(parent, childSelector, options = {}) {
     scrollTrigger: {
       trigger: parent,
       start,
-      toggleActions: "play none none none",
+      once: true,
     },
   });
 }
@@ -93,13 +93,13 @@ export function lineGrow(element, options = {}) {
     scrollTrigger: {
       trigger: element,
       start,
-      toggleActions: "play none none none",
+      once: true,
     },
   });
 }
 
 /**
- * Lazy video autoplay 
+ * Lazy video autoplay
  */
 export function lazyVideoPlay(videoElements) {
   videoElements.forEach((video) => {
@@ -116,7 +116,7 @@ export function lazyVideoPlay(videoElements) {
 }
 
 /**
- * Cinematic section header entrance 
+ * Cinematic section header entrance
  */
 export function cinematicHeader(headerEl, options = {}) {
   const { start = "top 82%" } = options;
@@ -128,7 +128,7 @@ export function cinematicHeader(headerEl, options = {}) {
     scrollTrigger: {
       trigger: headerEl,
       start,
-      toggleActions: "play none none none",
+      once: true,
     },
   });
 
@@ -159,7 +159,7 @@ export function cinematicHeader(headerEl, options = {}) {
 }
 
 /**
- * Scrub-based parallax on elements 
+ * Scrub-based parallax on elements
  */
 export function scrubParallax(elements, options = {}) {
   const { yPercent = -15, start = "top bottom", end = "bottom top" } = options;
@@ -210,7 +210,7 @@ export function scaleReveal(element, options = {}) {
     scrollTrigger: {
       trigger: element,
       start,
-      toggleActions: "play none none none",
+      once: true,
     },
   });
 }
