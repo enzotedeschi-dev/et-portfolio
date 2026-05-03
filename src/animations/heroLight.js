@@ -178,14 +178,18 @@ export function initHeroLight(canvas) {
   const targetMouse = { x: 0, y: 0 }; // dove vuole andare
   const currentMouse = { x: 0, y: 0 }; // dove è ora (interpolato)
 
+  const isTouchDevice = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+
   const onMouseMove = (e) => {
-    /* Normalizza il mouse in range [-1, 1] rispetto al centro schermo */
     const nx = (e.clientX / window.innerWidth) * 2 - 1;
     const ny = (e.clientY / window.innerHeight) * 2 - 1;
     targetMouse.x = nx;
     targetMouse.y = ny;
   };
-  window.addEventListener("mousemove", onMouseMove);
+
+  if (!isTouchDevice) {
+    window.addEventListener("mousemove", onMouseMove);
+  }
 
   /* ---- Entrata cinematografica ---- */
   /* L'intensita parte da 0 e sale dolcemente a 1 in ~2.5 secondi */
@@ -235,7 +239,9 @@ export function initHeroLight(canvas) {
     running = false;
     cancelAnimationFrame(rafId);
     window.removeEventListener("resize", resize);
-    window.removeEventListener("mousemove", onMouseMove);
+    if (!isTouchDevice) {
+      window.removeEventListener("mousemove", onMouseMove);
+    }
     geometry.dispose();
     material.dispose();
     renderer.dispose();
