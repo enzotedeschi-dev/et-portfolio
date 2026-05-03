@@ -18,15 +18,18 @@ export function renderNavbar() {
   return `
     <nav class="navbar" id="navbar">
       <a href="#" class="navbar__logo">ET</a>
-      <div class="navbar__lang" id="lang-toggle">
-        <button class="navbar__lang-btn${getLocale() === "en" ? " navbar__lang-btn--active" : ""}" data-lang="en">EN</button>
-        <button class="navbar__lang-btn${getLocale() === "it" ? " navbar__lang-btn--active" : ""}" data-lang="it">IT</button>
+      <div class="navbar__actions">
+        <div class="navbar__lang" id="lang-toggle">
+          <button class="navbar__lang-btn${getLocale() === "en" ? " navbar__lang-btn--active" : ""}" data-lang="en">EN</button>
+          <span class="navbar__lang-sep" aria-hidden="true">|</span>
+          <button class="navbar__lang-btn${getLocale() === "it" ? " navbar__lang-btn--active" : ""}" data-lang="it">IT</button>
+        </div>
+        <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle menu" aria-controls="nav-overlay" aria-expanded="false">
+          <span class="navbar__toggle-line"></span>
+          <span class="navbar__toggle-line"></span>
+          <span class="navbar__toggle-line"></span>
+        </button>
       </div>
-      <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle menu" aria-controls="nav-overlay" aria-expanded="false">
-        <span class="navbar__toggle-line"></span>
-        <span class="navbar__toggle-line"></span>
-        <span class="navbar__toggle-line"></span>
-      </button>
     </nav>
 
     <div class="nav-overlay" id="nav-overlay">
