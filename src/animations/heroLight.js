@@ -69,7 +69,7 @@ const fragmentShader = /* glsl */ `
     float dist = length(delta);
     float angle = atan(delta.x, -delta.y);
 
-    float mouseTilt = clamp(uMouseOffset.x, -1.0, 1.0) * 0.25;
+    float mouseTilt = clamp(uMouseOffset.x, -1.0, 1.0) * 0.40;
     float coneCenter = 0.85 + mouseTilt;
     float coneWidth  = 0.32;
 

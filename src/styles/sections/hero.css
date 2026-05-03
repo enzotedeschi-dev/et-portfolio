@@ -19,7 +19,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 220px;
+  height: 120px;
   background: linear-gradient(to bottom, transparent, var(--color-bg));
   z-index: 8;
   pointer-events: none;
@@ -61,7 +61,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 7;
+  z-index: 9;
 }
 
 .hero__cross {
@@ -104,11 +104,11 @@
   right: 48px;
 }
 .hero__cross--bl {
-  bottom: 80px;
+  bottom: 40px;
   left: 48px;
 }
 .hero__cross--br {
-  bottom: 80px;
+  bottom: 40px;
   right: 48px;
 }
 
@@ -248,7 +248,7 @@
 /* ---------- Scroll indicator ---------- */
 .hero__scroll-indicator {
   position: absolute;
-  bottom: calc(var(--space-sm) + 72px);
+  bottom: calc(var(--space-sm) + 20px);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
