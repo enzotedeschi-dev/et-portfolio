@@ -6,9 +6,7 @@
 
 import astronautaVideo from "../assets/breakdownastronauta.mp4";
 import unrealVideo from "../assets/videos/progettounreal/FilmatoFinito.mp4";
-import keyingVideo from "../assets/videos/greenscreencomp/keying.mp4";
-import keyingBefore from "../assets/videos/greenscreencomp/before.png";
-import keyingAfter from "../assets/videos/greenscreencomp/after.png";
+import cgEnvVideo from "../assets/FinishedCGEnvironment_CompressedDefinitivo.mp4";
 import autosortImg from "../assets/autosort/autosort.png";
 import legrandtabouImg from "../assets/dev/legrandtabou-site.png";
 import imediatopImg from "../assets/dev/imediatop-site.png";
@@ -21,7 +19,6 @@ import profumoVideo from "../assets/videoprofumocompressodefinitivo.mp4";
 import flipFluidsVideo from "../assets/output_ULTRA_LIGHT.mp4";
 import profumoPoster from "../assets/renderprofumoposter.jpg";
 import flipFluidsPoster from "../assets/frame_leucasiabreakdown_14.png";
-import houseModel from "../assets/house/house3dmodelcompressed.glb?url";
 
 import productPhoto1 from "../assets/photos/fotoprofumi1_def_compressed.jpg";
 import productPhoto2 from "../assets/photos/fotoprofumi3_compressed.jpg";
@@ -56,18 +53,13 @@ export const projects = {
     },
     {
       id: "vfx-3",
-      title: "Green Screen Composite",
+      title: "CG Environment",
       description:
-        "Clean keying and compositing of green screen footage with environment integration.",
-      tags: ["Nuke"],
-      video: keyingVideo,
+        "Full CG environment created in Blender with final compositing and color grading in DaVinci Resolve.",
+      tags: ["Blender", "DaVinci Resolve"],
+      video: cgEnvVideo,
       poster: null,
-      breakdown: {
-        type: "side-by-side",
-        before: keyingBefore,
-        after: keyingAfter,
-        steps: null,
-      },
+      breakdown: null,
     },
   ],
 
@@ -116,14 +108,6 @@ export const projects = {
   ],
 
   modeling: {
-    viewer: {
-      id: "3d-house",
-      title: "Architectural Model",
-      description:
-        "Detailed architectural house model built from scratch in Autodesk Maya — geometry, materials, and scene assembly.",
-      tags: ["Autodesk Maya", "3D Modeling", "Architecture"],
-      model: houseModel,
-    },
     renders: [
       {
         id: "3d-profumo",

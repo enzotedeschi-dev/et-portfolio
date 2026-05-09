@@ -1,5 +1,11 @@
+/**
+ * Development Section — tilt cards with parallax preview
+ */
+
+import { gsap } from "gsap";
 import { staggerIn, cinematicHeader } from "../animations/scrollAnimations.js";
-import { $ } from "../utils/dom.js";
+import { addTilt } from "../animations/tilt.js";
+import { $, $$ } from "../utils/dom.js";
 import { t } from "../i18n/i18n.js";
 import { projects } from "../data/projects.js";
 
@@ -66,6 +72,8 @@ export function renderDevelopment() {
   `;
 }
 
+const tiltCleanups = [];
+
 export function initDevelopment() {
   const header = $(".dev-section .section-header");
   if (header) cinematicHeader(header);
@@ -77,5 +85,48 @@ export function initDevelopment() {
     stagger: 0.15,
     ease: "power3.out",
     start: "top 80%",
+  });
+
+  // Cleanup previous tilt instances
+  tiltCleanups.forEach((fn) => fn());
+  tiltCleanups.length = 0;
+
+  // 3D tilt on dev cards
+  const cards = $$(".dev-card");
+  cards.forEach((card) => {
+    tiltCleanups.push(
+      addTilt(card, {
+        maxTilt: 5,
+        scale: 1.015,
+        glare: true,
+        glareOpacity: 0.06,
+      }),
+    );
+
+    // Parallax preview image on hover
+    const img = card.querySelector(".dev-card__img, .dev-card__iframe");
+    if (img) {
+      card.addEventListener("mousemove", (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
+        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 10;
+        gsap.to(img, {
+          x,
+          y,
+          duration: 0.4,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+      });
+
+      card.addEventListener("mouseleave", () => {
+        gsap.to(img, {
+          x: 0,
+          y: 0,
+          duration: 0.6,
+          ease: "power3.out",
+        });
+      });
+    }
   });
 }

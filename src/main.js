@@ -32,6 +32,13 @@ import { createPreloader, playIntro } from "./animations/preloader.js";
 
 import { initScrollProgress } from "./animations/scrollProgress.js";
 
+import { startMonitoring } from "./utils/performanceManager.js";
+
+import {
+  addVelocitySkew,
+  startVelocityScroll,
+} from "./animations/velocityScroll.js";
+
 import { renderNavbar, initNavbar } from "./sections/navbar.js";
 import { renderHero, initHero } from "./sections/hero.js";
 import { renderManifesto, initManifesto } from "./sections/manifesto.js";
@@ -75,6 +82,7 @@ function init() {
     initSmoothScroll();
     initCustomCursor();
     initScrollProgress();
+    startMonitoring();
     globalInitDone = true;
   }
   initNavbar();
@@ -87,6 +95,30 @@ function init() {
   initAbout();
   initContact();
   initLangToggle();
+  initVelocityEffects();
+}
+
+/**
+ * Register elements for velocity-based scroll effects
+ */
+function initVelocityEffects() {
+  // Skew on section titles during fast scroll
+  const titles = document.querySelectorAll(
+    ".section-title, .manifesto__text, .contact__heading",
+  );
+  if (titles.length) {
+    addVelocitySkew(titles, { maxSkew: 2 });
+  }
+
+  // Skew on project cards
+  const cards = document.querySelectorAll(
+    ".vfx-project, .dev-card, .photo-mosaic__item",
+  );
+  if (cards.length) {
+    addVelocitySkew(cards, { maxSkew: 1.5 });
+  }
+
+  startVelocityScroll();
 }
 
 function initLangToggle() {

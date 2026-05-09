@@ -1,4 +1,9 @@
+/**
+ * Contact Section — magnetic links
+ */
+
 import { fadeInUp } from "../animations/scrollAnimations.js";
+import { makeMagnetic } from "../animations/magnetic.js";
 import { $$ } from "../utils/dom.js";
 import { t } from "../i18n/i18n.js";
 
@@ -26,7 +31,13 @@ export function renderContact() {
   `;
 }
 
+const cleanups = [];
+
 export function initContact() {
+  // Cleanup previous
+  cleanups.forEach((fn) => fn());
+  cleanups.length = 0;
+
   const elements = $$(
     ".contact__heading, .contact__subtext, .contact__email, .contact__socials",
   );
@@ -36,5 +47,21 @@ export function initContact() {
     stagger: 0.12,
     ease: "power3.out",
     start: "top 80%",
+  });
+
+  // Magnetic email link
+  const email = document.querySelector(".contact__email");
+  if (email) {
+    cleanups.push(
+      makeMagnetic(email, { strength: 0.3, radius: 120 }),
+    );
+  }
+
+  // Magnetic on social links
+  const socials = $$(".contact__social-link");
+  socials.forEach((link) => {
+    cleanups.push(
+      makeMagnetic(link, { strength: 0.2, radius: 80 }),
+    );
   });
 }

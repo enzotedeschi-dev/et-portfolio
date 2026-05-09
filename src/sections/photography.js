@@ -1,5 +1,5 @@
 /**
- * Photography Section — premium editorial mosaic with lightbox
+ * Photography Section — premium editorial mosaic + lightbox
  */
 
 import { gsap } from "gsap";
@@ -141,23 +141,59 @@ function initLightbox() {
     stopScroll();
     closeBtn.focus();
     document.addEventListener("keydown", onKeydown);
+
+    // Animate in
+    gsap.fromTo(
+      imgEl,
+      { scale: 0.85, opacity: 0 },
+      {
+        scale: 1,
+        opacity: 1,
+        duration: 0.5,
+        ease: "power3.out",
+      },
+    );
   };
 
   const close = () => {
-    lightbox.classList.remove("photo-lightbox--open");
-    lightbox.setAttribute("aria-hidden", "true");
-    startScroll();
-    document.removeEventListener("keydown", onKeydown);
-    if (lastFocused) lastFocused.focus();
+    // Animate out
+    gsap.to(imgEl, {
+      scale: 0.9,
+      opacity: 0,
+      duration: 0.3,
+      ease: "power2.in",
+      onComplete: () => {
+        lightbox.classList.remove("photo-lightbox--open");
+        lightbox.setAttribute("aria-hidden", "true");
+        startScroll();
+        document.removeEventListener("keydown", onKeydown);
+        if (lastFocused) lastFocused.focus();
+      },
+    });
   };
 
   const showImage = (index) => {
     const total = flatList.length;
     currentIndex = (index + total) % total;
     const item = flatList[currentIndex];
-    imgEl.src = item.src;
-    imgEl.alt = item.alt;
-    counter.textContent = `${currentIndex + 1} / ${total}`;
+
+    // Animate image swap
+    gsap.to(imgEl, {
+      opacity: 0,
+      x: index > currentIndex ? -30 : 30,
+      duration: 0.15,
+      ease: "power2.in",
+      onComplete: () => {
+        imgEl.src = item.src;
+        imgEl.alt = item.alt;
+        counter.textContent = `${currentIndex + 1} / ${total}`;
+        gsap.fromTo(
+          imgEl,
+          { opacity: 0, x: index > currentIndex ? 30 : -30 },
+          { opacity: 1, x: 0, duration: 0.3, ease: "power2.out" },
+        );
+      },
+    });
   };
 
   const next = () => showImage(currentIndex + 1);

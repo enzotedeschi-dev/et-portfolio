@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { observeVisibility } from "../utils/performanceManager.js";
 
 /* ============================================================
    heroLight — cinematic volumetric light beam via Three.js
@@ -202,11 +203,15 @@ export function initHeroLight(canvas) {
 
   /* ---- Render loop ---- */
   let running = true;
+  let visible = true;
   let rafId = 0;
 
   function tick() {
     if (!running) return;
     rafId = requestAnimationFrame(tick);
+
+    // Skip rendering when hero is off-screen
+    if (!visible) return;
 
     const now = performance.now();
     uniforms.uTime.value = now * 0.001;
@@ -234,10 +239,20 @@ export function initHeroLight(canvas) {
 
   rafId = requestAnimationFrame(tick);
 
+  /* ---- Visibility-based pause (IntersectionObserver) ---- */
+  const heroSection = canvas.closest(".hero") || canvas.parentElement;
+  let unobserve = () => {};
+  if (heroSection) {
+    unobserve = observeVisibility(heroSection, (isVisible) => {
+      visible = isVisible;
+    });
+  }
+
   /* ---- Cleanup ---- */
   return () => {
     running = false;
     cancelAnimationFrame(rafId);
+    unobserve();
     window.removeEventListener("resize", resize);
     if (!isTouchDevice) {
       window.removeEventListener("mousemove", onMouseMove);

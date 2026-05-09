@@ -36,6 +36,8 @@
   text-decoration: none;
   position: relative;
   padding-bottom: 2px;
+  will-change: transform;
+  display: inline-block;
 }
 
 .contact__email::after {
@@ -69,6 +71,8 @@
   letter-spacing: 0.1em;
   color: var(--color-text-muted);
   transition: color var(--duration-fast) ease;
+  will-change: transform;
+  display: inline-block;
 }
 
 .contact__social-link:hover {

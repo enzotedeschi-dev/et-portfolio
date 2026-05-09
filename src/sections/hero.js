@@ -4,6 +4,7 @@ import { $ } from "../utils/dom.js";
 import { t } from "../i18n/i18n.js";
 import { prefersReducedMotion } from "../utils/motion.js";
 import { initHeroLight } from "../animations/heroLight.js";
+import { observeVisibility } from "../utils/performanceManager.js";
 
 function renderTagline() {
   const full = t("hero.tagline", "Where code meets cinema");
@@ -25,13 +26,6 @@ export function renderHero() {
         <canvas class="hero__light"></canvas>
       </div>
 
-      <div class="hero__viewfinder" aria-hidden="true">
-        <span class="hero__cross hero__cross--tl"></span>
-        <span class="hero__cross hero__cross--tr"></span>
-        <span class="hero__cross hero__cross--bl"></span>
-        <span class="hero__cross hero__cross--br"></span>
-      </div>
-
       <aside class="hero__rail" aria-hidden="true">
         <span class="hero__rail-tick"></span>
         <span class="hero__rail-text">${t("hero.rail", "Creative Developer & VFX Artist")}</span>
@@ -39,7 +33,7 @@ export function renderHero() {
 
       <div class="hero__content">
         <p class="hero__kicker gs-reveal">[ ${t("hero.kicker", "Code × Cinema")} ]</p>
-        <h1 class="hero__name gs-reveal">Enzo Tedeschi</h1>
+        <h1 class="hero__name gs-reveal"><span class="hero__name-word">Enzo</span> <span class="hero__name-word">Tedeschi</span></h1>
         <p class="hero__tagline gs-reveal">${renderTagline()}</p>
       </div>
 
@@ -104,9 +98,12 @@ function initNoise(canvas) {
     ctx.putImageData(img, 0, 0);
   };
 
+  let visible = true;
+
   const tick = (now) => {
     if (!running) return;
     rafId = requestAnimationFrame(tick);
+    if (!visible) return;
     if (now - last < FRAME_MS) return;
     last = now;
     renderFrame();
@@ -122,9 +119,19 @@ function initNoise(canvas) {
   const onResize = () => resize();
   window.addEventListener("resize", onResize);
 
+  // Pause when hero is off-screen
+  const heroSection = canvas.closest(".hero");
+  let unobserve = () => {};
+  if (heroSection) {
+    unobserve = observeVisibility(heroSection, (isVis) => {
+      visible = isVis;
+    });
+  }
+
   return () => {
     running = false;
     cancelAnimationFrame(rafId);
+    unobserve();
     window.removeEventListener("resize", onResize);
   };
 }
@@ -141,8 +148,12 @@ function initTimecode(el) {
   let rafId = 0;
   let running = true;
 
+  let visible = true;
+
   const tick = () => {
     if (!running) return;
+    rafId = requestAnimationFrame(tick);
+    if (!visible) return;
     const elapsedMs = performance.now() - start;
     const totalFrames = Math.floor((elapsedMs / 1000) * FPS);
     const f = totalFrames % FPS;
@@ -150,13 +161,22 @@ function initTimecode(el) {
     const m = Math.floor(totalFrames / FPS / 60) % 60;
     const h = Math.floor(totalFrames / FPS / 3600);
     el.textContent = `${pad(h)}:${pad(m)}:${pad(s)}:${pad(f)}`;
-    rafId = requestAnimationFrame(tick);
   };
   tick();
+
+  // Pause when hero is off-screen
+  const heroSection = el.closest(".hero");
+  let unobserve = () => {};
+  if (heroSection) {
+    unobserve = observeVisibility(heroSection, (isVis) => {
+      visible = isVis;
+    });
+  }
 
   return () => {
     running = false;
     cancelAnimationFrame(rafId);
+    unobserve();
   };
 }
 
@@ -171,7 +191,6 @@ export function initHero() {
   const scrollIndicator = $(".hero__scroll-indicator");
   const rail = $(".hero__rail");
   const canvas = $(".hero__noise");
-  const crosses = document.querySelectorAll(".hero__cross");
   const timecodeRoot = $(".hero__timecode");
   const timecodeValue = $(".hero__timecode-value");
 
@@ -191,15 +210,10 @@ export function initHero() {
     [scrollIndicator, rail, timecodeRoot].forEach((el) => {
       if (el) el.style.opacity = "1";
     });
-    crosses.forEach((el) => {
-      el.style.opacity = "1";
-      el.style.transform = "scale(1)";
-    });
     return;
   }
 
   gsap.set(canvas, { opacity: 0 });
-  gsap.set(crosses, { opacity: 0, scale: 0.5 });
   gsap.set([rail, timecodeRoot, scrollIndicator], {
     opacity: 0,
   });
@@ -207,17 +221,8 @@ export function initHero() {
 
   const tl = gsap.timeline({ delay: 0.2 });
 
-  // 1. Viewfinder crosshairs pop in
-  tl.to(crosses, {
-    opacity: 1,
-    scale: 1,
-    duration: 0.6,
-    ease: "back.out(2)",
-    stagger: 0.05,
-  });
-
-  // 2. Noise fades up
-  tl.to(canvas, { opacity: 1, duration: 1.4, ease: "power2.out" }, "-=0.4");
+  // 1. Noise fades up
+  tl.to(canvas, { opacity: 1, duration: 1.4, ease: "power2.out" });
 
   // 3. Kicker
   tl.add(() => {

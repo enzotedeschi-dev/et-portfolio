@@ -1,3 +1,7 @@
+/**
+ * Navbar — improved overlay
+ */
+
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { $, $$ } from "../utils/dom.js";
@@ -50,7 +54,13 @@ export function renderNavbar() {
   `;
 }
 
+const cleanups = [];
+
 export function initNavbar() {
+  // Cleanup previous
+  cleanups.forEach((fn) => fn());
+  cleanups.length = 0;
+
   const navbar = $("#navbar");
   const toggle = $("#nav-toggle");
   const overlay = $("#nav-overlay");
@@ -67,12 +77,13 @@ export function initNavbar() {
     stopScroll();
     gsap.fromTo(
       links,
-      { y: 30, opacity: 0 },
+      { y: 40, opacity: 0, skewY: 3 },
       {
         y: 0,
         opacity: 1,
-        duration: 0.6,
-        stagger: 0.08,
+        skewY: 0,
+        duration: 0.7,
+        stagger: 0.06,
         ease: "power3.out",
         delay: 0.15,
       },
@@ -89,6 +100,7 @@ export function initNavbar() {
     gsap.to(links, {
       y: -20,
       opacity: 0,
+      skewY: -2,
       duration: 0.3,
       stagger: 0.04,
       ease: "power2.in",

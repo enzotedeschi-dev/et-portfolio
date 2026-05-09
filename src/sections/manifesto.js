@@ -1,9 +1,11 @@
 /**
- * Manifesto Section
+ * Manifesto Section — scrub-based word-by-word opacity reveal
  */
 
 import { gsap } from "gsap";
-import { animateScrollText } from "../animations/textReveal.js";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { splitText } from "../animations/textReveal.js";
+import { makeMagnetic } from "../animations/magnetic.js";
 import { $, $$ } from "../utils/dom.js";
 import { t } from "../i18n/i18n.js";
 
@@ -27,20 +29,45 @@ export function renderManifesto() {
   `;
 }
 
+const magneticCleanups = [];
+
 export function initManifesto() {
   const text = $(".manifesto__text");
   const kicker = $(".manifesto__kicker");
   const line = $(".manifesto__line");
   const actions = $(".manifesto__actions");
 
-  animateScrollText(text, {
-    type: "words",
-    duration: 0.6,
-    stagger: 0.04,
-    y: 20,
-    ease: "power3.out",
-    start: "top 75%",
-  });
+  // Cleanup previous magnetic
+  magneticCleanups.forEach((fn) => fn());
+  magneticCleanups.length = 0;
+
+  // ---- Word-by-word scrub opacity reveal (Apple-style) ----
+  if (text) {
+    const words = splitText(text, "words");
+    text.style.visibility = "visible";
+
+    // Set all words to low opacity initially
+    gsap.set(words, { opacity: 0.15 });
+
+    // Scrub: each word lights up as you scroll through the section
+    ScrollTrigger.create({
+      trigger: text,
+      start: "top 75%",
+      end: "bottom 40%",
+      scrub: 0.5,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        words.forEach((word, i) => {
+          const wordProgress = i / words.length;
+          // Each word has a small range where it transitions
+          const range = 0.15;
+          const wordStart = wordProgress * (1 - range);
+          const t = Math.max(0, Math.min(1, (progress - wordStart) / range));
+          gsap.set(word, { opacity: 0.15 + t * 0.85 });
+        });
+      },
+    });
+  }
 
   if (kicker) {
     gsap.from(kicker, {
@@ -90,6 +117,14 @@ export function initManifesto() {
       onStart: () => {
         actions.style.visibility = "visible";
       },
+    });
+
+    // Magnetic buttons
+    const btns = actions.querySelectorAll(".btn");
+    btns.forEach((btn) => {
+      magneticCleanups.push(
+        makeMagnetic(btn, { strength: 0.25, radius: 100 }),
+      );
     });
   }
 }

@@ -1,5 +1,9 @@
+/**
+ * About Section — clip-reveal photo + stagger bios
+ */
+
 import { gsap } from "gsap";
-import { cinematicHeader } from "../animations/scrollAnimations.js";
+import { cinematicHeader, clipReveal } from "../animations/scrollAnimations.js";
 import { $, $$ } from "../utils/dom.js";
 import { t } from "../i18n/i18n.js";
 import aboutPhoto from "../assets/enzotedeschiphoto.png";
@@ -42,15 +46,9 @@ export function initAbout() {
 
   const photo = $(".about__photo");
   if (photo) {
-    gsap.from(photo, {
-      clipPath: "inset(0 100% 0 0)",
-      duration: 1.2,
-      ease: "power3.inOut",
-      scrollTrigger: {
-        trigger: photo,
-        start: "top 80%",
-        once: true,
-      },
+    clipReveal(photo, {
+      direction: "left",
+      start: "top 80%",
     });
   }
 
@@ -70,30 +68,34 @@ export function initAbout() {
   }
 
   const bios = $$(".about__bio");
-  gsap.from(bios, {
-    y: 40,
-    opacity: 0,
-    duration: 0.9,
-    stagger: 0.15,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: bios[0],
-      start: "top 85%",
-      once: true,
-    },
-  });
+  if (bios.length) {
+    gsap.from(bios, {
+      y: 40,
+      opacity: 0,
+      duration: 0.9,
+      stagger: 0.15,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: bios[0],
+        start: "top 85%",
+        once: true,
+      },
+    });
+  }
 
   const details = $$(".about__detail");
-  gsap.from(details, {
-    x: 40,
-    opacity: 0,
-    duration: 0.8,
-    stagger: 0.1,
-    ease: "power3.out",
-    scrollTrigger: {
-      trigger: details[0],
-      start: "top 88%",
-      once: true,
-    },
-  });
+  if (details.length) {
+    gsap.from(details, {
+      x: 40,
+      opacity: 0,
+      duration: 0.8,
+      stagger: 0.1,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: details[0],
+        start: "top 88%",
+        once: true,
+      },
+    });
+  }
 }

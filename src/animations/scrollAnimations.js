@@ -214,3 +214,127 @@ export function scaleReveal(element, options = {}) {
     },
   });
 }
+
+/**
+ * Clip-path reveal — wipe animation scrubbed with scroll
+ * @param {HTMLElement} element
+ * @param {object} options
+ */
+export function clipReveal(element, options = {}) {
+  const {
+    direction = "left", // left, right, top, bottom
+    start = "top 85%",
+    end = "top 40%",
+    scrub = false,
+  } = options;
+
+  const clipPaths = {
+    left: {
+      from: "inset(0 100% 0 0)",
+      to: "inset(0 0% 0 0)",
+    },
+    right: {
+      from: "inset(0 0 0 100%)",
+      to: "inset(0 0 0 0%)",
+    },
+    top: {
+      from: "inset(100% 0 0 0)",
+      to: "inset(0% 0 0 0)",
+    },
+    bottom: {
+      from: "inset(0 0 100% 0)",
+      to: "inset(0 0 0% 0)",
+    },
+  };
+
+  const clip = clipPaths[direction] || clipPaths.left;
+
+  if (scrub) {
+    gsap.fromTo(
+      element,
+      { clipPath: clip.from },
+      {
+        clipPath: clip.to,
+        ease: "none",
+        scrollTrigger: {
+          trigger: element,
+          start,
+          end,
+          scrub: true,
+        },
+      },
+    );
+  } else {
+    gsap.fromTo(
+      element,
+      { clipPath: clip.from },
+      {
+        clipPath: clip.to,
+        duration: 1.2,
+        ease: "power3.inOut",
+        scrollTrigger: {
+          trigger: element,
+          start,
+          once: true,
+        },
+      },
+    );
+  }
+}
+
+/**
+ * Horizontal marquee — text scrolls horizontally tied to scroll position
+ */
+export function horizontalMarquee(element, options = {}) {
+  const {
+    speed = -150, // negative = left, positive = right
+    start = "top bottom",
+    end = "bottom top",
+  } = options;
+
+  gsap.to(element, {
+    x: speed,
+    ease: "none",
+    scrollTrigger: {
+      trigger: element,
+      start,
+      end,
+      scrub: 0.5,
+    },
+  });
+}
+
+/**
+ * Counter reveal — animates a number from 0 to its value
+ */
+export function counterReveal(element, options = {}) {
+  const {
+    duration = 1.5,
+    ease = "power2.out",
+    start = "top 85%",
+  } = options;
+
+  const finalText = element.textContent;
+  const finalNum = parseInt(finalText, 10);
+  if (isNaN(finalNum)) return;
+
+  const prefix = finalText.replace(/\d+/, "");
+  const padLength = finalText.match(/\d+/)?.[0]?.length || 0;
+
+  const obj = { val: 0 };
+
+  gsap.to(obj, {
+    val: finalNum,
+    duration,
+    ease,
+    scrollTrigger: {
+      trigger: element,
+      start,
+      once: true,
+    },
+    onUpdate: () => {
+      element.textContent =
+        String(Math.round(obj.val)).padStart(padLength, "0") + prefix.trim();
+    },
+  });
+}

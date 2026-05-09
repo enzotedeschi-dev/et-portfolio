@@ -25,9 +25,6 @@
 .vfx-project__media:hover {
   border-color: var(--color-border-light);
   transform: scale(1.015);
-  box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 100px rgba(0, 0, 0, 0.2);
 }
 
 .vfx-project__video,
@@ -229,6 +226,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--space-lg);
+  perspective: 1000px;
 }
 
 @media (max-width: 720px) {
@@ -242,14 +240,15 @@
   border: 1px solid var(--color-border);
   border-radius: 4px;
   overflow: hidden;
+  transform-style: preserve-3d;
   transition:
     border-color var(--duration-fast) ease,
-    transform var(--duration-normal) var(--ease-out-expo);
+    box-shadow var(--duration-normal) var(--ease-out-expo);
 }
 
 .dev-card:hover {
   border-color: var(--color-border-light);
-  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
 }
 
 .dev-card__preview {

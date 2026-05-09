@@ -19,8 +19,16 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 120px;
-  background: linear-gradient(to bottom, transparent, var(--color-bg));
+  height: 40vh;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(10, 10, 10, 0.15) 20%,
+    rgba(10, 10, 10, 0.4) 40%,
+    rgba(10, 10, 10, 0.7) 60%,
+    rgba(10, 10, 10, 0.9) 80%,
+    var(--color-bg) 100%
+  );
   z-index: 8;
   pointer-events: none;
 }
@@ -56,61 +64,6 @@
   pointer-events: none;
 }
 
-/* ---------- Viewfinder crosshairs (corner sight marks) ---------- */
-.hero__viewfinder {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9;
-}
-
-.hero__cross {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  opacity: 0;
-  will-change: transform, opacity;
-}
-
-.hero__cross::before,
-.hero__cross::after {
-  content: "";
-  position: absolute;
-  background: rgba(240, 236, 228, 0.55);
-}
-
-.hero__cross::before {
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 1px;
-  transform: translateY(-50%);
-}
-
-.hero__cross::after {
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  transform: translateX(-50%);
-}
-
-.hero__cross--tl {
-  top: 80px;
-  left: 48px;
-}
-.hero__cross--tr {
-  top: 80px;
-  right: 48px;
-}
-.hero__cross--bl {
-  bottom: 40px;
-  left: 48px;
-}
-.hero__cross--br {
-  bottom: 40px;
-  right: 48px;
-}
 
 /* ---------- Timecode ticker (top-center) ---------- */
 .hero__timecode {
@@ -189,13 +142,17 @@
   font-size: clamp(2.5rem, 1rem + 6.5vw, 6.5rem);
   font-weight: 200;
   letter-spacing: 0.22em;
-  line-height: 1;
+  line-height: 1.15;
   text-transform: uppercase;
   color: #f5f1e8;
   margin: 0 0 clamp(1.25rem, 2.2vw, 2.25rem);
   padding-left: 0.22em; /* compensate tracking for visual centering */
   visibility: hidden;
   text-shadow: 0 0 40px rgba(255, 253, 248, 0.12);
+}
+
+.hero__name-word {
+  display: inline-block;
 }
 
 .hero__tagline {

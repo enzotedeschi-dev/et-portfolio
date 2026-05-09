@@ -13,6 +13,7 @@ function getDisciplines() {
         "Compositing, 3D integration, simulations, and digital environments. Turning the impossible into photorealistic.",
       ),
       tools: ["Nuke", "Blender", "Autodesk Maya", "After Effects", "PFTrack"],
+      href: "#vfx",
     },
     {
       number: "02",
@@ -22,6 +23,7 @@ function getDisciplines() {
         "Full-stack development, creative coding, and interactive experiences. Clean code that powers bold ideas.",
       ),
       tools: ["Python", "JavaScript", "Node.js", "Three.js", "GSAP"],
+      href: "#development",
     },
     {
       number: "03",
@@ -31,6 +33,7 @@ function getDisciplines() {
         "High-end websites with motion, rhythm, and purpose. Every pixel and interaction is intentional.",
       ),
       tools: ["HTML", "CSS", "Vite", "React", "Tailwind"],
+      href: "#development",
     },
     {
       number: "04",
@@ -40,6 +43,7 @@ function getDisciplines() {
         "Cinematic storytelling through the lens. From concept to color grade, every frame tells a story.",
       ),
       tools: ["Premiere Pro", "DaVinci", "Lightroom", "Sony", "Canon"],
+      href: "#photography",
     },
   ];
 }
@@ -63,6 +67,7 @@ export function renderDisciplines() {
               <div class="discipline-card__tools">
                 ${d.tools.map((tool) => `<span class="discipline-card__tool">${tool}</span>`).join("")}
               </div>
+              <a href="${d.href}" class="btn btn--outline discipline-card__cta">${t("disciplines.cta", "See work")} <span class="btn__arrow">&rarr;</span></a>
             </div>
           `,
             )

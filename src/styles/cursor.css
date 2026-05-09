@@ -1,5 +1,5 @@
 /* ============================================
-   CUSTOM CURSOR — dot + ring follower
+   CUSTOM CURSOR — dot + ring + context label
    ============================================ */
 
 /* Hide default cursor on non-touch devices */
@@ -10,7 +10,8 @@
 }
 
 .cursor-dot,
-.cursor-ring {
+.cursor-ring,
+.cursor-label {
   position: fixed;
   top: 0;
   left: 0;
@@ -19,9 +20,13 @@
   border-radius: 50%;
   transform: translate(-50%, -50%);
   will-change: transform;
+}
+
+.cursor-dot,
+.cursor-ring {
   transition:
-    width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
     background 0.3s ease,
     opacity 0.3s ease,
     border-color 0.3s ease;
@@ -32,6 +37,7 @@
   width: 6px;
   height: 6px;
   background: var(--color-text-primary);
+  mix-blend-mode: difference;
 }
 
 /* Ring — larger hollow follower */
@@ -40,6 +46,30 @@
   height: 40px;
   border: 1.5px solid rgba(240, 236, 228, 0.35);
   background: transparent;
+  mix-blend-mode: difference;
+}
+
+/* Label — contextual text inside ring */
+.cursor-label {
+  z-index: 10000;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.7);
+  transition:
+    opacity 0.25s ease,
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  mix-blend-mode: difference;
+}
+
+.cursor-label--visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 /* Hover state — ring expands, dot shrinks */
@@ -56,8 +86,30 @@
   background: rgba(240, 236, 228, 0.04);
 }
 
+/* Context state — larger ring for label */
+.cursor-ring--context {
+  width: 80px;
+  height: 80px;
+  border-color: rgba(240, 236, 228, 0.2);
+  background: rgba(240, 236, 228, 0.06);
+}
+
+/* Specific context styles */
+.cursor--media {
+  border-color: rgba(240, 236, 228, 0.25);
+}
+
+.cursor--view {
+  border-color: rgba(240, 236, 228, 0.2);
+}
+
+.cursor--drag {
+  border-color: rgba(240, 236, 228, 0.15);
+}
+
 /* Hidden when mouse leaves window */
 .cursor-dot--hidden,
-.cursor-ring--hidden {
+.cursor-ring--hidden,
+.cursor-label--hidden {
   opacity: 0;
 }

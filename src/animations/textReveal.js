@@ -18,16 +18,39 @@ export function splitText(element, type = "chars") {
   element.innerHTML = "";
 
   if (type === "chars") {
-    const chars = text.split("");
-    return chars.map((char) => {
-      const span = document.createElement("span");
-      span.className = "split-char";
-      span.textContent = char === " " ? "\u00A0" : char;
-      span.style.display = "inline-block";
-      span.setAttribute("aria-hidden", "true");
-      element.appendChild(span);
-      return span;
+    const words = text.split(" ");
+    const allChars = [];
+    words.forEach((word, wi) => {
+      // Wrap each word's characters in an inline-block container
+      const wordWrap = document.createElement("span");
+      wordWrap.className = "split-word-wrap";
+      wordWrap.style.display = "inline-block";
+      wordWrap.style.whiteSpace = "nowrap";
+
+      word.split("").forEach((char) => {
+        const span = document.createElement("span");
+        span.className = "split-char";
+        span.textContent = char;
+        span.style.display = "inline-block";
+        span.setAttribute("aria-hidden", "true");
+        wordWrap.appendChild(span);
+        allChars.push(span);
+      });
+
+      element.appendChild(wordWrap);
+
+      // Add space between words
+      if (wi < words.length - 1) {
+        const space = document.createElement("span");
+        space.className = "split-char";
+        space.textContent = "\u00A0";
+        space.style.display = "inline-block";
+        space.setAttribute("aria-hidden", "true");
+        element.appendChild(space);
+        allChars.push(space);
+      }
     });
+    return allChars;
   }
 
   if (type === "words") {

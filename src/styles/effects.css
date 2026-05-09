@@ -63,7 +63,7 @@
   );
 }
 
-/* --- Gradient Section Dividers --- */
+/* --- Section Dividers --- */
 .section-glow-divider {
   position: relative;
   height: 1px;
@@ -113,4 +113,10 @@
 .video-section {
   position: relative;
   overflow: hidden;
+}
+
+/* --- Performance degraded mode — reduce visual complexity --- */
+
+.perf-degraded .tilt-glare {
+  display: none !important;
 }
