@@ -1,0 +1,56 @@
+/* ============================================
+   BACK TO TOP BUTTON
+   ============================================ */
+
+.back-to-top {
+  position: fixed;
+  bottom: clamp(20px, 4vw, 40px);
+  right: clamp(20px, 4vw, 40px);
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--color-bg-overlay);
+  border: 1px solid var(--color-border-light);
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: var(--z-nav);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  
+  /* Initial hidden state */
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  
+  transition: 
+    background-color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease,
+    transform 0.4s var(--ease-out-expo),
+    box-shadow var(--duration-fast) ease;
+}
+
+.back-to-top:hover {
+  background: var(--color-text-primary);
+  color: var(--color-bg);
+  transform: translateY(-4px) !important; /* overrides GSAP temporarily */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.back-to-top:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 4px;
+}
+
+/* On mobile, align it nicely so it doesn't overlap the scrollbar or get cut off */
+@media (max-width: 768px) {
+  .back-to-top {
+    width: 48px;
+    height: 48px;
+    bottom: 20px;
+    right: 20px;
+  }
+}

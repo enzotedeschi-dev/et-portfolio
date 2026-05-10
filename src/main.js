@@ -21,6 +21,7 @@ import "./styles/effects.css";
 import "./styles/cursor.css";
 import "./styles/preloader.css";
 import "./styles/scrollProgress.css";
+import "./styles/backToTop.css";
 
 import { initI18n, setLocale, getLocale } from "./i18n/i18n.js";
 
@@ -31,6 +32,8 @@ import { initCustomCursor } from "./animations/cursor.js";
 import { createPreloader, playIntro } from "./animations/preloader.js";
 
 import { initScrollProgress } from "./animations/scrollProgress.js";
+
+import { renderBackToTop, initBackToTop } from "./animations/backToTop.js";
 
 import { startMonitoring } from "./utils/performanceManager.js";
 
@@ -72,7 +75,7 @@ function render() {
     renderContact(),
   ].join("");
 
-  app.innerHTML = `${renderNavbar()}<main>${mainContent}</main>`;
+  app.innerHTML = `${renderNavbar()}<main>${mainContent}</main>${renderBackToTop()}`;
 }
 
 let globalInitDone = false;
@@ -96,6 +99,7 @@ function init() {
   initContact();
   initLangToggle();
   initVelocityEffects();
+  initBackToTop();
 }
 
 /**
