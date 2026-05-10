@@ -9,8 +9,6 @@
 /* --- Category block --- */
 .photo-category {
   margin-bottom: clamp(72px, 8vw, 128px);
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 900px;
 }
 
 .photo-category:last-child {
@@ -94,8 +92,6 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  contain: layout style;
-  will-change: transform;
 }
 
 .photo-mosaic__item img {
@@ -104,7 +100,14 @@
   object-fit: cover;
   display: block;
   will-change: transform;
-  transition: transform 0.6s var(--ease-out-expo);
+  opacity: 0;
+  transition:
+    transform 0.6s var(--ease-out-expo),
+    opacity 0.5s ease;
+}
+
+.photo-mosaic__item img.photo-mosaic__img--loaded {
+  opacity: 1;
 }
 
 .photo-mosaic__item::after {

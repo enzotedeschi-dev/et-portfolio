@@ -112,7 +112,7 @@ function initVelocityEffects() {
 
   // Skew on project cards
   const cards = document.querySelectorAll(
-    ".vfx-project, .dev-card, .photo-mosaic__item",
+    ".vfx-project, .dev-card",
   );
   if (cards.length) {
     addVelocitySkew(cards, { maxSkew: 1.5 });

@@ -51,7 +51,7 @@ export function renderPhotography() {
                   data-index="${i}"
                   aria-label="${t(titleKey, cat.title)} — ${i + 1}"
                 >
-                  <img src="${src}" alt="${t(titleKey, cat.title)} — ${i + 1}" loading="lazy" decoding="async" />
+                  <img data-src="${src}" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="${t(titleKey, cat.title)} — ${i + 1}" decoding="async" />
                 </button>
               `,
                 )
@@ -90,6 +90,29 @@ export function renderPhotography() {
   `;
 }
 
+/**
+ * Load a single image off the main thread using decode().
+ * The browser decompresses the JPEG in a background thread;
+ * only after it's fully ready do we swap the src and fade in.
+ */
+function loadImage(img) {
+  const realSrc = img.getAttribute("data-src");
+  if (!realSrc || img.classList.contains("photo-mosaic__img--loaded")) return;
+
+  const loader = new Image();
+  loader.src = realSrc;
+
+  // decode() runs the heavy JPEG decompression OFF the main thread
+  loader.decode().then(() => {
+    img.src = realSrc;
+    img.classList.add("photo-mosaic__img--loaded");
+  }).catch(() => {
+    // Fallback for older browsers that don't support decode()
+    img.src = realSrc;
+    img.classList.add("photo-mosaic__img--loaded");
+  });
+}
+
 export function initPhotography() {
   const header = $(".photography .section-header");
   if (header) cinematicHeader(header);
@@ -102,12 +125,27 @@ export function initPhotography() {
       start: "top 85%",
     });
 
-    staggerIn(cat, ".photo-mosaic__item", {
+    const items = cat.querySelectorAll(".photo-mosaic__item");
+    const totalStaggerTime = 0.7 + 0.08 * items.length; // duration + stagger * count
+
+    // Phase 1: Animate empty cards in (no heavy images = buttery 60fps)
+    gsap.from(items, {
       y: 30,
+      opacity: 0,
       duration: 0.7,
       stagger: 0.08,
       ease: "power3.out",
-      start: "top 80%",
+      scrollTrigger: {
+        trigger: cat,
+        start: "top 80%",
+        once: true,
+      },
+      // Phase 2: After stagger finishes, load all images in parallel
+      onComplete: () => {
+        items.forEach((item) => {
+          loadImage(item.querySelector("img"));
+        });
+      },
     });
   });
 
@@ -127,10 +165,13 @@ function initLightbox() {
   let currentIndex = 0;
   let lastFocused = null;
 
-  const flatList = items.map((btn) => ({
-    src: btn.querySelector("img").src,
-    alt: btn.querySelector("img").alt,
-  }));
+  const flatList = items.map((btn) => {
+    const img = btn.querySelector("img");
+    return {
+      src: img.getAttribute("data-src") || img.src,
+      alt: img.alt,
+    };
+  });
 
   const open = (index) => {
     currentIndex = index;
