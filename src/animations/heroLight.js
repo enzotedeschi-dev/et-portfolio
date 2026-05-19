@@ -72,7 +72,7 @@ const fragmentShader = /* glsl */ `
 
     float mouseTilt = clamp(uMouseOffset.x, -1.0, 1.0) * 0.40;
     float coneCenter = 0.85 + mouseTilt;
-    float coneWidth  = 0.32;
+    float coneWidth  = 0.36;
 
     float dynamicWidth = coneWidth + 0.85 / (1.0 + dist * 4.0);
     float angDiff = (angle - coneCenter) / dynamicWidth;
@@ -81,7 +81,7 @@ const fragmentShader = /* glsl */ `
     float angDist = abs(angle - coneCenter);
     coneFalloff *= smoothstep(1.4, 0.8, angDist);
 
-    float distAtten = exp(-dist * dist * 0.55);
+    float distAtten = exp(-dist * dist * 0.46);
 
     float beam = coneFalloff * distAtten;
 
@@ -91,7 +91,7 @@ const fragmentShader = /* glsl */ `
     float rays = smoothstep(0.42, 0.78, rayNoise) * 0.42;
     rays *= coneFalloff * distAtten;
 
-    float scatter = exp(-dist * dist * 0.95) * 0.16;
+    float scatter = exp(-dist * dist * 0.82) * 0.16;
     scatter *= coneFalloff;
 
     float hotspot = exp(-dist * dist * 4.5) * 0.6;
@@ -101,15 +101,35 @@ const fragmentShader = /* glsl */ `
     light = 1.0 - exp(-light * 1.25);
     light *= uIntensity;
 
+    // Vertical fade-out toward the bottom of the canvas — replaces the
+    // external CSS gradient (which banded because of 8-bit alpha quantization).
+    // Lives inside the shader so it inherits the per-pixel dither below.
+    // pow() flattens the curve: longer ray "tail" before fading to black,
+    // and a wider smoothstep range so the cutoff feels less abrupt.
+    light *= pow(smoothstep(-0.12, 0.96, uv.y), 0.54);
+
     vec3 warmColor = vec3(1.00, 0.95, 0.86);
     vec3 coolColor = vec3(0.94, 0.93, 0.89);
     float warmth = smoothstep(0.0, 0.55, beam);
     vec3 color = mix(coolColor, warmColor, warmth) * light;
 
-    float dither = (hash(uv * uResolution + uTime) - 0.5) * 0.012;
-    color += dither;
+    // Per-channel dither (white noise, independent seeds) to break the 8-bit
+    // quantization bands that show up in the dark falloff of the cone.
+    // Amplitude ~6/255 in linear space — enough to survive the linear→sRGB
+    // remap in the dark range without becoming visible texture.
+    vec2 pix = uv * uResolution + uTime;
+    vec3 ditherRGB = vec3(
+      hash(pix),
+      hash(pix + vec2(17.13, 43.71)),
+      hash(pix + vec2(91.27, 7.43))
+    ) - 0.5;
+    color += ditherRGB * 0.024;
 
-    gl_FragColor = vec4(color, light);
+    // Dither the alpha as well — otherwise straight-alpha compositing of the
+    // canvas onto the DOM re-introduces bands on the cone edges.
+    float ditherA = (hash(pix + vec2(53.11, 28.93)) - 0.5) * 0.024;
+
+    gl_FragColor = vec4(color, light + ditherA);
   }
 `;
 
@@ -118,10 +138,20 @@ const fragmentShader = /* glsl */ `
 /**
  * Initializes the Three.js volumetric light.
  * @param {HTMLCanvasElement} canvas — the target canvas element
+ * @param {object} [options]
+ * @param {number} [options.maxIntensity=1.0] — peak intensity reached after fade-in
+ * @param {number} [options.fadeInDelay=600]  — ms before fade-in starts
+ * @param {number} [options.fadeInDuration=2500] — fade-in length in ms
  * @returns {Function} cleanup/dispose function
  */
-export function initHeroLight(canvas) {
+export function initHeroLight(canvas, options = {}) {
   if (!canvas) return () => {};
+
+  const {
+    maxIntensity = 1.0,
+    fadeInDelay = 600,
+    fadeInDuration = 2500,
+  } = options;
 
   const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -129,7 +159,10 @@ export function initHeroLight(canvas) {
     antialias: false,
     powerPreference: "low-power",
   });
-  renderer.setPixelRatio(1.0);
+  // Render at device pixel density (capped at 2x) so the GPU produces enough
+  // samples to keep the dither subpixel — single biggest factor in killing
+  // banding on retina displays.
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.setClearColor(0x000000, 0);
 
   const scene = new THREE.Scene();
@@ -193,9 +226,9 @@ export function initHeroLight(canvas) {
   }
 
   /* ---- Entrata cinematografica ---- */
-  /* L'intensita parte da 0 e sale dolcemente a 1 in ~2.5 secondi */
-  const FADE_IN_DURATION = 2500; // ms
-  const FADE_IN_DELAY = 600; // ms — ritardo prima che parta
+  /* L'intensita parte da 0 e sale dolcemente a maxIntensity */
+  const FADE_IN_DURATION = fadeInDuration; // ms
+  const FADE_IN_DELAY = fadeInDelay; // ms — ritardo prima che parta
   const startTime = performance.now();
 
   /* easing dolce per l'entrata — power3.out simulato */
@@ -205,6 +238,7 @@ export function initHeroLight(canvas) {
   let running = true;
   let visible = true;
   let rafId = 0;
+  let lastFrameTime = performance.now();
 
   function tick() {
     if (!running) return;
@@ -214,6 +248,8 @@ export function initHeroLight(canvas) {
     if (!visible) return;
 
     const now = performance.now();
+    const deltaSeconds = Math.min((now - lastFrameTime) / 1000, 0.05);
+    lastFrameTime = now;
     uniforms.uTime.value = now * 0.001;
 
     /* --- Animazione di entrata --- */
@@ -222,16 +258,17 @@ export function initHeroLight(canvas) {
       uniforms.uIntensity.value = 0;
     } else if (elapsed < FADE_IN_DURATION) {
       const t = elapsed / FADE_IN_DURATION;
-      uniforms.uIntensity.value = easeOutCubic(t);
+      uniforms.uIntensity.value = easeOutCubic(t) * maxIntensity;
     } else {
-      uniforms.uIntensity.value = 1;
+      uniforms.uIntensity.value = maxIntensity;
     }
 
-    /* --- Smoothing del mouse (lerp) --- */
-    /* Piu basso il fattore, piu "lento e setoso" segue il mouse */
-    const SMOOTH = 0.35;
-    currentMouse.x += (targetMouse.x - currentMouse.x) * SMOOTH;
-    currentMouse.y += (targetMouse.y - currentMouse.y) * SMOOTH;
+    /* --- Smoothing del mouse --- */
+    /* Time-based: risposta morbida e coerente anche su refresh rate diversi. */
+    const FOLLOW_SPEED = 3.2;
+    const smooth = 1 - Math.exp(-FOLLOW_SPEED * deltaSeconds);
+    currentMouse.x += (targetMouse.x - currentMouse.x) * smooth;
+    currentMouse.y += (targetMouse.y - currentMouse.y) * smooth;
     uniforms.uMouseOffset.value.set(currentMouse.x, currentMouse.y);
 
     renderer.render(scene, camera);

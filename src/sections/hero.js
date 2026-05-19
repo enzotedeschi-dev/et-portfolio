@@ -74,6 +74,13 @@ function initNoise(canvas) {
   let rafId = 0;
   let running = true;
   let last = 0;
+  let alphaFloorByRow = new Uint8Array(0);
+  let alphaFracByRow = new Float32Array(0);
+
+  const smoothstep = (edge0, edge1, x) => {
+    const t = Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0)));
+    return t * t * (3 - 2 * t);
+  };
 
   const resize = () => {
     const rect = canvas.getBoundingClientRect();
@@ -81,19 +88,36 @@ function initNoise(canvas) {
     h = Math.max(1, Math.floor(rect.height * SCALE * DPR));
     canvas.width = w;
     canvas.height = h;
+
+    alphaFloorByRow = new Uint8Array(h);
+    alphaFracByRow = new Float32Array(h);
+    for (let y = 0; y < h; y += 1) {
+      const yNorm = h > 1 ? y / (h - 1) : 0;
+      const fade = 1 - smoothstep(0.52, 1, yNorm);
+      const alpha = 8 * fade;
+      alphaFloorByRow[y] = Math.floor(alpha);
+      alphaFracByRow[y] = alpha - alphaFloorByRow[y];
+    }
   };
 
   const renderFrame = () => {
     const img = ctx.createImageData(w, h);
     const d = img.data;
-    for (let i = 0, len = d.length; i < len; i += 4) {
-      // Luminanza ristretta attorno al grigio medio (110-180 invece di 0-255)
-      // Niente piu pixel completamente neri o bianchi → contrasto morbido
-      const v = 110 + ((Math.random() * 70) | 0);
-      d[i] = v;
-      d[i + 1] = v;
-      d[i + 2] = v;
-      d[i + 3] = 14;            // era 26 — alpha quasi dimezzato
+    let i = 0;
+    for (let y = 0; y < h; y += 1) {
+      const alphaBase = alphaFloorByRow[y];
+      const alphaFrac = alphaFracByRow[y];
+      for (let x = 0; x < w; x += 1) {
+        // Luminanza ristretta attorno al grigio medio (110-180 invece di 0-255)
+        // Niente piu pixel completamente neri o bianchi -> contrasto morbido
+        const rnd = Math.random();
+        const v = 110 + ((rnd * 70) | 0);
+        d[i] = v;
+        d[i + 1] = v;
+        d[i + 2] = v;
+        d[i + 3] = alphaBase + (rnd < alphaFrac ? 1 : 0); // fade dithered, no CSS mask bands
+        i += 4;
+      }
     }
     ctx.putImageData(img, 0, 0);
   };

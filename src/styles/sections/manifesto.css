@@ -1,12 +1,20 @@
 /* ============================================
-   MANIFESTO — Cinematic statement with CTAs
+   MANIFESTO — Cinematic statement with editorial pillars
    ============================================ */
 
 .manifesto {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 80vh;
+  overflow: hidden;
+}
+
+/* Make content sit above the background marquee */
+.manifesto > .container {
+  position: relative;
+  z-index: 2;
 }
 
 .manifesto__inner {
@@ -14,7 +22,68 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  width: 100%;
 }
+
+/* ---------- Background vertical keyword columns ---------- */
+
+.manifesto__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  overflow: hidden;
+}
+
+.manifesto__bg-col {
+  position: absolute;
+  top: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(4rem, 10vw, 11rem);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1;
+  color: rgba(240, 236, 228, 0.04);
+  white-space: nowrap;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  will-change: transform;
+}
+
+.manifesto__bg-col--left {
+  left: clamp(0.25rem, 1.2vw, 1.25rem);
+}
+
+.manifesto__bg-col--right {
+  right: clamp(0.25rem, 1.2vw, 1.25rem);
+  color: rgba(240, 236, 228, 0.03);
+}
+
+@media (max-width: 768px) {
+  .manifesto__bg-col {
+    font-size: clamp(3.5rem, 18vw, 7rem);
+  }
+
+  .manifesto__bg-col--left {
+    left: 0.25rem;
+  }
+
+  .manifesto__bg-col--right {
+    right: 0.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .manifesto__bg {
+    display: none;
+  }
+}
+
+/* ---------- Kicker ---------- */
 
 .manifesto__kicker {
   font-family: var(--font-body);
@@ -27,6 +96,8 @@
   visibility: hidden;
 }
 
+/* ---------- Hairline under kicker ---------- */
+
 .manifesto__line {
   width: 60px;
   height: 1px;
@@ -36,27 +107,133 @@
   visibility: hidden;
 }
 
+/* ---------- Main statement ---------- */
+
 .manifesto__text {
   font-family: var(--font-heading);
   font-size: var(--text-2xl);
   font-weight: 400;
   line-height: 1.5;
   color: var(--color-text-primary);
-  max-width: 800px;
+  max-width: 820px;
   text-align: center;
   visibility: hidden;
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
 }
 
 .manifesto__text .split-word-inner {
   transition: color 0.3s ease;
 }
 
+/* Italic accent on key words — synthesized italic on Space Grotesk
+   stays coherent with the brand. A touch warmer/lighter feels editorial. */
+.manifesto__accent {
+  font-style: italic;
+  font-weight: 400;
+  color: #f5f1e8;
+  font-feature-settings: "ss01" on, "ss02" on;
+}
+
+/* ---------- Subtext (smaller paragraph below the statement) ---------- */
+
+.manifesto__subtext {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--color-text-muted);
+  max-width: 540px;
+  margin-bottom: var(--space-lg);
+  text-align: center;
+  visibility: hidden;
+}
+
+/* ---------- Actions ---------- */
+
 .manifesto__actions {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
   visibility: hidden;
+}
+
+/* ---------- Divider between statement block and pillars ---------- */
+
+.manifesto__divider {
+  width: 100%;
+  max-width: 880px;
+  height: 1px;
+  background: var(--color-border);
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-lg);
+  transform-origin: center;
+  visibility: hidden;
+}
+
+/* ---------- Pillars ---------- */
+
+.manifesto__pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+  width: 100%;
+  max-width: 880px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  visibility: hidden;
+  text-align: left;
+}
+
+.manifesto-pillar {
+  display: flex;
+  flex-direction: column;
+  padding-right: var(--space-sm);
+}
+
+.manifesto-pillar__number {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 14px;
+  transition: color var(--duration-fast) ease;
+}
+
+.manifesto-pillar__title {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  margin: 0 0 14px;
+  line-height: 1.2;
+}
+
+.manifesto-pillar__description {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  max-width: 240px;
+  margin: 0;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .manifesto__pillars {
+    gap: var(--space-sm);
+  }
+
+  .manifesto-pillar__description {
+    max-width: none;
+  }
 }
 
 @media (max-width: 600px) {
@@ -68,5 +245,18 @@
   .manifesto__actions .btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .manifesto__pillars {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    max-width: 360px;
+    margin-inline: auto;
+  }
+
+  .manifesto-pillar {
+    padding-right: 0;
+    text-align: center;
+    align-items: center;
   }
 }

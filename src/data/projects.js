@@ -33,9 +33,9 @@ export const projects = {
   vfx: [
     {
       id: "vfx-1",
-      title: "Astronaut Breakdown",
+      title: "Astronaut Live-Action",
       description:
-        "Full VFX breakdown of an astronaut composite — tracking, keying, and environment integration.",
+        "Live-action greenscreen integration of an astronaut into a fully crafted CG environment.",
       tags: ["Nuke", "Blender", "DaVinci Resolve", "PFTrack"],
       video: astronautaVideo,
       poster: null,

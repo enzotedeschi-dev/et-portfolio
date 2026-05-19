@@ -49,30 +49,55 @@ function getDisciplines() {
 }
 
 export function renderDisciplines() {
+  const items = getDisciplines();
+  const ctaLabel = t("disciplines.cta", "View work");
+
   return `
     <section class="disciplines" id="disciplines">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header disciplines__header">
           <span class="section-label">${t("disciplines.label", "What I do")}</span>
           <h2 class="section-title">${t("disciplines.title", "Disciplines")}</h2>
+          <p class="disciplines__lede">${t(
+            "disciplines.lede",
+            "Four interconnected practices. One language — cinematic, precise, intentional.",
+          )}</p>
         </div>
-        <div class="disciplines__grid">
-          ${getDisciplines()
+
+        <div class="disciplines__index" aria-hidden="true">
+          <span class="disciplines__index-label">${t("disciplines.index.label", "Index")}</span>
+          <span class="disciplines__index-range">01 — ${String(items.length).padStart(2, "0")}</span>
+        </div>
+
+        <ul class="disciplines__list">
+          ${items
             .map(
               (d) => `
-            <div class="discipline-card">
-              <span class="discipline-card__number">${d.number}</span>
-              <h3 class="discipline-card__title">${d.title}</h3>
-              <p class="discipline-card__description">${d.description}</p>
-              <div class="discipline-card__tools">
-                ${d.tools.map((tool) => `<span class="discipline-card__tool">${tool}</span>`).join("")}
-              </div>
-              <a href="${d.href}" class="btn btn--outline discipline-card__cta">${t("disciplines.cta", "See work")} <span class="btn__arrow">&rarr;</span></a>
-            </div>
+            <li class="discipline-row">
+              <a href="${d.href}" class="discipline-row__link" aria-label="${d.title} — ${ctaLabel}">
+                <div class="discipline-row__index">
+                  <span class="discipline-row__number">${d.number}</span>
+                  <span class="discipline-row__rule" aria-hidden="true"></span>
+                </div>
+
+                <div class="discipline-row__content">
+                  <h3 class="discipline-row__title">${d.title}</h3>
+                  <p class="discipline-row__description">${d.description}</p>
+                  <ul class="discipline-row__tools" aria-label="Tools">
+                    ${d.tools.map((tool) => `<li>${tool}</li>`).join("")}
+                  </ul>
+                </div>
+
+                <div class="discipline-row__cta">
+                  <span class="discipline-row__cta-text">${ctaLabel}</span>
+                  <span class="discipline-row__cta-arrow" aria-hidden="true">&rarr;</span>
+                </div>
+              </a>
+            </li>
           `,
             )
             .join("")}
-        </div>
+        </ul>
       </div>
     </section>
   `;
@@ -82,22 +107,50 @@ export function initDisciplines() {
   const header = $(".disciplines .section-header");
   if (header) cinematicHeader(header);
 
-  const cards = $$(".discipline-card");
-  cards.forEach((card, i) => {
-    const fromLeft = i % 2 === 0;
-    gsap.from(card, {
-      x: fromLeft ? -60 : 60,
-      y: 40,
+  const lede = $(".disciplines__lede");
+  if (lede) {
+    gsap.from(lede, {
+      y: 20,
       opacity: 0,
-      rotation: fromLeft ? -3 : 3,
-      duration: 1,
+      duration: 0.9,
       ease: "power3.out",
+      delay: 0.2,
       scrollTrigger: {
-        trigger: card,
-        start: "top 85%",
+        trigger: lede,
+        start: "top 88%",
         once: true,
       },
-      delay: i * 0.1,
+    });
+  }
+
+  const indexMeta = $(".disciplines__index");
+  if (indexMeta) {
+    gsap.from(indexMeta, {
+      opacity: 0,
+      y: 12,
+      duration: 0.7,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: indexMeta,
+        start: "top 92%",
+        once: true,
+      },
+    });
+  }
+
+  const rows = $$(".discipline-row");
+  rows.forEach((row, i) => {
+    gsap.from(row, {
+      y: 48,
+      opacity: 0,
+      duration: 1,
+      ease: "power3.out",
+      delay: i * 0.08,
+      scrollTrigger: {
+        trigger: row,
+        start: "top 90%",
+        once: true,
+      },
     });
   });
 }

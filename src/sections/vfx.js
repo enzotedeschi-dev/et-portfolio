@@ -14,6 +14,79 @@ import { $, $$ } from "../utils/dom.js";
 import { t } from "../i18n/i18n.js";
 import { projects } from "../data/projects.js";
 
+const VFX_META = [
+  {
+    role: "Compositing / Tracking",
+    format: "Breakdown",
+    year: "2025",
+    steps: [
+      ["Plate", "Source footage prepared for cleanup and integration."],
+      ["Track", "Camera and object movement solved for stable placement."],
+      ["CG Environment", "Every aspect of the digital environment was built and refined for the shot."],
+      ["Key", "Foreground elements isolated with clean matte extraction."],
+      ["Composite", "CG, plate, and atmosphere merged into one image."],
+      ["Grade", "Final color balance shaped for a cinematic finish."],
+    ],
+  },
+  {
+    role: "Realtime Cinematic",
+    format: "Sequence",
+    year: "2025",
+    steps: [
+      ["Layout", "Shot composition and camera rhythm blocked in engine."],
+      ["Lighting", "Scene mood built through practical and cinematic light."],
+      ["Render", "Realtime output captured with controlled visual settings."],
+      ["Comp", "Passes refined with contrast, depth, and atmosphere."],
+      ["Edit", "Final sequence paced for continuity and impact."],
+    ],
+  },
+  {
+    role: "CG Environment",
+    format: "Full CG",
+    year: "2025",
+    steps: [
+      ["Model", "Environment forms shaped from blockout to final detail."],
+      ["Shade", "Materials tuned for scale, texture, and believable response."],
+      ["Light", "Directional lighting designed to guide the viewer's eye."],
+      ["Render", "Final frames rendered with composition and depth in mind."],
+      ["Grade", "Color and contrast unified into the final look."],
+    ],
+  },
+];
+
+function getVfxMeta(project, index) {
+  return VFX_META[index] || {
+    role: project.tags[0] || "Visual Effects",
+    format: "Case Study",
+    year: "2025",
+    steps: project.tags.slice(0, 5),
+  };
+}
+
+function renderPipeline(steps) {
+  return `
+    <ol class="vfx-project__pipeline" aria-label="VFX pipeline">
+      ${steps
+        .map(
+          (step, i) => {
+            const [label, description = "A focused stage in the visual effects pipeline."] =
+              Array.isArray(step) ? step : [step];
+            return `
+        <li class="vfx-project__pipeline-step">
+          <span class="vfx-project__pipeline-index">${String(i + 1).padStart(2, "0")}</span>
+          <span class="vfx-project__pipeline-copy">
+            <span class="vfx-project__pipeline-label">${label}</span>
+            <span class="vfx-project__pipeline-description">${description}</span>
+          </span>
+        </li>
+      `;
+          },
+        )
+        .join("")}
+    </ol>
+  `;
+}
+
 function renderBreakdown(breakdown) {
   if (!breakdown) return "";
 
@@ -69,15 +142,23 @@ export function renderVfx() {
   return `
     <section class="vfx-section" id="vfx">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header vfx-section__header">
           <span class="section-label">${t("vfx.label", "01 / Visual Effects")}</span>
           <h2 class="section-title">${t("vfx.title", "VFX")}</h2>
+          <p class="vfx-section__lede">${t(
+            "vfx.lede",
+            "Selected shots, breakdowns, and CG work shaped through light, compositing, and technical precision.",
+          )}</p>
         </div>
-        ${vfxProjects
-          .map(
-            (project) => `
-          <article class="vfx-project">
-            <div class="vfx-project__media">
+
+        <div class="vfx-showcase">
+          ${vfxProjects
+            .map((project, index) => {
+              const meta = getVfxMeta(project, index);
+              return `
+          <article class="vfx-project vfx-project--${index === 0 ? "feature" : "compact"}">
+            <div class="vfx-project__media-wrap">
+              <div class="vfx-project__media">
               ${
                 project.video
                   ? `<video class="vfx-project__video" src="${project.video}" muted loop playsinline poster="${project.poster || ""}"></video>
@@ -86,21 +167,33 @@ export function renderVfx() {
                      </button>`
                   : `<div class="vfx-project__placeholder">Video placeholder — ${project.title}</div>`
               }
+                <div class="vfx-project__media-overlay">
+                  <span>${String(index + 1).padStart(2, "0")}</span>
+                </div>
+              </div>
             </div>
             <div class="vfx-project__info">
-              <div>
+              <div class="vfx-project__copy">
+                <div class="vfx-project__eyebrow">
+                  <span>${meta.role}</span>
+                  <span>${meta.year}</span>
+                </div>
                 <h3 class="vfx-project__title">${t(`vfx.${project.id}.title`, project.title)}</h3>
                 <p class="vfx-project__description">${t(`vfx.${project.id}.description`, project.description)}</p>
               </div>
-              <div class="vfx-project__tags">
-                ${project.tags.map((tag) => `<span class="vfx-project__tag">${tag}</span>`).join("")}
+              <div class="vfx-project__details">
+                <div class="vfx-project__tags">
+                  ${project.tags.map((tag) => `<span class="vfx-project__tag">${tag}</span>`).join("")}
+                </div>
+                ${renderPipeline(meta.steps)}
               </div>
             </div>
             ${renderBreakdown(project.breakdown)}
           </article>
-        `,
-          )
-          .join("")}
+        `;
+            })
+            .join("")}
+        </div>
 
         ${renderModeling()}
       </div>
@@ -190,7 +283,18 @@ function safePause(video) {
 
 export function initVfx() {
   const header = $(".vfx-section .section-header");
-  if (header) cinematicHeader(header);
+  if (header) {
+    cinematicHeader(header);
+    const lede = header.querySelector(".vfx-section__lede");
+    if (lede) {
+      fadeInUp(lede, {
+        y: 24,
+        duration: 0.8,
+        delay: 0.25,
+        start: "top 82%",
+      });
+    }
+  }
 
   const vfxProjects = $$(".vfx-project");
   vfxProjects.forEach((project) => {
@@ -199,6 +303,22 @@ export function initVfx() {
       duration: 1,
       ease: "power3.out",
       start: "top 85%",
+    });
+
+    const media = project.querySelector(".vfx-project__media");
+    if (media) {
+      scaleReveal(media, {
+        scale: 0.96,
+        duration: 1.1,
+        start: "top 86%",
+      });
+    }
+
+    staggerIn(project, ".vfx-project__tag, .vfx-project__pipeline-step", {
+      y: 16,
+      duration: 0.55,
+      stagger: 0.035,
+      start: "top 82%",
     });
   });
 
