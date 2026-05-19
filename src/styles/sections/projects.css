@@ -151,19 +151,6 @@
   max-width: 620px;
 }
 
-.vfx-project__eyebrow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 18px;
-  margin-bottom: var(--space-xs);
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
-
 .vfx-project__title {
   font-family: var(--font-heading);
   font-size: clamp(1.8rem, 1.1rem + 1.85vw, 3rem);

@@ -6,23 +6,6 @@
   position: relative;
 }
 
-/* Subtle directional glow behind the section — premium depth without noise */
-.disciplines::before {
-  content: "";
-  position: absolute;
-  top: 15%;
-  left: -5%;
-  width: 45%;
-  height: 70%;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(240, 236, 228, 0.03) 0%,
-    transparent 70%
-  );
-  pointer-events: none;
-  z-index: 0;
-}
-
 /* Disciplines breathes a bit wider than the standard container — editorial but coherent */
 .disciplines > .container {
   position: relative;
@@ -211,44 +194,6 @@
   margin: 0;
 }
 
-/* Tools — inline editorial metadata, dot separators */
-.discipline-row__tools {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 22px;
-  list-style: none;
-  padding: 0;
-  margin: var(--space-xs) 0 0;
-}
-
-.discipline-row__tools li {
-  position: relative;
-  font-family: var(--font-body);
-  font-size: 10.5px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--color-text-muted);
-  transition: color var(--duration-fast) ease;
-}
-
-.discipline-row__tools li + li::before {
-  content: "";
-  position: absolute;
-  left: -13px;
-  top: 50%;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: var(--color-border-light);
-  transform: translateY(-50%);
-}
-
-.discipline-row__link:hover .discipline-row__tools li,
-.discipline-row__link:focus-visible .discipline-row__tools li {
-  color: var(--color-text-secondary);
-}
-
 /* ---------- CTA column ---------- */
 
 .discipline-row__cta {
@@ -303,28 +248,64 @@
 }
 
 @media (max-width: 600px) {
+  .disciplines__header {
+    margin-bottom: var(--space-md);
+  }
+
   .discipline-row__link {
     grid-template-columns: 1fr;
-    gap: var(--space-xs);
-    padding: var(--space-md) 0;
+    gap: 0.85rem;
+    padding: clamp(1.35rem, 6vw, 2rem) 0;
   }
 
   .discipline-row__index {
     padding-top: 0;
+    gap: 12px;
+  }
+
+  .discipline-row__rule {
+    width: 24px;
+  }
+
+  .discipline-row__content {
+    gap: 0.8rem;
   }
 
   .discipline-row__cta {
     padding-left: 0;
-    margin-top: var(--space-sm);
+    padding-top: 0;
+    margin-top: 1.2rem;
+    white-space: normal;
+    line-height: 1.4;
   }
 
   .discipline-row__title {
     font-size: clamp(1.45rem, 5.2vw, 2rem);
+    line-height: 1.08;
+    overflow-wrap: anywhere;
+  }
+
+  .discipline-row__description {
+    font-size: var(--text-sm);
+    line-height: 1.65;
   }
 
   .discipline-row__link:hover,
   .discipline-row__link:focus-visible {
+    background: transparent;
     padding-left: 0;
+  }
+
+  .discipline-row__link::before,
+  .discipline-row__link:hover::before,
+  .discipline-row__link:focus-visible::before {
+    display: none;
+  }
+
+  .discipline-row__link:hover .discipline-row__rule,
+  .discipline-row__link:focus-visible .discipline-row__rule {
+    width: 24px;
+    background: var(--color-border-light);
   }
 
   .discipline-row__link:hover .discipline-row__title,

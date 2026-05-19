@@ -12,7 +12,6 @@ function getDisciplines() {
         "disciplines.vfx.description",
         "Compositing, 3D integration, simulations, and digital environments. Turning the impossible into photorealistic.",
       ),
-      tools: ["Nuke", "Blender", "Autodesk Maya", "After Effects", "PFTrack"],
       href: "#vfx",
     },
     {
@@ -22,7 +21,6 @@ function getDisciplines() {
         "disciplines.dev.description",
         "Full-stack development, creative coding, and interactive experiences. Clean code that powers bold ideas.",
       ),
-      tools: ["Python", "JavaScript", "Node.js", "Three.js", "GSAP"],
       href: "#development",
     },
     {
@@ -32,7 +30,6 @@ function getDisciplines() {
         "disciplines.web.description",
         "High-end websites with motion, rhythm, and purpose. Every pixel and interaction is intentional.",
       ),
-      tools: ["HTML", "CSS", "Vite", "React", "Tailwind"],
       href: "#development",
     },
     {
@@ -42,7 +39,6 @@ function getDisciplines() {
         "disciplines.photo.description",
         "Cinematic storytelling through the lens. From concept to color grade, every frame tells a story.",
       ),
-      tools: ["Premiere Pro", "DaVinci", "Lightroom", "Sony", "Canon"],
       href: "#photography",
     },
   ];
@@ -83,9 +79,6 @@ export function renderDisciplines() {
                 <div class="discipline-row__content">
                   <h3 class="discipline-row__title">${d.title}</h3>
                   <p class="discipline-row__description">${d.description}</p>
-                  <ul class="discipline-row__tools" aria-label="Tools">
-                    ${d.tools.map((tool) => `<li>${tool}</li>`).join("")}
-                  </ul>
                 </div>
 
                 <div class="discipline-row__cta">

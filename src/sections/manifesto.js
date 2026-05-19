@@ -1,7 +1,7 @@
 /**
- * Manifesto Section — cinematic statement with editorial pillars.
+ * Manifesto Section — cinematic statement.
  * - Scrub-based word-by-word reveal on the main text (preserves inline accents).
- * - Cascading entrance on kicker, line, subtext, actions, divider and pillars.
+ * - Cascading entrance on kicker, line, subtext and actions.
  * - Two huge outlined keyword rows in the background, scrubbed in opposite directions.
  */
 
@@ -9,35 +9,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { $, $$ } from "../utils/dom.js";
 import { t } from "../i18n/i18n.js";
-
-function getPillars() {
-  return [
-    {
-      number: "01",
-      title: t("manifesto.pillars.vision.title", "Vision"),
-      description: t(
-        "manifesto.pillars.vision.description",
-        "Every project starts from a clear idea and a defined intent.",
-      ),
-    },
-    {
-      number: "02",
-      title: t("manifesto.pillars.precision.title", "Precision"),
-      description: t(
-        "manifesto.pillars.precision.description",
-        "Craft and technology applied to every detail — no compromises.",
-      ),
-    },
-    {
-      number: "03",
-      title: t("manifesto.pillars.image.title", "Image"),
-      description: t(
-        "manifesto.pillars.image.description",
-        "Visual storytelling and identity, built to resonate and last.",
-      ),
-    },
-  ];
-}
 
 /**
  * Background vertical keywords — decorative texture on the left/right edges.
@@ -77,22 +48,6 @@ export function renderManifesto() {
             <a href="#vfx" class="btn btn--primary">${t("manifesto.cta.work", "See my work")} <span class="btn__arrow">&rarr;</span></a>
             <a href="#disciplines" class="btn btn--outline">${t("manifesto.cta.what", "What I do")} <span class="btn__arrow">&rarr;</span></a>
           </div>
-
-          <div class="manifesto__divider gs-reveal" aria-hidden="true"></div>
-
-          <ul class="manifesto__pillars gs-reveal">
-            ${getPillars()
-              .map(
-                (p) => `
-              <li class="manifesto-pillar">
-                <span class="manifesto-pillar__number">${p.number}</span>
-                <h3 class="manifesto-pillar__title">${p.title}</h3>
-                <p class="manifesto-pillar__description">${p.description}</p>
-              </li>
-            `,
-              )
-              .join("")}
-          </ul>
         </div>
       </div>
     </section>
@@ -151,8 +106,6 @@ export function initManifesto() {
   const text = $(".manifesto__text");
   const subtext = $(".manifesto__subtext");
   const actions = $(".manifesto__actions");
-  const divider = $(".manifesto__divider");
-  const pillars = $$(".manifesto-pillar");
   const bgLeft = $(".manifesto__bg-col--left");
   const bgRight = $(".manifesto__bg-col--right");
   const section = $(".manifesto");
@@ -291,58 +244,4 @@ export function initManifesto() {
     });
   }
 
-  // ---- Divider ----
-  if (divider) {
-    gsap.from(divider, {
-      scaleX: 0,
-      duration: 1.4,
-      ease: "power3.inOut",
-      scrollTrigger: {
-        trigger: divider,
-        start: "top 88%",
-        once: true,
-      },
-      onStart: () => {
-        divider.style.visibility = "visible";
-      },
-    });
-  }
-
-  // ---- Pillars: stagger reveal + hover accent on number ----
-  if (pillars.length) {
-    const pillarsContainer = $(".manifesto__pillars");
-    if (pillarsContainer) pillarsContainer.style.visibility = "visible";
-
-    gsap.from(pillars, {
-      opacity: 0,
-      y: 30,
-      duration: 0.9,
-      stagger: 0.12,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: pillarsContainer || pillars[0],
-        start: "top 85%",
-        once: true,
-      },
-    });
-
-    pillars.forEach((pillar) => {
-      const number = pillar.querySelector(".manifesto-pillar__number");
-      if (!number) return;
-      pillar.addEventListener("mouseenter", () => {
-        gsap.to(number, {
-          color: "var(--color-text-primary)",
-          duration: 0.4,
-          ease: "power2.out",
-        });
-      });
-      pillar.addEventListener("mouseleave", () => {
-        gsap.to(number, {
-          color: "var(--color-text-muted)",
-          duration: 0.4,
-          ease: "power2.out",
-        });
-      });
-    });
-  }
 }

@@ -55,11 +55,26 @@ const VFX_META = [
 ];
 
 function getVfxMeta(project, index) {
-  return VFX_META[index] || {
+  const meta = VFX_META[index] || {
     role: project.tags[0] || "Visual Effects",
     format: "Case Study",
     year: "2025",
     steps: project.tags.slice(0, 5),
+  };
+
+  return {
+    ...meta,
+    role: t(`vfx.${project.id}.meta.role`, meta.role),
+    format: t(`vfx.${project.id}.meta.format`, meta.format),
+    steps: meta.steps.map((step, stepIndex) => {
+      const [label, description = "A focused stage in the visual effects pipeline."] =
+        Array.isArray(step) ? step : [step];
+      const keyBase = `vfx.${project.id}.pipeline.${stepIndex + 1}`;
+      return [
+        t(`${keyBase}.label`, label),
+        t(`${keyBase}.description`, description),
+      ];
+    }),
   };
 }
 
@@ -174,10 +189,6 @@ export function renderVfx() {
             </div>
             <div class="vfx-project__info">
               <div class="vfx-project__copy">
-                <div class="vfx-project__eyebrow">
-                  <span>${meta.role}</span>
-                  <span>${meta.year}</span>
-                </div>
                 <h3 class="vfx-project__title">${t(`vfx.${project.id}.title`, project.title)}</h3>
                 <p class="vfx-project__description">${t(`vfx.${project.id}.description`, project.description)}</p>
               </div>
