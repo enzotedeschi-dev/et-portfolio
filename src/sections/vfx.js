@@ -217,61 +217,59 @@ function renderModeling() {
   if (!modeling) return "";
 
   const { renders } = modeling;
+  const videoProjects = renders.filter((p) => p.video);
+  const stillsProject = renders.find((p) => p.images.length > 0);
 
   return `
-    <div class="modeling-subsection">
+    <section class="modeling-subsection" aria-labelledby="cg-commercials-title">
       <div class="modeling-header">
-        <span class="section-label">${t("modeling.label", "3D Modeling")}</span>
-        <h2 class="modeling-title">${t("modeling.title", "Explore in 3D")}</h2>
+        <span class="section-label">${t("modeling.label", "02 / CG Advertising")}</span>
+        <h2 class="modeling-title" id="cg-commercials-title">${t("modeling.title", "CG Commercials")}</h2>
+        <p class="modeling-lede">${t(
+          "modeling.lede",
+          "Product-focused 3D visuals for advertising, brand films and digital campaigns — from vertical product films to simulation breakdowns and final campaign stills.",
+        )}</p>
       </div>
 
       ${
-        renders.length > 0
+        videoProjects.length > 0
           ? `
-        <div class="modeling-renders">
-          <div class="modeling-renders__videos-row">
-            ${renders
-              .filter((p) => p.video)
-              .map(
-                (project) => `
-              <div class="modeling-renders__video-col">
-                <div class="modeling-renders__video-wrap">
-                  <video class="modeling-renders__video" src="${project.video}" muted loop playsinline preload="metadata" poster="${project.poster || ""}"></video>
+        <div class="modeling-commercials">
+          ${videoProjects
+            .map(
+              (project, i) => `
+            <article class="modeling-commercial">
+              <div class="modeling-commercial__media">
+                <span class="modeling-commercial__number">${String(i + 1).padStart(2, "0")}</span>
+                <div class="modeling-renders__video-wrap${project.finalVideo ? " modeling-renders__video-wrap--wipe" : ""}"${project.finalVideo ? ' style="--wipe: 55%;"' : ""}>
+                  ${
+                    project.finalVideo
+                      ? `
+                    <video class="modeling-renders__video modeling-renders__video--breakdown" src="${project.video}" muted loop playsinline preload="metadata" poster="${project.poster || ""}"></video>
+                    <video class="modeling-renders__video modeling-renders__video--final" src="${project.finalVideo}" muted loop playsinline preload="metadata" poster="${project.poster || ""}"></video>
+                    <div class="modeling-wipe" aria-hidden="true">
+                      <span class="modeling-wipe__label modeling-wipe__label--left">Final</span>
+                      <span class="modeling-wipe__handle"></span>
+                      <span class="modeling-wipe__label modeling-wipe__label--right">Breakdown</span>
+                    </div>
+                    <input class="modeling-wipe__range" type="range" min="0" max="100" value="55" aria-label="Compare final and breakdown" />
+                  `
+                      : `<video class="modeling-renders__video" src="${project.video}" muted loop playsinline preload="metadata" poster="${project.poster || ""}"></video>`
+                  }
                   <button class="modeling-renders__play-btn" aria-label="Play video">
                     <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" stroke="currentColor" stroke-width="2" opacity="0.6"/><path d="M19 15l14 9-14 9V15z" fill="currentColor"/></svg>
                   </button>
                 </div>
-                <h4 class="modeling-renders__video-label">${t(`modeling.renders.${project.id}.title`, project.title)}</h4>
               </div>
-            `,
-              )
-              .join("")}
-          </div>
-
-          ${renders
-            .filter((p) => p.images.length > 0)
-            .map(
-              (project) => `
-            <div class="modeling-renders__project">
-              <div class="modeling-renders__info">
-                <h4 class="modeling-renders__name">${t(`modeling.renders.${project.id}.title`, project.title)}</h4>
-                <p class="modeling-renders__desc">${t(`modeling.renders.${project.id}.description`, project.description)}</p>
-                <div class="vfx-project__tags">
+              <div class="modeling-commercial__copy">
+                <span class="modeling-commercial__eyebrow">${t(`modeling.renders.${project.id}.eyebrow`, i === 0 ? "Final Product Film" : "Breakdown Reel")}</span>
+                <h3 class="modeling-commercial__title">${t(`modeling.renders.${project.id}.title`, project.title)}</h3>
+                <p class="modeling-commercial__description">${t(`modeling.renders.${project.id}.description`, project.description)}</p>
+                <div class="modeling-commercial__tags">
                   ${project.tags.map((tag) => `<span class="vfx-project__tag">${tag}</span>`).join("")}
                 </div>
               </div>
-              <div class="modeling-renders__grid">
-                ${project.images
-                  .map(
-                    (img, i) => `
-                  <div class="modeling-renders__item">
-                    <img src="${img}" alt="${project.title} — render ${i + 1}" loading="lazy" decoding="async" />
-                  </div>
-                `,
-                  )
-                  .join("")}
-              </div>
-            </div>
+            </article>
           `,
             )
             .join("")}
@@ -279,7 +277,36 @@ function renderModeling() {
       `
           : ""
       }
-    </div>
+
+      ${
+        stillsProject
+          ? `
+        <div class="modeling-stills">
+          <div class="modeling-stills__header">
+            <span class="modeling-stills__label">${t("modeling.stills.label", "03 / Campaign Stills")}</span>
+            <h3 class="modeling-stills__title">${t("modeling.stills.title", "Campaign Stills")}</h3>
+            <p class="modeling-stills__description">${t(
+              "modeling.stills.description",
+              "Static CGI frames designed as supporting campaign visuals — focused on packaging, reflections, material detail and premium product presence.",
+            )}</p>
+          </div>
+
+          <div class="modeling-renders__grid">
+            ${stillsProject.images
+              .map(
+                (img, i) => `
+                  <div class="modeling-renders__item">
+                    <img src="${img}" alt="${stillsProject.title} — campaign still ${i + 1}" loading="lazy" decoding="async" />
+                  </div>
+                `,
+              )
+              .join("")}
+          </div>
+        </div>
+      `
+          : ""
+      }
+    </section>
   `;
 }
 
@@ -380,32 +407,65 @@ export function initVfx() {
       ease: "power3.out",
       start: "top 85%",
     });
+
+    staggerIn(sub, ".modeling-commercial", {
+      y: 36,
+      duration: 0.9,
+      stagger: 0.12,
+      ease: "power3.out",
+      start: "top 78%",
+    });
   });
 
   const playBtns = $$(".modeling-renders__play-btn");
   playBtns.forEach((btn) => {
     const wrap = btn.closest(".modeling-renders__video-wrap");
-    const video = wrap.querySelector(".modeling-renders__video");
+    const videos = Array.from(wrap.querySelectorAll(".modeling-renders__video"));
+    const primaryVideo = videos[0];
 
     btn.addEventListener("click", () => {
-      if (video.paused) {
-        safePlay(video);
+      if (primaryVideo.paused) {
+        videos.forEach((video) => {
+          if (video !== primaryVideo) video.currentTime = primaryVideo.currentTime;
+          safePlay(video);
+        });
         wrap.classList.add("modeling-renders__video-wrap--playing");
       } else {
-        safePause(video);
+        videos.forEach((video) => safePause(video));
         wrap.classList.remove("modeling-renders__video-wrap--playing");
       }
     });
 
-    video.addEventListener("click", () => {
-      safePause(video);
+    primaryVideo.addEventListener("click", () => {
+      videos.forEach((video) => safePause(video));
       wrap.classList.remove("modeling-renders__video-wrap--playing");
     });
   });
 
-  const renderProjects = $$(".modeling-renders__project");
-  renderProjects.forEach((project) => {
-    staggerIn(project, ".modeling-renders__item", {
+  $$(".modeling-renders__video-wrap--wipe").forEach((wrap) => {
+    const range = wrap.querySelector(".modeling-wipe__range");
+    const videos = Array.from(wrap.querySelectorAll(".modeling-renders__video"));
+    if (!range) return;
+
+    const setWipe = () => {
+      wrap.style.setProperty("--wipe", `${range.value}%`);
+    };
+    range.addEventListener("input", setWipe);
+    setWipe();
+
+    const [baseVideo, compareVideo] = videos;
+    if (baseVideo && compareVideo) {
+      baseVideo.addEventListener("timeupdate", () => {
+        if (Math.abs(compareVideo.currentTime - baseVideo.currentTime) > 0.12) {
+          compareVideo.currentTime = baseVideo.currentTime;
+        }
+      });
+    }
+  });
+
+  const stillsBlocks = $$(".modeling-stills");
+  stillsBlocks.forEach((block) => {
+    staggerIn(block, ".modeling-renders__item", {
       y: 40,
       duration: 0.8,
       stagger: 0.1,
@@ -420,7 +480,9 @@ export function initVfx() {
         btn.closest(".vfx-project__media") ||
         btn.closest(".modeling-renders__video-wrap");
       const video = container.querySelector("video");
-      if (video) {
+      if (container?.requestFullscreen) {
+        container.requestFullscreen();
+      } else if (video) {
         if (video.requestFullscreen) video.requestFullscreen();
         else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
       }

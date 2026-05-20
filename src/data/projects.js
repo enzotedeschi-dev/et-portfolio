@@ -16,6 +16,7 @@ import renderProfumo1 from "../assets/profumo/renderprofumo1.jpg";
 import renderProfumo2 from "../assets/profumo/renderprofumo2.jpg";
 import renderProfumo3 from "../assets/profumo/renderprofumo3.jpg";
 import profumoVideo from "../assets/videoprofumocompressodefinitivo.mp4";
+import leucaFinalVideo from "../assets/LEUCASIASPOTCOMPRESSED.mp4";
 import flipFluidsVideo from "../assets/output_ULTRA_LIGHT.mp4";
 import profumoPoster from "../assets/renderprofumoposter.jpg";
 import flipFluidsPoster from "../assets/frame_leucasiabreakdown_14.png";
@@ -111,20 +112,21 @@ export const projects = {
     renders: [
       {
         id: "3d-profumo",
-        title: "Perfume Bottle",
+        title: "Perfume Product Film",
         description:
-          "Product visualization — modeled and rendered in Blender with procedural materials.",
-        tags: ["Blender", "3D Rendering"],
+          "A polished 3D product film created for G. Inglese, designed to translate the brand's refined identity into a digital advertising piece for premium product communication. The spot focuses on material detail, warm reflections, controlled lighting, camera rhythm, and a visual language that gives the bottle a cinematic presence. Every element is shaped to make the product feel tactile, elegant, and campaign-ready.",
+        tags: ["Product CGI", "Lighting", "Lookdev", "Final Render"],
         video: profumoVideo,
         poster: profumoPoster,
         images: [renderProfumo1, renderProfumo2, renderProfumo3],
       },
       {
         id: "3d-flipfluids",
-        title: "Perfume Commercial Breakdown",
+        title: "Fluid Simulation Breakdown",
         description:
-          "Commercial breakdown with FLIP Fluids simulation in Blender.",
-        tags: ["Blender", "FLIP Fluids", "Simulation"],
+          "A commercial-style product shot created for G. Inglese, built around simulated liquid motion and a refined product reveal. The interactive wipe compares the finished film with the technical breakdown, showing how fluid dynamics, lighting, render control, compositing, and final grading come together in the final spot. It is meant to show both the polished advertising result and the technical process behind the image.",
+        tags: ["FLIP Fluids", "Simulation", "Blender", "Breakdown"],
+        finalVideo: leucaFinalVideo,
         video: flipFluidsVideo,
         poster: flipFluidsPoster,
         images: [],
