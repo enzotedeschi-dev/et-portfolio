@@ -72,7 +72,7 @@ const fragmentShader = /* glsl */ `
 
     float mouseTilt = clamp(uMouseOffset.x, -1.0, 1.0) * 0.40;
     float coneCenter = 0.85 + mouseTilt;
-    float coneWidth  = 0.36;
+    float coneWidth  = 0.52;
 
     float dynamicWidth = coneWidth + 0.85 / (1.0 + dist * 4.0);
     float angDiff = (angle - coneCenter) / dynamicWidth;
@@ -85,19 +85,19 @@ const fragmentShader = /* glsl */ `
 
     float beam = coneFalloff * distAtten;
 
-    float r1 = fbm(vec2(angle * 14.0, dist * 1.2 - uTime * 0.004));
-    float r2 = fbm(vec2(angle * 14.0 + 47.3, dist * 1.2 - uTime * 0.004));
+    float r1 = fbm(vec2(angle * 12.0, dist * 1.3 - uTime * 0.006));
+    float r2 = fbm(vec2(angle * 12.0 + 47.3, dist * 1.3 - uTime * 0.006));
     float rayNoise = (r1 + r2) * 0.5;
-    float rays = smoothstep(0.42, 0.78, rayNoise) * 0.42;
+    float rays = smoothstep(0.40, 0.78, rayNoise) * 0.70;
     rays *= coneFalloff * distAtten;
 
     float scatter = exp(-dist * dist * 0.82) * 0.16;
     scatter *= coneFalloff;
 
-    float hotspot = exp(-dist * dist * 4.5) * 0.6;
+    float hotspot = exp(-dist * dist * 4.0) * 0.45;
     hotspot *= mix(0.45, 1.0, coneFalloff);
 
-    float light = beam * 0.75 + rays + scatter + hotspot;
+    float light = beam * 0.5 + rays + scatter + hotspot;
     light = 1.0 - exp(-light * 1.25);
     light *= uIntensity;
 
@@ -148,7 +148,7 @@ export function initHeroLight(canvas, options = {}) {
   if (!canvas) return () => {};
 
   const {
-    maxIntensity = 1.0,
+    maxIntensity = 1.15,
     fadeInDelay = 600,
     fadeInDuration = 2500,
   } = options;

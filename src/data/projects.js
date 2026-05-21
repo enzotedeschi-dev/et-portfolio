@@ -11,6 +11,7 @@ import autosortImg from "../assets/autosort/autosort.png";
 import legrandtabouImg from "../assets/dev/legrandtabou-site.png";
 import imediatopImg from "../assets/dev/imediatop-site.png";
 import trullidigiuliaImg from "../assets/dev/trullidigiulia_site.png";
+import cgEnvSolidVideo from "../assets/solidcompressedoutput.mp4";
 
 import renderProfumo1 from "../assets/profumo/renderprofumo1.jpg";
 import renderProfumo2 from "../assets/profumo/renderprofumo2.jpg";
@@ -58,7 +59,8 @@ export const projects = {
       description:
         "Full CG environment created in Blender with final compositing and color grading in DaVinci Resolve.",
       tags: ["Blender", "DaVinci Resolve"],
-      video: cgEnvVideo,
+      video: cgEnvSolidVideo,
+      finalVideo: cgEnvVideo,
       poster: null,
       breakdown: null,
     },

@@ -175,7 +175,23 @@ export function renderVfx() {
             <div class="vfx-project__media-wrap">
               <div class="vfx-project__media">
               ${
-                project.video
+                project.finalVideo
+                  ? `
+                  <div class="vfx-project__video-wrap--wipe" style="--wipe: 55%;">
+                    <video class="vfx-project__video vfx-project__video--breakdown" src="${project.video}" muted loop playsinline preload="metadata" poster="${project.poster || ""}"></video>
+                    <video class="vfx-project__video vfx-project__video--final" src="${project.finalVideo}" muted loop playsinline preload="metadata" poster="${project.poster || ""}"></video>
+                    <div class="modeling-wipe" aria-hidden="true">
+                      <span class="modeling-wipe__label modeling-wipe__label--left">Final</span>
+                      <span class="modeling-wipe__handle"></span>
+                      <span class="modeling-wipe__label modeling-wipe__label--right">Solid</span>
+                    </div>
+                    <input class="modeling-wipe__range vfx-wipe__range" type="range" min="0" max="100" value="55" aria-label="Compare final and solid" />
+                    <button class="video-fullscreen-btn" aria-label="Fullscreen" style="z-index: 10;">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3h5M3 3v5M17 3h-5M17 3v5M3 17h5M3 17v-5M17 17h-5M17 17v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                  </div>
+                  `
+                  : project.video
                   ? `<video class="vfx-project__video" src="${project.video}" muted loop playsinline poster="${project.poster || ""}"></video>
                      <button class="video-fullscreen-btn" aria-label="Fullscreen">
                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3h5M3 3v5M17 3h-5M17 3v5M3 17h5M3 17v-5M17 17h-5M17 17v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -442,9 +458,9 @@ export function initVfx() {
     });
   });
 
-  $$(".modeling-renders__video-wrap--wipe").forEach((wrap) => {
-    const range = wrap.querySelector(".modeling-wipe__range");
-    const videos = Array.from(wrap.querySelectorAll(".modeling-renders__video"));
+  $$(".modeling-renders__video-wrap--wipe, .vfx-project__video-wrap--wipe").forEach((wrap) => {
+    const range = wrap.querySelector(".modeling-wipe__range, .vfx-wipe__range");
+    const videos = Array.from(wrap.querySelectorAll(".modeling-renders__video, .vfx-project__video"));
     if (!range) return;
 
     const setWipe = () => {

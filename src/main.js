@@ -60,6 +60,7 @@ function render() {
 
   const mainContent = [
     renderHero(),
+    divider,
     renderManifesto(),
     divider,
     renderDisciplines(),

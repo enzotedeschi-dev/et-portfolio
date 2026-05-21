@@ -115,6 +115,26 @@
   object-fit: cover;
 }
 
+.vfx-project__video-wrap--wipe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.vfx-project__video--breakdown {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.vfx-project__video--final {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  clip-path: inset(0 calc(100% - var(--wipe)) 0 0);
+}
+
 .vfx-project__placeholder {
   display: flex;
   align-items: center;
