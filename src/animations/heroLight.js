@@ -32,6 +32,7 @@ const fragmentShader = /* glsl */ `
   uniform float uAspect;
   uniform float uIntensity;
   uniform vec2  uMouseOffset;
+  uniform float uIsMobile;
 
   float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
@@ -65,14 +66,16 @@ const fragmentShader = /* glsl */ `
     vec2 coord = uv;
     coord.x *= uAspect;
 
-    vec2 lightPos = vec2(0.12 * uAspect, 1.05);
+    // Desktop: origin top-left, Mobile: origin more centered
+    vec2 lightPos = mix(vec2(0.12 * uAspect, 1.05), vec2(0.35 * uAspect, 1.05), uIsMobile);
 
     vec2 delta = coord - lightPos;
     float dist = length(delta);
     float angle = atan(delta.x, -delta.y);
 
     float mouseTilt = clamp(uMouseOffset.x, -1.0, 1.0) * 0.40;
-    float coneCenter = 0.85 + mouseTilt;
+    // Desktop points at ~48 deg, Mobile points at ~17 deg (more vertical)
+    float coneCenter = mix(0.85, 0.30, uIsMobile) + mouseTilt;
     float coneWidth  = 0.52;
 
     float dynamicWidth = coneWidth + 0.85 / (1.0 + dist * 4.0);
@@ -165,10 +168,6 @@ export async function initHeroLight(canvas, options = {}) {
     antialias: false,
     powerPreference: "low-power",
   });
-  // Render at device pixel density (capped at 2x) so the GPU produces enough
-  // samples to keep the dither subpixel — single biggest factor in killing
-  // banding on retina displays.
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.setClearColor(0x000000, 0);
 
   const scene = new THREE.Scene();
@@ -181,6 +180,7 @@ export async function initHeroLight(canvas, options = {}) {
     uAspect: { value: 1.0 },
     uIntensity: { value: 0 }, // parte invisibile
     uMouseOffset: { value: new THREE.Vector2() },
+    uIsMobile: { value: 0.0 },
   };
 
   const material = new THREE.ShaderMaterial({
@@ -203,12 +203,18 @@ export async function initHeroLight(canvas, options = {}) {
     const rect = parent.getBoundingClientRect();
     const w = rect.width;
     const h = rect.height;
+    
+    // Performance fix for mobile: cap pixel ratio to 1
+    const isMobile = w < 768;
+    renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2));
+    
     renderer.setSize(w, h, false);
     uniforms.uResolution.value.set(
       w * renderer.getPixelRatio(),
       h * renderer.getPixelRatio(),
     );
     uniforms.uAspect.value = w / h;
+    uniforms.uIsMobile.value = isMobile ? 1.0 : 0.0;
   }
 
   resize();
