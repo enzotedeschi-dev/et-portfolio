@@ -82,10 +82,22 @@ function initNoise(canvas) {
     return t * t * (3 - 2 * t);
   };
 
+  let lastW = 0;
+
   const resize = () => {
     const rect = canvas.getBoundingClientRect();
-    w = Math.max(1, Math.floor(rect.width * SCALE * DPR));
-    h = Math.max(1, Math.floor(rect.height * SCALE * DPR));
+    const newW = Math.max(1, Math.floor(rect.width * SCALE * DPR));
+    const newH = Math.max(1, Math.floor(rect.height * SCALE * DPR));
+    
+    // Prevent clearing the canvas on mobile address-bar hide/show
+    if (newW === lastW && Math.abs(newH - h) < 200) {
+      return;
+    }
+    
+    lastW = newW;
+    w = newW;
+    h = newH;
+    
     canvas.width = w;
     canvas.height = h;
 

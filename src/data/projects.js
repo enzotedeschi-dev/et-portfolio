@@ -18,7 +18,7 @@ import renderProfumo2 from "../assets/profumo/renderprofumo2.jpg";
 import renderProfumo3 from "../assets/profumo/renderprofumo3.jpg";
 import profumoVideo from "../assets/videoprofumocompressodefinitivo.mp4";
 import leucaFinalVideo from "../assets/LEUCASIASPOTCOMPRESSED.mp4";
-import flipFluidsVideo from "../assets/output_ULTRA_LIGHT.mp4";
+
 import profumoPoster from "../assets/renderprofumoposter.jpg";
 import flipFluidsPoster from "../assets/frame_leucasiabreakdown_14.png";
 
@@ -128,8 +128,7 @@ export const projects = {
         description:
           "A commercial-style product shot created for G. Inglese, built around simulated liquid motion and a refined product reveal. The interactive wipe compares the finished film with the technical breakdown, showing how fluid dynamics, lighting, render control, compositing, and final grading come together in the final spot. It is meant to show both the polished advertising result and the technical process behind the image.",
         tags: ["FLIP Fluids", "Simulation", "Blender", "Breakdown"],
-        finalVideo: leucaFinalVideo,
-        video: flipFluidsVideo,
+        video: leucaFinalVideo,
         poster: flipFluidsPoster,
         images: [],
       },

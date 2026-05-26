@@ -327,6 +327,7 @@ function renderModeling() {
 }
 
 function safePlay(video) {
+  if (getComputedStyle(video).display === "none") return;
   const p = video.play();
   if (p !== undefined) p.catch(() => {});
 }
@@ -484,7 +485,9 @@ export function initVfx() {
     const [baseVideo, compareVideo] = videos;
     if (baseVideo && compareVideo) {
       const syncHandler = () => {
-        if (Math.abs(compareVideo.currentTime - baseVideo.currentTime) > 0.12) {
+        // Aumentato da 0.12 a 0.4: su mobile i due video possono differire di qualche frame.
+        // Se forziamo currentTime troppo spesso, il decoder hardware va in stallo (stuttering).
+        if (Math.abs(compareVideo.currentTime - baseVideo.currentTime) > 0.4) {
           compareVideo.currentTime = baseVideo.currentTime;
         }
       };

@@ -414,6 +414,7 @@
 .modeling-renders__video--final {
   z-index: 2;
   clip-path: inset(0 calc(100% - var(--wipe)) 0 0);
+  will-change: clip-path;
 }
 
 .modeling-wipe {
@@ -488,6 +489,7 @@
   margin: 0;
   opacity: 0;
   cursor: ew-resize;
+  touch-action: pan-x;
 }
 
 .modeling-renders__play-btn {
@@ -648,5 +650,16 @@
 
   .modeling-renders__grid {
     grid-template-columns: 1fr;
+  }
+
+  .modeling-renders__video--breakdown,
+  .modeling-wipe,
+  .modeling-wipe__range,
+  .vfx-wipe__range {
+    display: none !important;
+  }
+
+  .modeling-renders__video--final {
+    clip-path: none !important;
   }
 }

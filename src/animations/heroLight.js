@@ -196,6 +196,9 @@ export async function initHeroLight(canvas, options = {}) {
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
 
+  let lastW = 0;
+  let currentH = 0;
+
   /* ---- Sizing ---- */
   function resize() {
     const parent = canvas.parentElement;
@@ -203,6 +206,13 @@ export async function initHeroLight(canvas, options = {}) {
     const rect = parent.getBoundingClientRect();
     const w = rect.width;
     const h = rect.height;
+    
+    // Prevent WebGL clear flicker on mobile address bar hide/show
+    if (w === lastW && Math.abs(h - currentH) < 200) {
+      return;
+    }
+    lastW = w;
+    currentH = h;
     
     // Performance fix for mobile: cap pixel ratio to 1
     const isMobile = w < 768;

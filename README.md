@@ -1,10 +1,10 @@
 # Enzo Tedeschi — Portfolio
 
-**Creative Developer & Visual Artist**
+**Creative Developer & VFX Artist**
 
 Live: [enzotedeschi.studio](https://www.enzotedeschi.studio/)
 
-A personal portfolio built from scratch — no templates, no frameworks, just vanilla JavaScript with modern tooling. Designed to showcase work across VFX, 3D modeling, web development, and video production.
+A premium portfolio built from scratch focusing on cinematic aesthetics, extreme performance, and custom interactive experiences. Zero frameworks, just vanilla JavaScript with modern build tooling.
 
 ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
 ![Three.js](https://img.shields.io/badge/Three.js-000000?logo=three.js&logoColor=white)
@@ -17,40 +17,39 @@ A personal portfolio built from scratch — no templates, no frameworks, just va
 
 ### Sections
 
-- **Hero** — Cinematic entrance with video background, character-by-character text reveal, and scroll-driven parallax
-- **Disciplines** — Animated cards with asymmetric reveals showcasing skills and tools
-- **VFX** — Video projects with scroll-triggered autoplay, side-by-side breakdowns, and native fullscreen support
-- **3D Modeling** — Interactive Three.js model viewer (desktop) with OrbitControls, Draco/Meshopt compression, and lazy initialization on scroll; image carousel fallback on mobile
-- **Renders** — Click-to-play video renders with poster thumbnails
-- **Development** — Live iframe previews of web projects and GitHub links
-- **About** — Bio section with clip-path photo reveal and staggered animations
-- **Contact** — Email and social links with fade-in animations
+- **Hero** — Cinematic entrance featuring a real-time WebGL volumetric light beam (Three.js), procedural FBM noise, and a custom CRT-style timecode ticker.
+- **Manifesto** — Typographic reveal driven by scroll interactions.
+- **Disciplines** — Animated cards with asymmetric reveals showcasing skills and tools.
+- **VFX** — Video projects with scroll-triggered autoplay and native fullscreen support.
+- **Development** — Interactive preview cards showcasing web projects with direct GitHub links.
+- **Photography** — Premium editorial mosaic grid with a custom vanilla JS lightbox and context-aware cursors.
+- **About & Contact** — Bio section with image reveals, and a clean contact footer.
 
-### Technical
+### Technical Excellence
 
-- **Zero frameworks** — Pure vanilla JS, no React/Vue/Angular
-- **Vite** — Fast dev server and optimized production builds
-- **Three.js** — GLTF model loading with Draco and Meshopt decompression, custom lighting rig, auto-rotation, IntersectionObserver for lazy rendering
-- **GSAP + ScrollTrigger** — Scroll-driven animations, parallax, cinematic reveals, staggered entrances
-- **Lenis** — Smooth scrolling with GSAP integration
-- **i18n** — Full bilingual support (English/Italian) with JSON translation files and localStorage persistence
-- **Responsive** — Mobile-first approach with adaptive layouts; 3D viewer replaced by image carousel on mobile to prevent crashes
-- **SEO** — Open Graph, Twitter Card meta tags, full favicon set, semantic HTML
-- **Performance** — Lazy loading images/videos, `preload="metadata"` for video thumbnails, IntersectionObserver for deferred Three.js initialization, click-to-play for heavy video content
+- **Zero frameworks** — Pure vanilla JS. Architecture based on mount/unmount patterns similar to React, but hand-written for maximum control.
+- **Three.js Volumetric Light** — Custom fragment shaders for procedural godrays, atmospheric scattering, and per-pixel dithering. Automatically scales down pixel density on mobile for butter-smooth 60fps.
+- **GSAP + ScrollTrigger** — Scroll-driven animations, parallax, cinematic reveals, and staggered entrances.
+- **Velocity Scroll** — Custom Lenis integration that skews and stretches DOM elements dynamically based on scroll speed.
+- **Custom Cursor** — Context-aware magnetic cursor (View, Play, Open) that survives component re-renders.
+- **Performance First** — 
+  - Automated `sharp` image pipeline for WebP conversion (saving >90% bandwidth).
+  - Code-splitting via Vite/Rolldown (Three.js and GSAP isolated in chunks).
+  - IntersectionObserver system to pause WebGL and animations when off-screen.
+  - Centralized GSAP ticker loop to prevent RAF (Request Animation Frame) memory leaks.
+- **i18n** — Full bilingual support (English/Italian) with instantaneous JSON-based swapping without page reloads.
 
 ### Architecture
 
 ```
 src/
-├── animations/      # GSAP animation modules (scroll, preloader, hero text)
-├── assets/          # Videos, images, 3D models (.glb)
-├── data/            # Project data (VFX, dev, modeling, photography)
-├── i18n/            # Translation files (en.json, it.json) and i18n engine
-├── sections/        # Section renderers and initializers
-├── styles/          # Modular CSS (base, layout, sections, effects)
-├── three/           # Three.js viewer setup
-├── utils/           # DOM helpers
-└── main.js          # Entry point — orchestrates everything
+├── animations/      # GSAP, Velocity Scroll, Custom Cursor, WebGL Hero Light
+├── data/            # JSON structures for VFX, Dev, and Photography projects
+├── i18n/            # Translation engine and en.json/it.json
+├── sections/        # Section renderers and logic (Hero, VFX, Dev, Photo...)
+├── styles/          # Modular CSS architecture
+├── utils/           # Performance manager, DOM helpers
+└── main.js          # Main orchestrator (handles routing and memory cleanup)
 ```
 
 ---
@@ -60,6 +59,9 @@ src/
 ```bash
 # Install dependencies
 npm install
+
+# Optimize heavy assets (PNG/JPG -> WebP)
+npm run optimize-images
 
 # Start dev server
 npm run dev
@@ -77,11 +79,10 @@ npm run preview
 
 | Category       | Tools                      |
 | -------------- | -------------------------- |
-| **Build**      | Vite                       |
-| **3D**         | Three.js, Draco, Meshopt   |
+| **Build**      | Vite, Sharp                |
+| **WebGL/3D**   | Three.js, Custom GLSL      |
 | **Animation**  | GSAP, ScrollTrigger, Lenis |
 | **Languages**  | JavaScript, HTML, CSS      |
-| **Deployment** | Vercel                     |
 
 ---
 

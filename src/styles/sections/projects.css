@@ -133,6 +133,7 @@
   inset: 0;
   z-index: 2;
   clip-path: inset(0 calc(100% - var(--wipe)) 0 0);
+  will-change: clip-path;
 }
 
 .vfx-project__placeholder {
@@ -416,6 +417,14 @@
 
   .vfx-breakdown__panels {
     flex-direction: column;
+  }
+
+  .vfx-project__video--breakdown {
+    display: none !important;
+  }
+
+  .vfx-project__video--final {
+    clip-path: none !important;
   }
 }
 
