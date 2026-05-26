@@ -66,16 +66,16 @@ const fragmentShader = /* glsl */ `
     vec2 coord = uv;
     coord.x *= uAspect;
 
-    // Desktop: origin top-left, Mobile: origin more centered
-    vec2 lightPos = mix(vec2(0.12 * uAspect, 1.05), vec2(0.35 * uAspect, 1.05), uIsMobile);
+    // Desktop: origin top-left, Mobile: origin top-right
+    vec2 lightPos = mix(vec2(0.12 * uAspect, 1.05), vec2(0.85 * uAspect, 1.05), uIsMobile);
 
     vec2 delta = coord - lightPos;
     float dist = length(delta);
     float angle = atan(delta.x, -delta.y);
 
     float mouseTilt = clamp(uMouseOffset.x, -1.0, 1.0) * 0.40;
-    // Desktop points at ~48 deg, Mobile points at ~17 deg (more vertical)
-    float coneCenter = mix(0.85, 0.30, uIsMobile) + mouseTilt;
+    // Desktop points right (+0.85 rad), Mobile points left (-0.45 rad)
+    float coneCenter = mix(0.85, -0.45, uIsMobile) + mouseTilt;
     float coneWidth  = 0.52;
 
     float dynamicWidth = coneWidth + 0.85 / (1.0 + dist * 4.0);
