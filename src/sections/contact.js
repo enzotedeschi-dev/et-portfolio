@@ -31,12 +31,8 @@ export function renderContact() {
   `;
 }
 
-const cleanups = [];
-
 export function initContact() {
-  // Cleanup previous
-  cleanups.forEach((fn) => fn());
-  cleanups.length = 0;
+  const cleanups = [];
 
   const elements = $$(
     ".contact__heading, .contact__subtext, .contact__email, .contact__socials",
@@ -64,4 +60,8 @@ export function initContact() {
       makeMagnetic(link, { strength: 0.2, radius: 80 }),
     );
   });
+
+  return () => {
+    cleanups.forEach((fn) => fn());
+  };
 }

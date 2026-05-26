@@ -121,3 +121,19 @@
 .perf-degraded .tilt-glare {
   display: none !important;
 }
+
+.perf-degraded .hero__noise {
+  display: none !important;
+}
+
+.perf-degraded .manifesto__bg-col {
+  display: none !important;
+}
+
+.perf-degraded .hero__scroll-line {
+  animation: none !important;
+}
+
+.perf-degraded .hero__timecode-dot {
+  animation: none !important;
+}

@@ -72,8 +72,6 @@ export function renderDevelopment() {
   `;
 }
 
-const tiltCleanups = [];
-
 export function initDevelopment() {
   const header = $(".dev-section .section-header");
   if (header) cinematicHeader(header);
@@ -87,14 +85,12 @@ export function initDevelopment() {
     start: "top 80%",
   });
 
-  // Cleanup previous tilt instances
-  tiltCleanups.forEach((fn) => fn());
-  tiltCleanups.length = 0;
+  const cleanups = [];
 
   // 3D tilt on dev cards
   const cards = $$(".dev-card");
   cards.forEach((card) => {
-    tiltCleanups.push(
+    cleanups.push(
       addTilt(card, {
         maxTilt: 5,
         scale: 1.015,
@@ -106,7 +102,7 @@ export function initDevelopment() {
     // Parallax preview image on hover
     const img = card.querySelector(".dev-card__img, .dev-card__iframe");
     if (img) {
-      card.addEventListener("mousemove", (e) => {
+      const moveHandler = (e) => {
         const rect = card.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width - 0.5) * 10;
         const y = ((e.clientY - rect.top) / rect.height - 0.5) * 10;
@@ -117,16 +113,28 @@ export function initDevelopment() {
           ease: "power2.out",
           overwrite: "auto",
         });
-      });
-
-      card.addEventListener("mouseleave", () => {
+      };
+      
+      const leaveHandler = () => {
         gsap.to(img, {
           x: 0,
           y: 0,
           duration: 0.6,
           ease: "power3.out",
         });
+      };
+
+      card.addEventListener("mousemove", moveHandler);
+      card.addEventListener("mouseleave", leaveHandler);
+      
+      cleanups.push(() => {
+        card.removeEventListener("mousemove", moveHandler);
+        card.removeEventListener("mouseleave", leaveHandler);
       });
     }
   });
+
+  return () => {
+    cleanups.forEach((fn) => fn());
+  };
 }

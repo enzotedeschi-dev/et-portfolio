@@ -149,7 +149,7 @@ export function initPhotography() {
     });
   });
 
-  initLightbox();
+  return initLightbox();
 }
 
 function initLightbox() {
@@ -172,6 +172,8 @@ function initLightbox() {
       alt: img.alt,
     };
   });
+
+  const cleanups = [];
 
   const open = (index) => {
     currentIndex = index;
@@ -247,14 +249,28 @@ function initLightbox() {
   };
 
   items.forEach((btn, i) => {
-    btn.addEventListener("click", () => open(i));
+    const handler = () => open(i);
+    btn.addEventListener("click", handler);
+    cleanups.push(() => btn.removeEventListener("click", handler));
   });
 
   closeBtn.addEventListener("click", close);
   nextBtn.addEventListener("click", next);
   prevBtn.addEventListener("click", prev);
-
-  lightbox.addEventListener("click", (e) => {
-    if (e.target === lightbox) close();
+  cleanups.push(() => {
+    closeBtn.removeEventListener("click", close);
+    nextBtn.removeEventListener("click", next);
+    prevBtn.removeEventListener("click", prev);
   });
+
+  const lightboxClick = (e) => {
+    if (e.target === lightbox) close();
+  };
+  lightbox.addEventListener("click", lightboxClick);
+  cleanups.push(() => lightbox.removeEventListener("click", lightboxClick));
+
+  return () => {
+    document.removeEventListener("keydown", onKeydown);
+    cleanups.forEach(fn => fn());
+  };
 }

@@ -1,4 +1,5 @@
-import * as THREE from "three";
+/** @type {typeof import('three')} */
+let THREE = null;
 import { observeVisibility } from "../utils/performanceManager.js";
 
 /* ============================================================
@@ -144,8 +145,13 @@ const fragmentShader = /* glsl */ `
  * @param {number} [options.fadeInDuration=2500] — fade-in length in ms
  * @returns {Function} cleanup/dispose function
  */
-export function initHeroLight(canvas, options = {}) {
+export async function initHeroLight(canvas, options = {}) {
   if (!canvas) return () => {};
+
+  // Lazy-load Three.js al primo utilizzo
+  if (!THREE) {
+    THREE = await import("three");
+  }
 
   const {
     maxIntensity = 1.15,

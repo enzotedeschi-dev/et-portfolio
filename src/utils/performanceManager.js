@@ -1,3 +1,5 @@
+import { gsap } from "gsap";
+
 /**
  * Performance Manager
  * - Idle detection: pause RAF loops when sections aren't visible
@@ -7,7 +9,6 @@
 
 let fpsHistory = [];
 let lastFrameTime = performance.now();
-let rafId = 0;
 let running = false;
 let degraded = false;
 
@@ -59,20 +60,18 @@ function tick() {
     document.documentElement.classList.remove("perf-degraded");
     notifyAll();
   }
-
-  rafId = requestAnimationFrame(tick);
 }
 
 export function startMonitoring() {
   if (running) return;
   running = true;
   lastFrameTime = performance.now();
-  rafId = requestAnimationFrame(tick);
+  gsap.ticker.add(tick);
 }
 
 export function stopMonitoring() {
   running = false;
-  cancelAnimationFrame(rafId);
+  gsap.ticker.remove(tick);
 }
 
 export function isDegraded() {

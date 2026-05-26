@@ -7,10 +7,10 @@
 import astronautaVideo from "../assets/breakdownastronauta.mp4";
 import unrealVideo from "../assets/videos/progettounreal/FilmatoFinito.mp4";
 import cgEnvVideo from "../assets/FinishedCGEnvironment_CompressedDefinitivo.mp4";
-import autosortImg from "../assets/autosort/autosort.png";
-import legrandtabouImg from "../assets/dev/legrandtabou-site.png";
-import imediatopImg from "../assets/dev/imediatop-site.png";
-import trullidigiuliaImg from "../assets/dev/trullidigiulia_site.png";
+import autosortImg from "../assets/autosort/autosort.webp";
+import legrandtabouImg from "../assets/dev/legrandtabou-site.webp";
+import imediatopImg from "../assets/dev/imediatop-site.webp";
+import trullidigiuliaImg from "../assets/dev/trullidigiulia_site.webp";
 import cgEnvSolidVideo from "../assets/solidcompressedoutput.mp4";
 
 import renderProfumo1 from "../assets/profumo/renderprofumo1.jpg";
@@ -22,14 +22,14 @@ import flipFluidsVideo from "../assets/output_ULTRA_LIGHT.mp4";
 import profumoPoster from "../assets/renderprofumoposter.jpg";
 import flipFluidsPoster from "../assets/frame_leucasiabreakdown_14.png";
 
-import productPhoto1 from "../assets/photos/fotoprofumi1_def_compressed.jpg";
-import productPhoto2 from "../assets/photos/fotoprofumi3_compressed.jpg";
-import productPhoto3 from "../assets/photos/fotoprofumi4_def_compressed.jpg";
-import naturePhoto1 from "../assets/photos/IMG_7849-2-refined_compressed.jpg";
-import naturePhoto2 from "../assets/photos/IMG_8031-compressed.jpg";
-import naturePhoto3 from "../assets/photos/IMG_8172-compressed.jpg";
-import naturePhoto4 from "../assets/photos/IMG_8252-compressed.jpg";
-import naturePhoto5 from "../assets/photos/Ninfe_compressed.jpg";
+import productPhoto1 from "../assets/photos/fotoprofumi1_def_compressed.webp";
+import productPhoto2 from "../assets/photos/fotoprofumi3_compressed.webp";
+import productPhoto3 from "../assets/photos/fotoprofumi4_def_compressed.webp";
+import naturePhoto1 from "../assets/photos/IMG_7849-2-refined_compressed.webp";
+import naturePhoto2 from "../assets/photos/IMG_8031-compressed.webp";
+import naturePhoto3 from "../assets/photos/IMG_8172-compressed.webp";
+import naturePhoto4 from "../assets/photos/IMG_8252-compressed.webp";
+import naturePhoto5 from "../assets/photos/Ninfe_compressed.webp";
 
 export const projects = {
   vfx: [

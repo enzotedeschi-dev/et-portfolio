@@ -124,10 +124,9 @@ function initNoise(canvas) {
 
   let visible = true;
 
-  const tick = (now) => {
-    if (!running) return;
-    rafId = requestAnimationFrame(tick);
-    if (!visible) return;
+  const tick = (time) => {
+    if (!running || !visible) return;
+    const now = time * 1000;
     if (now - last < FRAME_MS) return;
     last = now;
     renderFrame();
@@ -137,7 +136,7 @@ function initNoise(canvas) {
   if (reduced) {
     renderFrame();
   } else {
-    rafId = requestAnimationFrame(tick);
+    gsap.ticker.add(tick);
   }
 
   const onResize = () => resize();
@@ -154,7 +153,7 @@ function initNoise(canvas) {
 
   return () => {
     running = false;
-    cancelAnimationFrame(rafId);
+    gsap.ticker.remove(tick);
     unobserve();
     window.removeEventListener("resize", onResize);
   };
@@ -169,15 +168,12 @@ function initTimecode(el) {
   const pad = (n) => String(n).padStart(2, "0");
   const FPS = 24;
   const start = performance.now();
-  let rafId = 0;
   let running = true;
 
   let visible = true;
 
   const tick = () => {
-    if (!running) return;
-    rafId = requestAnimationFrame(tick);
-    if (!visible) return;
+    if (!running || !visible) return;
     const elapsedMs = performance.now() - start;
     const totalFrames = Math.floor((elapsedMs / 1000) * FPS);
     const f = totalFrames % FPS;
@@ -186,7 +182,7 @@ function initTimecode(el) {
     const h = Math.floor(totalFrames / FPS / 3600);
     el.textContent = `${pad(h)}:${pad(m)}:${pad(s)}:${pad(f)}`;
   };
-  tick();
+  gsap.ticker.add(tick);
 
   // Pause when hero is off-screen
   const heroSection = el.closest(".hero");
@@ -199,7 +195,7 @@ function initTimecode(el) {
 
   return () => {
     running = false;
-    cancelAnimationFrame(rafId);
+    gsap.ticker.remove(tick);
     unobserve();
   };
 }
@@ -225,7 +221,10 @@ export function initHero() {
   if (stopLight) stopLight();
   stopNoise = initNoise(canvas);
   stopTimecode = initTimecode(timecodeValue);
-  stopLight = initHeroLight(lightCanvas);
+  stopLight = null;
+  initHeroLight(lightCanvas).then((dispose) => {
+    stopLight = dispose;
+  });
 
   if (prefersReducedMotion()) {
     [name, tagline, kicker].forEach((el) => {
@@ -346,4 +345,10 @@ export function initHero() {
       exitTl.to(kickerChars, { opacity: 0, ease: "none" }, 0);
     }
   });
+
+  return () => {
+    if (stopNoise) stopNoise();
+    if (stopTimecode) stopTimecode();
+    if (stopLight) stopLight();
+  };
 }

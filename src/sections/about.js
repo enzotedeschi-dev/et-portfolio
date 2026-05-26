@@ -6,7 +6,7 @@ import { gsap } from "gsap";
 import { cinematicHeader, clipReveal } from "../animations/scrollAnimations.js";
 import { $, $$ } from "../utils/dom.js";
 import { t } from "../i18n/i18n.js";
-import aboutPhoto from "../assets/enzotedeschiphoto.png";
+import aboutPhoto from "../assets/enzotedeschiphoto.webp";
 
 export function renderAbout() {
   return `

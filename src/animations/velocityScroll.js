@@ -8,7 +8,6 @@ import { gsap } from "gsap";
 import { getLenis } from "./smoothScroll.js";
 
 let running = false;
-let rafId = 0;
 
 // Registered targets
 const skewTargets = [];
@@ -43,7 +42,6 @@ export function addVelocityStretch(els, opts = {}) {
 
 function tick() {
   if (!running) return;
-  rafId = requestAnimationFrame(tick);
 
   const lenis = getLenis();
   if (!lenis) return;
@@ -80,12 +78,12 @@ function tick() {
 export function startVelocityScroll() {
   if (running) return;
   running = true;
-  rafId = requestAnimationFrame(tick);
+  gsap.ticker.add(tick);
 }
 
 export function stopVelocityScroll() {
   running = false;
-  cancelAnimationFrame(rafId);
+  gsap.ticker.remove(tick);
 }
 
 /**

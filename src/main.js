@@ -40,6 +40,7 @@ import { startMonitoring } from "./utils/performanceManager.js";
 import {
   addVelocitySkew,
   startVelocityScroll,
+  disposeVelocityScroll,
 } from "./animations/velocityScroll.js";
 
 import { renderNavbar, initNavbar } from "./sections/navbar.js";
@@ -81,6 +82,22 @@ function render() {
 
 let globalInitDone = false;
 
+/**
+ * Cleanup registry — collects dispose functions from section init calls.
+ * Called before re-init on language switch to prevent listener accumulation.
+ */
+const sectionCleanups = [];
+
+function cleanupSections() {
+  sectionCleanups.forEach((fn) => fn());
+  sectionCleanups.length = 0;
+  disposeVelocityScroll();
+}
+
+function registerCleanup(fn) {
+  if (typeof fn === "function") sectionCleanups.push(fn);
+}
+
 function init() {
   if (!globalInitDone) {
     initSmoothScroll();
@@ -89,15 +106,15 @@ function init() {
     startMonitoring();
     globalInitDone = true;
   }
-  initNavbar();
-  initHero();
-  initManifesto();
-  initDisciplines();
-  initVfx();
-  initDevelopment();
-  initPhotography();
-  initAbout();
-  initContact();
+  registerCleanup(initNavbar());
+  registerCleanup(initHero());
+  registerCleanup(initManifesto());
+  registerCleanup(initDisciplines());
+  registerCleanup(initVfx());
+  registerCleanup(initDevelopment());
+  registerCleanup(initPhotography());
+  registerCleanup(initAbout());
+  registerCleanup(initContact());
   initLangToggle();
   initVelocityEffects();
   initBackToTop();
@@ -141,6 +158,8 @@ function initLangToggle() {
 
     setLocale(lang);
 
+    // Cleanup previous section state
+    cleanupSections();
     ScrollTrigger.getAll().forEach((st) => st.kill());
 
     render();

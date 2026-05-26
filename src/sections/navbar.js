@@ -54,12 +54,8 @@ export function renderNavbar() {
   `;
 }
 
-const cleanups = [];
-
 export function initNavbar() {
-  // Cleanup previous
-  cleanups.forEach((fn) => fn());
-  cleanups.length = 0;
+  const cleanups = [];
 
   const navbar = $("#navbar");
   const toggle = $("#nav-toggle");
@@ -107,28 +103,47 @@ export function initNavbar() {
     });
   };
 
-  toggle.addEventListener("click", () => {
+  const toggleHandler = () => {
     if (isOpen) closeMenu();
     else openMenu();
-  });
+  };
 
-  overlay.addEventListener("click", (event) => {
+  const overlayHandler = (event) => {
     if (event.target === overlay && isOpen) {
       closeMenu();
     }
-  });
+  };
 
-  document.addEventListener("keydown", (event) => {
+  const keydownHandler = (event) => {
     if (event.key === "Escape" && isOpen) {
       closeMenu();
     }
+  };
+
+  toggle.addEventListener("click", toggleHandler);
+  overlay.addEventListener("click", overlayHandler);
+  document.addEventListener("keydown", keydownHandler);
+
+  cleanups.push(() => {
+    toggle.removeEventListener("click", toggleHandler);
+    overlay.removeEventListener("click", overlayHandler);
+    document.removeEventListener("keydown", keydownHandler);
   });
 
-  links.forEach((link) => {
-    link.addEventListener("click", () => {
+  const linkHandlers = [];
+  links.forEach((link, i) => {
+    const handler = () => {
       if (isOpen) {
         closeMenu();
       }
+    };
+    link.addEventListener("click", handler);
+    linkHandlers.push({ link, handler });
+  });
+
+  cleanups.push(() => {
+    linkHandlers.forEach(({ link, handler }) => {
+      link.removeEventListener("click", handler);
     });
   });
 
@@ -152,4 +167,8 @@ export function initNavbar() {
       lastScroll = scrollY;
     },
   });
+
+  return () => {
+    cleanups.forEach((fn) => fn());
+  };
 }

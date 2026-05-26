@@ -178,8 +178,8 @@ export function renderVfx() {
                 project.finalVideo
                   ? `
                   <div class="vfx-project__video-wrap--wipe" style="--wipe: 55%;">
-                    <video class="vfx-project__video vfx-project__video--breakdown" src="${project.video}" muted loop playsinline preload="metadata" poster="${project.poster || ""}"></video>
-                    <video class="vfx-project__video vfx-project__video--final" src="${project.finalVideo}" muted loop playsinline preload="metadata" poster="${project.poster || ""}"></video>
+                    <video class="vfx-project__video vfx-project__video--breakdown" src="${project.video}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
+                    <video class="vfx-project__video vfx-project__video--final" src="${project.finalVideo}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
                     <div class="modeling-wipe" aria-hidden="true">
                       <span class="modeling-wipe__label modeling-wipe__label--left">Final</span>
                       <span class="modeling-wipe__handle"></span>
@@ -261,8 +261,8 @@ function renderModeling() {
                   ${
                     project.finalVideo
                       ? `
-                    <video class="modeling-renders__video modeling-renders__video--breakdown" src="${project.video}" muted loop playsinline preload="metadata" poster="${project.poster || ""}"></video>
-                    <video class="modeling-renders__video modeling-renders__video--final" src="${project.finalVideo}" muted loop playsinline preload="metadata" poster="${project.poster || ""}"></video>
+                    <video class="modeling-renders__video modeling-renders__video--breakdown" src="${project.video}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
+                    <video class="modeling-renders__video modeling-renders__video--final" src="${project.finalVideo}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
                     <div class="modeling-wipe" aria-hidden="true">
                       <span class="modeling-wipe__label modeling-wipe__label--left">Final</span>
                       <span class="modeling-wipe__handle"></span>
@@ -270,7 +270,7 @@ function renderModeling() {
                     </div>
                     <input class="modeling-wipe__range" type="range" min="0" max="100" value="55" aria-label="Compare final and breakdown" />
                   `
-                      : `<video class="modeling-renders__video" src="${project.video}" muted loop playsinline preload="metadata" poster="${project.poster || ""}"></video>`
+                      : `<video class="modeling-renders__video" src="${project.video}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>`
                   }
                   <button class="modeling-renders__play-btn" aria-label="Play video">
                     <svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="23" stroke="currentColor" stroke-width="2" opacity="0.6"/><path d="M19 15l14 9-14 9V15z" fill="currentColor"/></svg>
@@ -376,9 +376,11 @@ export function initVfx() {
     });
   });
 
+  const cleanups = [];
+
   const toggles = $$(".vfx-breakdown__toggle");
   toggles.forEach((toggle) => {
-    toggle.addEventListener("click", (e) => {
+    const handler = (e) => {
       e.preventDefault();
       e.stopPropagation();
       const content = toggle.nextElementSibling;
@@ -398,7 +400,9 @@ export function initVfx() {
           delay: 0.2,
         });
       }
-    });
+    };
+    toggle.addEventListener("click", handler);
+    cleanups.push(() => toggle.removeEventListener("click", handler));
   });
 
   const videos = $$(".vfx-project__video");
@@ -413,7 +417,6 @@ export function initVfx() {
       onLeaveBack: () => safePause(video),
     });
   });
-
 
   const modelingSubs = $$(".modeling-subsection");
   modelingSubs.forEach((sub) => {
@@ -439,7 +442,7 @@ export function initVfx() {
     const videos = Array.from(wrap.querySelectorAll(".modeling-renders__video"));
     const primaryVideo = videos[0];
 
-    btn.addEventListener("click", () => {
+    const btnHandler = () => {
       if (primaryVideo.paused) {
         videos.forEach((video) => {
           if (video !== primaryVideo) video.currentTime = primaryVideo.currentTime;
@@ -450,11 +453,19 @@ export function initVfx() {
         videos.forEach((video) => safePause(video));
         wrap.classList.remove("modeling-renders__video-wrap--playing");
       }
-    });
-
-    primaryVideo.addEventListener("click", () => {
+    };
+    
+    const videoHandler = () => {
       videos.forEach((video) => safePause(video));
       wrap.classList.remove("modeling-renders__video-wrap--playing");
+    };
+
+    btn.addEventListener("click", btnHandler);
+    primaryVideo.addEventListener("click", videoHandler);
+    
+    cleanups.push(() => {
+      btn.removeEventListener("click", btnHandler);
+      primaryVideo.removeEventListener("click", videoHandler);
     });
   });
 
@@ -468,14 +479,17 @@ export function initVfx() {
     };
     range.addEventListener("input", setWipe);
     setWipe();
+    cleanups.push(() => range.removeEventListener("input", setWipe));
 
     const [baseVideo, compareVideo] = videos;
     if (baseVideo && compareVideo) {
-      baseVideo.addEventListener("timeupdate", () => {
+      const syncHandler = () => {
         if (Math.abs(compareVideo.currentTime - baseVideo.currentTime) > 0.12) {
           compareVideo.currentTime = baseVideo.currentTime;
         }
-      });
+      };
+      baseVideo.addEventListener("timeupdate", syncHandler);
+      cleanups.push(() => baseVideo.removeEventListener("timeupdate", syncHandler));
     }
   });
 
@@ -491,7 +505,7 @@ export function initVfx() {
   });
 
   $$(".video-fullscreen-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
+    const fullHandler = () => {
       const container =
         btn.closest(".vfx-project__media") ||
         btn.closest(".modeling-renders__video-wrap");
@@ -502,6 +516,12 @@ export function initVfx() {
         if (video.requestFullscreen) video.requestFullscreen();
         else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
       }
-    });
+    };
+    btn.addEventListener("click", fullHandler);
+    cleanups.push(() => btn.removeEventListener("click", fullHandler));
   });
+
+  return () => {
+    cleanups.forEach((fn) => fn());
+  };
 }
