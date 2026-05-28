@@ -114,20 +114,20 @@ export const projects = {
     renders: [
       {
         id: "3d-profumo",
-        title: "Perfume Product Film",
+        title: "Odorata Ginestra",
         description:
-          "A polished 3D product film created for G. Inglese, designed to translate the brand's refined identity into a digital advertising piece for premium product communication. The spot focuses on material detail, warm reflections, controlled lighting, camera rhythm, and a visual language that gives the bottle a cinematic presence. Every element is shaped to make the product feel tactile, elegant, and campaign-ready.",
-        tags: ["Product CGI", "Lighting", "Lookdev", "Final Render"],
+          "A CG commercial created for the Odorata Ginestra fragrance by G. Inglese, designed to translate the brand's elegant identity into a cinematic advertising piece. Materials, reflections, lighting, and camera movements are carefully crafted to enhance the bottle's presence and convey a warm, refined, and immersive sensation. Every detail contributes to building a premium product image, tailored for contemporary and impactful visual communication.",
+        tags: ["Modeling", "Shading", "Lighting", "Rendering", "Compositing", "Lookdev"],
         video: profumoVideo,
         poster: profumoPoster,
         images: [renderProfumo1, renderProfumo2, renderProfumo3],
       },
       {
         id: "3d-flipfluids",
-        title: "Fluid Simulation Breakdown",
+        title: "Leucasia",
         description:
-          "A commercial-style product shot created for G. Inglese, built around simulated liquid motion and a refined product reveal. The interactive wipe compares the finished film with the technical breakdown, showing how fluid dynamics, lighting, render control, compositing, and final grading come together in the final spot. It is meant to show both the polished advertising result and the technical process behind the image.",
-        tags: ["FLIP Fluids", "Simulation", "Blender", "Breakdown"],
+          "A CG commercial created for the Leucasia fragrance, where fluid simulation, cinematic lighting, and attention to detail come together to elevate the product in an elegant and immersive way. The project explores the entire creative and technical production process, from fluid simulation to final rendering and color correction, with the goal of creating a visual with strong aesthetic and atmospheric impact.",
+        tags: ["Modeling", "Shading", "Lighting", "Rendering", "Compositing", "Fluid Simulation"],
         video: leucaFinalVideo,
         poster: flipFluidsPoster,
         images: [],

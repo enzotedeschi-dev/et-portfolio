@@ -398,13 +398,10 @@
   cursor: pointer;
 }
 
-.modeling-renders__video-wrap--wipe {
-  --wipe: 55%;
-}
-
-.modeling-renders__video-wrap--wipe .modeling-renders__video {
+.modeling-renders__video-wrap--toggle .modeling-renders__video {
   position: absolute;
   inset: 0;
+  transition: opacity 0.3s ease, visibility 0.3s;
 }
 
 .modeling-renders__video--breakdown {
@@ -413,83 +410,6 @@
 
 .modeling-renders__video--final {
   z-index: 2;
-  clip-path: inset(0 calc(100% - var(--wipe)) 0 0);
-  will-change: clip-path;
-}
-
-.modeling-wipe {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-}
-
-.modeling-wipe__handle {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: var(--wipe);
-  width: 1px;
-  background: rgba(245, 241, 232, 0.82);
-  box-shadow: 0 0 18px rgba(245, 241, 232, 0.24);
-  transform: translateX(-50%);
-}
-
-.modeling-wipe__handle::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 34px;
-  height: 34px;
-  border: 1px solid rgba(245, 241, 232, 0.7);
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.44);
-  backdrop-filter: blur(8px);
-  transform: translate(-50%, -50%);
-}
-
-.modeling-wipe__handle::after {
-  content: "↔";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  color: rgba(245, 241, 232, 0.82);
-  font-family: var(--font-body);
-  font-size: 13px;
-  transform: translate(-50%, -52%);
-}
-
-.modeling-wipe__label {
-  position: absolute;
-  top: 14px;
-  font-family: var(--font-body);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(245, 241, 232, 0.78);
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.65);
-}
-
-.modeling-wipe__label--left {
-  left: 14px;
-}
-
-.modeling-wipe__label--right {
-  right: 14px;
-}
-
-.modeling-wipe__range {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  opacity: 0;
-  cursor: ew-resize;
-  touch-action: pan-x;
 }
 
 .modeling-renders__play-btn {
@@ -650,16 +570,5 @@
 
   .modeling-renders__grid {
     grid-template-columns: 1fr;
-  }
-
-  .modeling-renders__video--breakdown,
-  .modeling-wipe,
-  .modeling-wipe__range,
-  .vfx-wipe__range {
-    display: none !important;
-  }
-
-  .modeling-renders__video--final {
-    clip-path: none !important;
   }
 }

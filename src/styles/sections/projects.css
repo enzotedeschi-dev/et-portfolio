@@ -115,7 +115,7 @@
   object-fit: cover;
 }
 
-.vfx-project__video-wrap--wipe {
+.vfx-project__video-wrap--toggle {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -126,14 +126,46 @@
   position: absolute;
   inset: 0;
   z-index: 1;
+  transition: opacity 0.3s ease, visibility 0.3s;
 }
 
 .vfx-project__video--final {
   position: absolute;
   inset: 0;
   z-index: 2;
-  clip-path: inset(0 calc(100% - var(--wipe)) 0 0);
-  will-change: clip-path;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+
+.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.vfx-video-toggle {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  background: rgba(10, 10, 10, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.vfx-video-toggle:hover {
+  background: rgba(30, 30, 30, 0.85);
+  transform: translateX(-50%) scale(1.02);
 }
 
 .vfx-project__placeholder {
@@ -419,12 +451,10 @@
     flex-direction: column;
   }
 
-  .vfx-project__video--breakdown {
-    display: none !important;
-  }
-
-  .vfx-project__video--final {
-    clip-path: none !important;
+  .vfx-video-toggle {
+    bottom: 16px;
+    padding: 6px 12px;
+    font-size: 10px;
   }
 }
 

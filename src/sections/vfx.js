@@ -177,15 +177,10 @@ export function renderVfx() {
               ${
                 project.finalVideo
                   ? `
-                  <div class="vfx-project__video-wrap--wipe" style="--wipe: 55%;">
-                    <video class="vfx-project__video vfx-project__video--breakdown" src="${project.video}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
+                  <div class="vfx-project__video-wrap--toggle">
+                    <video class="vfx-project__video vfx-project__video--breakdown is-hidden" src="${project.video}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
                     <video class="vfx-project__video vfx-project__video--final" src="${project.finalVideo}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
-                    <div class="modeling-wipe" aria-hidden="true">
-                      <span class="modeling-wipe__label modeling-wipe__label--left">Final</span>
-                      <span class="modeling-wipe__handle"></span>
-                      <span class="modeling-wipe__label modeling-wipe__label--right">Solid</span>
-                    </div>
-                    <input class="modeling-wipe__range vfx-wipe__range" type="range" min="0" max="100" value="55" aria-label="Compare final and solid" />
+                    <button class="vfx-video-toggle" data-state="final">${t("vfx.toggle.breakdown", "View Breakdown")}</button>
                     <button class="video-fullscreen-btn" aria-label="Fullscreen" style="z-index: 10;">
                       <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3h5M3 3v5M17 3h-5M17 3v5M3 17h5M3 17v-5M17 17h-5M17 17v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </button>
@@ -257,18 +252,13 @@ function renderModeling() {
             <article class="modeling-commercial">
               <div class="modeling-commercial__media">
                 <span class="modeling-commercial__number">${String(i + 1).padStart(2, "0")}</span>
-                <div class="modeling-renders__video-wrap${project.finalVideo ? " modeling-renders__video-wrap--wipe" : ""}"${project.finalVideo ? ' style="--wipe: 55%;"' : ""}>
+                <div class="modeling-renders__video-wrap${project.finalVideo ? " modeling-renders__video-wrap--toggle" : ""}">
                   ${
                     project.finalVideo
                       ? `
-                    <video class="modeling-renders__video modeling-renders__video--breakdown" src="${project.video}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
+                    <video class="modeling-renders__video modeling-renders__video--breakdown is-hidden" src="${project.video}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
                     <video class="modeling-renders__video modeling-renders__video--final" src="${project.finalVideo}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
-                    <div class="modeling-wipe" aria-hidden="true">
-                      <span class="modeling-wipe__label modeling-wipe__label--left">Final</span>
-                      <span class="modeling-wipe__handle"></span>
-                      <span class="modeling-wipe__label modeling-wipe__label--right">Breakdown</span>
-                    </div>
-                    <input class="modeling-wipe__range" type="range" min="0" max="100" value="55" aria-label="Compare final and breakdown" />
+                    <button class="vfx-video-toggle" data-state="final">${t("vfx.toggle.breakdown", "View Breakdown")}</button>
                   `
                       : `<video class="modeling-renders__video" src="${project.video}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>`
                   }
@@ -278,7 +268,7 @@ function renderModeling() {
                 </div>
               </div>
               <div class="modeling-commercial__copy">
-                <span class="modeling-commercial__eyebrow">${t(`modeling.renders.${project.id}.eyebrow`, i === 0 ? "Final Product Film" : "Breakdown Reel")}</span>
+                <span class="modeling-commercial__eyebrow">${t(`modeling.renders.${project.id}.eyebrow`, "Final Spot")}</span>
                 <h3 class="modeling-commercial__title">${t(`modeling.renders.${project.id}.title`, project.title)}</h3>
                 <p class="modeling-commercial__description">${t(`modeling.renders.${project.id}.description`, project.description)}</p>
                 <div class="modeling-commercial__tags">
@@ -470,30 +460,40 @@ export function initVfx() {
     });
   });
 
-  $$(".modeling-renders__video-wrap--wipe, .vfx-project__video-wrap--wipe").forEach((wrap) => {
-    const range = wrap.querySelector(".modeling-wipe__range, .vfx-wipe__range");
-    const videos = Array.from(wrap.querySelectorAll(".modeling-renders__video, .vfx-project__video"));
-    if (!range) return;
+  $$(".vfx-project__video-wrap--toggle, .modeling-renders__video-wrap--toggle").forEach((wrap) => {
+    const btn = wrap.querySelector(".vfx-video-toggle");
+    const videoFinal = wrap.querySelector(".vfx-project__video--final, .modeling-renders__video--final");
+    const videoBreakdown = wrap.querySelector(".vfx-project__video--breakdown, .modeling-renders__video--breakdown");
+    
+    if (!btn || !videoFinal || !videoBreakdown) return;
 
-    const setWipe = () => {
-      wrap.style.setProperty("--wipe", `${range.value}%`);
+    const toggleHandler = (e) => {
+      e.stopPropagation();
+      const isFinal = btn.dataset.state === "final";
+      
+      if (isFinal) {
+        btn.dataset.state = "breakdown";
+        const isVfxSection = wrap.classList.contains("vfx-project__video-wrap--toggle");
+        btn.textContent = t("vfx.toggle.final", "View Final");
+        videoFinal.classList.add("is-hidden");
+        videoBreakdown.classList.remove("is-hidden");
+        videoBreakdown.currentTime = videoFinal.currentTime;
+        safePause(videoFinal);
+        safePlay(videoBreakdown);
+      } else {
+        btn.dataset.state = "final";
+        const isVfxSection = wrap.classList.contains("vfx-project__video-wrap--toggle");
+        btn.textContent = isVfxSection ? t("vfx.toggle.solid", "View Solid") : t("vfx.toggle.breakdown", "View Breakdown");
+        videoBreakdown.classList.add("is-hidden");
+        videoFinal.classList.remove("is-hidden");
+        videoFinal.currentTime = videoBreakdown.currentTime;
+        safePause(videoBreakdown);
+        safePlay(videoFinal);
+      }
     };
-    range.addEventListener("input", setWipe);
-    setWipe();
-    cleanups.push(() => range.removeEventListener("input", setWipe));
 
-    const [baseVideo, compareVideo] = videos;
-    if (baseVideo && compareVideo) {
-      const syncHandler = () => {
-        // Aumentato da 0.12 a 0.4: su mobile i due video possono differire di qualche frame.
-        // Se forziamo currentTime troppo spesso, il decoder hardware va in stallo (stuttering).
-        if (Math.abs(compareVideo.currentTime - baseVideo.currentTime) > 0.4) {
-          compareVideo.currentTime = baseVideo.currentTime;
-        }
-      };
-      baseVideo.addEventListener("timeupdate", syncHandler);
-      cleanups.push(() => baseVideo.removeEventListener("timeupdate", syncHandler));
-    }
+    btn.addEventListener("click", toggleHandler);
+    cleanups.push(() => btn.removeEventListener("click", toggleHandler));
   });
 
   const stillsBlocks = $$(".modeling-stills");

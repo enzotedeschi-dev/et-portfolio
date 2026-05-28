@@ -39,11 +39,6 @@ export function renderManifesto() {
 
           <p class="manifesto__text gs-reveal">${manifestoText}</p>
 
-          <p class="manifesto__subtext gs-reveal">${t(
-            "manifesto.subtext",
-            "Every project balances aesthetics and function. From the first idea to the final result, every choice is made to communicate with impact and honesty.",
-          )}</p>
-
           <div class="manifesto__actions gs-reveal">
             <a href="#vfx" class="btn btn--primary">${t("manifesto.cta.work", "See my work")} <span class="btn__arrow">&rarr;</span></a>
             <a href="#disciplines" class="btn btn--outline">${t("manifesto.cta.what", "What I do")} <span class="btn__arrow">&rarr;</span></a>
@@ -104,7 +99,6 @@ export function initManifesto() {
   const kicker = $(".manifesto__kicker");
   const line = $(".manifesto__line");
   const text = $(".manifesto__text");
-  const subtext = $(".manifesto__subtext");
   const actions = $(".manifesto__actions");
   const bgLeft = $(".manifesto__bg-col--left");
   const bgRight = $(".manifesto__bg-col--right");
@@ -202,25 +196,6 @@ export function initManifesto() {
           const t = Math.max(0, Math.min(1, (progress - wordStart) / range));
           gsap.set(word, { opacity: 0.15 + t * 0.85 });
         });
-      },
-    });
-  }
-
-  // ---- Subtext ----
-  if (subtext) {
-    gsap.from(subtext, {
-      opacity: 0,
-      y: 20,
-      duration: 0.9,
-      ease: "power3.out",
-      delay: 0.2,
-      scrollTrigger: {
-        trigger: subtext,
-        start: "top 88%",
-        once: true,
-      },
-      onStart: () => {
-        subtext.style.visibility = "visible";
       },
     });
   }

@@ -112,9 +112,9 @@ const fragmentShader = /* glsl */ `
     // and a wider smoothstep range so the cutoff feels less abrupt.
     light *= pow(smoothstep(-0.12, 0.96, uv.y), 0.54);
 
-    vec3 warmColor = vec3(1.00, 0.95, 0.86);
-    vec3 coolColor = vec3(0.94, 0.93, 0.89);
-    float warmth = smoothstep(0.0, 0.55, beam);
+    vec3 warmColor = vec3(1.00, 0.90, 0.68);
+    vec3 coolColor = vec3(0.96, 0.94, 0.89);
+    float warmth = smoothstep(0.0, 0.30, beam + rays + hotspot);
     vec3 color = mix(coolColor, warmColor, warmth) * light;
 
     // Per-channel dither (white noise, independent seeds) to break the 8-bit
