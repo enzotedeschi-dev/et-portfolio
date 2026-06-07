@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  overflow: hidden;
+  overflow-x: hidden;
   padding: var(--space-xl) var(--container-padding);
 }
 
@@ -24,13 +24,13 @@
 
 .contact__marquee--row1 {
   position: absolute;
-  top: 3%;
+  top: -0.02em;
   left: 0;
 }
 
 .contact__marquee--row2 {
   position: absolute;
-  bottom: 3%;
+  bottom: -0.02em;
   left: 0;
 }
 
@@ -40,7 +40,7 @@
   font-size: clamp(4rem, 3rem + 6vw, 9rem);
   font-weight: 600;
   letter-spacing: -0.03em;
-  line-height: 1;
+  line-height: 0.75;
   color: var(--color-text-primary);
   opacity: 0.035;
   user-select: none;

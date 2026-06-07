@@ -1,5 +1,10 @@
 /**
- * VFX Section
+ * VFX Section — Horizontal scroll showcase + vertical modeling subsection
+ *
+ * Desktop: VFX projects are displayed as full-viewport horizontal scroll panels
+ * pinned with GSAP ScrollTrigger. Each panel shows a large video with overlay info.
+ *
+ * Mobile (<768px): Falls back to a vertical stacked layout for touch UX.
  */
 
 import { gsap } from "gsap";
@@ -13,6 +18,8 @@ import {
 import { $, $$ } from "../utils/dom.js";
 import { t } from "../i18n/i18n.js";
 import { projects } from "../data/projects.js";
+
+/* ── VFX Project Metadata ────────────────────────────────── */
 
 const VFX_META = [
   {
@@ -78,6 +85,25 @@ function getVfxMeta(project, index) {
   };
 }
 
+/* ── Render Pipeline (compact label row for horizontal panels) ── */
+
+function renderPipelineCompact(steps) {
+  return `
+    <div class="vfx-hscroll__pipeline">
+      ${steps
+        .map(
+          (step) => {
+            const [label] = Array.isArray(step) ? step : [step];
+            return `<span class="vfx-hscroll__pipeline-step">${label}</span>`;
+          },
+        )
+        .join('<span class="vfx-hscroll__pipeline-sep">→</span>')}
+    </div>
+  `;
+}
+
+/* ── Render Full Pipeline (vertical — for mobile fallback) ── */
+
 function renderPipeline(steps) {
   return `
     <ol class="vfx-project__pipeline" aria-label="VFX pipeline">
@@ -101,6 +127,58 @@ function renderPipeline(steps) {
     </ol>
   `;
 }
+
+/* ── Render Video Element ── */
+
+function renderVideo(project) {
+  if (project.finalVideo) {
+    return `
+      <div class="vfx-hscroll__video-wrap--toggle">
+        <video class="vfx-hscroll__video vfx-hscroll__video--breakdown is-hidden" src="${project.video}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
+        <video class="vfx-hscroll__video vfx-hscroll__video--final" src="${project.finalVideo}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
+        <button class="vfx-video-toggle" data-state="final">${t("vfx.toggle.breakdown", "View Breakdown")}</button>
+        <button class="video-fullscreen-btn" aria-label="Fullscreen" style="z-index: 10;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3h5M3 3v5M17 3h-5M17 3v5M3 17h5M3 17v-5M17 17h-5M17 17v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    `;
+  }
+  if (project.video) {
+    return `
+      <video class="vfx-hscroll__video" src="${project.video}" muted loop playsinline poster="${project.poster || ""}"></video>
+      <button class="video-fullscreen-btn" aria-label="Fullscreen" style="z-index: 10;">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3h5M3 3v5M17 3h-5M17 3v5M3 17h5M3 17v-5M17 17h-5M17 17v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    `;
+  }
+  return `<div class="vfx-hscroll__placeholder">Video — ${project.title}</div>`;
+}
+
+/* ── Render VFX Video for mobile fallback ── */
+
+function renderVideoMobile(project) {
+  if (project.finalVideo) {
+    return `
+      <div class="vfx-project__video-wrap--toggle">
+        <video class="vfx-project__video vfx-project__video--breakdown is-hidden" src="${project.video}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
+        <video class="vfx-project__video vfx-project__video--final" src="${project.finalVideo}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
+        <button class="vfx-video-toggle" data-state="final">${t("vfx.toggle.breakdown", "View Breakdown")}</button>
+        <button class="video-fullscreen-btn" aria-label="Fullscreen" style="z-index: 10;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3h5M3 3v5M17 3h-5M17 3v5M3 17h5M3 17v-5M17 17h-5M17 17v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    `;
+  }
+  if (project.video) {
+    return `<video class="vfx-project__video" src="${project.video}" muted loop playsinline poster="${project.poster || ""}"></video>
+       <button class="video-fullscreen-btn" aria-label="Fullscreen">
+         <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3h5M3 3v5M17 3h-5M17 3v5M3 17h5M3 17v-5M17 17h-5M17 17v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+       </button>`;
+  }
+  return `<div class="vfx-project__placeholder">Video placeholder — ${project.title}</div>`;
+}
+
+/* ── Render Breakdown (preserved for mobile) ── */
 
 function renderBreakdown(breakdown) {
   if (!breakdown) return "";
@@ -151,6 +229,8 @@ function renderBreakdown(breakdown) {
   `;
 }
 
+/* ── Main Render ────────────────────────────────────────── */
+
 export function renderVfx() {
   const vfxProjects = projects.vfx;
 
@@ -165,63 +245,94 @@ export function renderVfx() {
             "Selected shots, breakdowns, and CG work shaped through light, compositing, and technical precision.",
           )}</p>
         </div>
+      </div>
 
+      <!-- ═══ Horizontal Scroll Showcase (desktop) ═══ -->
+      <div class="vfx-hscroll" aria-label="VFX project showcase">
+        <div class="vfx-hscroll__track">
+          ${vfxProjects
+            .map((project, index) => {
+              const meta = getVfxMeta(project, index);
+              return `
+            <article class="vfx-hscroll__panel" data-panel="${index}">
+              <div class="vfx-hscroll__panel-inner">
+                <div class="vfx-hscroll__panel-media">
+                  ${renderVideo(project)}
+                  <div class="vfx-hscroll__panel-overlay">
+                    <div class="vfx-hscroll__panel-number">${String(index + 1).padStart(2, "0")}</div>
+                  </div>
+                </div>
+                <div class="vfx-hscroll__panel-info">
+                  <div class="vfx-hscroll__panel-meta">
+                    <span class="vfx-hscroll__panel-role">${meta.role}</span>
+                    <span class="vfx-hscroll__panel-sep">—</span>
+                    <span class="vfx-hscroll__panel-format">${meta.format}</span>
+                  </div>
+                  <h3 class="vfx-hscroll__panel-title">${t(`vfx.${project.id}.title`, project.title)}</h3>
+                  <p class="vfx-hscroll__panel-description">${t(`vfx.${project.id}.description`, project.description)}</p>
+                  <div class="vfx-hscroll__panel-tags">
+                    ${project.tags.map((tag) => `<span class="vfx-project__tag">${tag}</span>`).join("")}
+                  </div>
+                  ${renderPipelineCompact(meta.steps)}
+                </div>
+              </div>
+            </article>
+          `;
+            })
+            .join("")}
+        </div>
+        <div class="vfx-hscroll__progress">
+          <div class="vfx-hscroll__progress-bar">
+            <div class="vfx-hscroll__progress-fill"></div>
+          </div>
+          <span class="vfx-hscroll__progress-counter">01 / ${String(vfxProjects.length).padStart(2, "0")}</span>
+        </div>
+      </div>
+
+      <!-- ═══ Mobile Fallback (vertical stack) ═══ -->
+      <div class="vfx-mobile-stack container">
         <div class="vfx-showcase">
           ${vfxProjects
             .map((project, index) => {
               const meta = getVfxMeta(project, index);
               return `
-          <article class="vfx-project vfx-project--${index === 0 ? "feature" : "compact"}">
-            <div class="vfx-project__media-wrap">
-              <div class="vfx-project__media">
-              ${
-                project.finalVideo
-                  ? `
-                  <div class="vfx-project__video-wrap--toggle">
-                    <video class="vfx-project__video vfx-project__video--breakdown is-hidden" src="${project.video}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
-                    <video class="vfx-project__video vfx-project__video--final" src="${project.finalVideo}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
-                    <button class="vfx-video-toggle" data-state="final">${t("vfx.toggle.breakdown", "View Breakdown")}</button>
-                    <button class="video-fullscreen-btn" aria-label="Fullscreen" style="z-index: 10;">
-                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3h5M3 3v5M17 3h-5M17 3v5M3 17h5M3 17v-5M17 17h-5M17 17v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </button>
+            <article class="vfx-project vfx-project--${index === 0 ? "feature" : "compact"}">
+              <div class="vfx-project__media-wrap">
+                <div class="vfx-project__media">
+                ${renderVideoMobile(project)}
+                  <div class="vfx-project__media-overlay">
+                    <span>${String(index + 1).padStart(2, "0")}</span>
                   </div>
-                  `
-                  : project.video
-                  ? `<video class="vfx-project__video" src="${project.video}" muted loop playsinline poster="${project.poster || ""}"></video>
-                     <button class="video-fullscreen-btn" aria-label="Fullscreen">
-                       <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3h5M3 3v5M17 3h-5M17 3v5M3 17h5M3 17v-5M17 17h-5M17 17v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                     </button>`
-                  : `<div class="vfx-project__placeholder">Video placeholder — ${project.title}</div>`
-              }
-                <div class="vfx-project__media-overlay">
-                  <span>${String(index + 1).padStart(2, "0")}</span>
                 </div>
               </div>
-            </div>
-            <div class="vfx-project__info">
-              <div class="vfx-project__copy">
-                <h3 class="vfx-project__title">${t(`vfx.${project.id}.title`, project.title)}</h3>
-                <p class="vfx-project__description">${t(`vfx.${project.id}.description`, project.description)}</p>
-              </div>
-              <div class="vfx-project__details">
-                <div class="vfx-project__tags">
-                  ${project.tags.map((tag) => `<span class="vfx-project__tag">${tag}</span>`).join("")}
+              <div class="vfx-project__info">
+                <div class="vfx-project__copy">
+                  <h3 class="vfx-project__title">${t(`vfx.${project.id}.title`, project.title)}</h3>
+                  <p class="vfx-project__description">${t(`vfx.${project.id}.description`, project.description)}</p>
                 </div>
-                ${renderPipeline(meta.steps)}
+                <div class="vfx-project__details">
+                  <div class="vfx-project__tags">
+                    ${project.tags.map((tag) => `<span class="vfx-project__tag">${tag}</span>`).join("")}
+                  </div>
+                  ${renderPipeline(meta.steps)}
+                </div>
               </div>
-            </div>
-            ${renderBreakdown(project.breakdown)}
-          </article>
-        `;
+              ${renderBreakdown(project.breakdown)}
+            </article>
+          `;
             })
             .join("")}
         </div>
+      </div>
 
+      <div class="container">
         ${renderModeling()}
       </div>
     </section>
   `;
 }
+
+/* ── Modeling Sub-section (unchanged) ── */
 
 function renderModeling() {
   const modeling = projects.modeling;
@@ -316,6 +427,8 @@ function renderModeling() {
   `;
 }
 
+/* ── Helpers ── */
+
 function safePlay(video) {
   if (getComputedStyle(video).display === "none") return;
   const p = video.play();
@@ -325,6 +438,12 @@ function safePlay(video) {
 function safePause(video) {
   video.pause();
 }
+
+function isMobile() {
+  return window.innerWidth < 768;
+}
+
+/* ── Init ──────────────────────────────────────────────── */
 
 export function initVfx() {
   const header = $(".vfx-section .section-header");
@@ -341,7 +460,256 @@ export function initVfx() {
     }
   }
 
-  const vfxProjects = $$(".vfx-project");
+  const cleanups = [];
+
+  if (!isMobile()) {
+    cleanups.push(initHorizontalScroll());
+  }
+
+  // Mobile vertical fallback — init animations
+  initMobileVfx(cleanups);
+
+  // Modeling subsection — always vertical
+  initModeling(cleanups);
+
+  return () => {
+    cleanups.forEach((fn) => fn());
+  };
+}
+
+/* ── Horizontal Scroll Init (desktop only) ──────────── */
+
+function initHorizontalScroll() {
+  const hscroll = $(".vfx-hscroll");
+  const track = $(".vfx-hscroll__track");
+  const panels = $$(".vfx-hscroll__panel");
+  const counter = $(".vfx-hscroll__progress-counter");
+  const progressFill = $(".vfx-hscroll__progress-fill");
+
+  if (!hscroll || !track || panels.length === 0) return () => {};
+
+  const cleanups = [];
+  const totalPanels = panels.length;
+
+  // Animate the hscroll section entrance
+  fadeInUp(hscroll, {
+    y: 60,
+    duration: 1,
+    ease: "power3.out",
+    start: "top 85%",
+  });
+
+  // Calculate track width — each panel is 100vw
+  const getTrackShift = () => track.scrollWidth - window.innerWidth;
+
+  // Main horizontal scroll — pin + scrub
+  const st = ScrollTrigger.create({
+    trigger: hscroll,
+    start: "top top",
+    end: () => `+=${window.innerHeight * (totalPanels - 1) + window.innerHeight * 0.5}`,
+    pin: true,
+    scrub: 0.8,
+    invalidateOnRefresh: true,
+    animation: gsap.to(track, {
+      x: () => -getTrackShift(),
+      ease: "none",
+    }),
+    onUpdate: (self) => {
+      const progress = self.progress;
+
+      // Update counter
+      const activeIndex = Math.min(
+        totalPanels - 1,
+        Math.floor(progress * totalPanels),
+      );
+      if (counter) {
+        counter.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(totalPanels).padStart(2, "0")}`;
+      }
+
+      // Update progress bar
+      if (progressFill) {
+        gsap.set(progressFill, { scaleX: progress });
+      }
+    },
+  });
+
+  cleanups.push(() => st.kill(true));
+
+  // Animate panel info elements as they come into view
+  panels.forEach((panel, i) => {
+    const info = panel.querySelector(".vfx-hscroll__panel-info");
+    const title = panel.querySelector(".vfx-hscroll__panel-title");
+    const desc = panel.querySelector(".vfx-hscroll__panel-description");
+    const tags = panel.querySelectorAll(".vfx-project__tag");
+    const pipeline = panel.querySelector(".vfx-hscroll__pipeline");
+    const meta = panel.querySelector(".vfx-hscroll__panel-meta");
+
+    if (i === 0) {
+      // First panel is visible on load — animate once
+      const firstST = ScrollTrigger.create({
+        trigger: hscroll,
+        start: "top 80%",
+        once: true,
+        onEnter: () => {
+          animatePanelIn(info, title, desc, tags, pipeline, meta);
+        },
+      });
+      cleanups.push(() => firstST.kill());
+    } else {
+      // Subsequent panels — animate based on horizontal scroll progress
+      const entryProgress = (i - 0.3) / totalPanels;
+      const panelST = ScrollTrigger.create({
+        trigger: hscroll,
+        start: "top top",
+        end: () => `+=${window.innerHeight * (totalPanels - 1) + window.innerHeight * 0.5}`,
+        onUpdate: (self) => {
+          if (self.progress >= entryProgress && !panel.classList.contains("vfx-hscroll__panel--animated")) {
+            panel.classList.add("vfx-hscroll__panel--animated");
+            animatePanelIn(info, title, desc, tags, pipeline, meta);
+          }
+        },
+      });
+      cleanups.push(() => panelST.kill());
+    }
+  });
+
+  // Auto-play videos based on visible panel
+  const allVideos = $$(".vfx-hscroll__video");
+  let lastActivePanel = -1;
+
+  const videoST = ScrollTrigger.create({
+    trigger: hscroll,
+    start: "top top",
+    end: () => `+=${window.innerHeight * (totalPanels - 1) + window.innerHeight * 0.5}`,
+    onUpdate: (self) => {
+      const activeIndex = Math.min(
+        totalPanels - 1,
+        Math.floor(self.progress * totalPanels),
+      );
+      if (activeIndex !== lastActivePanel) {
+        lastActivePanel = activeIndex;
+        // Pause all, play current panel's visible video
+        allVideos.forEach((v) => safePause(v));
+        const activePanel = panels[activeIndex];
+        if (activePanel) {
+          const visibleVideo = activePanel.querySelector(".vfx-hscroll__video:not(.is-hidden)");
+          if (visibleVideo) safePlay(visibleVideo);
+        }
+      }
+    },
+    onLeave: () => {
+      allVideos.forEach((v) => safePause(v));
+      lastActivePanel = -1;
+    },
+    onLeaveBack: () => {
+      allVideos.forEach((v) => safePause(v));
+      lastActivePanel = -1;
+    },
+  });
+
+  cleanups.push(() => videoST.kill());
+
+  // Video toggle buttons (final/breakdown)
+  $$(".vfx-hscroll .vfx-video-toggle").forEach((btn) => {
+    const wrap = btn.closest(".vfx-hscroll__video-wrap--toggle");
+    if (!wrap) return;
+    const videoFinal = wrap.querySelector(".vfx-hscroll__video--final");
+    const videoBreakdown = wrap.querySelector(".vfx-hscroll__video--breakdown");
+    if (!videoFinal || !videoBreakdown) return;
+
+    const handler = (e) => {
+      e.stopPropagation();
+      const isFinal = btn.dataset.state === "final";
+
+      if (isFinal) {
+        btn.dataset.state = "breakdown";
+        btn.textContent = t("vfx.toggle.final", "View Final");
+        videoFinal.classList.add("is-hidden");
+        videoBreakdown.classList.remove("is-hidden");
+        videoBreakdown.currentTime = videoFinal.currentTime;
+        safePause(videoFinal);
+        safePlay(videoBreakdown);
+      } else {
+        btn.dataset.state = "final";
+        btn.textContent = t("vfx.toggle.solid", "View Solid");
+        videoBreakdown.classList.add("is-hidden");
+        videoFinal.classList.remove("is-hidden");
+        videoFinal.currentTime = videoBreakdown.currentTime;
+        safePause(videoBreakdown);
+        safePlay(videoFinal);
+      }
+    };
+
+    btn.addEventListener("click", handler);
+    cleanups.push(() => btn.removeEventListener("click", handler));
+  });
+
+  // Desktop fullscreen buttons
+  $$(".vfx-hscroll .video-fullscreen-btn").forEach((btn) => {
+    const fullHandler = () => {
+      const container = btn.closest(".vfx-hscroll__panel-media");
+      const video = container?.querySelector("video:not(.is-hidden)") || container?.querySelector("video");
+      if (video) {
+        if (video.requestFullscreen) {
+          video.requestFullscreen();
+        } else if (video.webkitEnterFullscreen) {
+          video.webkitEnterFullscreen();
+        }
+      }
+    };
+    btn.addEventListener("click", fullHandler);
+    cleanups.push(() => btn.removeEventListener("click", fullHandler));
+  });
+
+  return () => {
+    cleanups.forEach((fn) => fn());
+  };
+}
+
+/* ── Panel info entrance animation ── */
+
+function animatePanelIn(info, title, desc, tags, pipeline, meta) {
+  if (!info) return;
+
+  const tl = gsap.timeline();
+
+  if (meta) {
+    tl.from(meta, {
+      opacity: 0, x: -20, duration: 0.5, ease: "power3.out",
+    }, 0);
+  }
+
+  if (title) {
+    tl.from(title, {
+      opacity: 0, y: 30, duration: 0.7, ease: "power3.out",
+    }, 0.1);
+  }
+
+  if (desc) {
+    tl.from(desc, {
+      opacity: 0, y: 20, duration: 0.6, ease: "power3.out",
+    }, 0.25);
+  }
+
+  if (tags.length) {
+    tl.from(tags, {
+      opacity: 0, y: 12, stagger: 0.04, duration: 0.45, ease: "power3.out",
+    }, 0.35);
+  }
+
+  if (pipeline) {
+    tl.from(pipeline, {
+      opacity: 0, y: 10, duration: 0.5, ease: "power3.out",
+    }, 0.45);
+  }
+}
+
+/* ── Mobile VFX Init (vertical fallback) ────────────── */
+
+function initMobileVfx(cleanups) {
+  const vfxProjects = $$(".vfx-mobile-stack .vfx-project");
+  if (!vfxProjects.length) return;
+
   vfxProjects.forEach((project) => {
     fadeInUp(project, {
       y: 60,
@@ -367,9 +735,8 @@ export function initVfx() {
     });
   });
 
-  const cleanups = [];
-
-  const toggles = $$(".vfx-breakdown__toggle");
+  // Breakdown toggles
+  const toggles = $$(".vfx-mobile-stack .vfx-breakdown__toggle");
   toggles.forEach((toggle) => {
     const handler = (e) => {
       e.preventDefault();
@@ -396,7 +763,8 @@ export function initVfx() {
     cleanups.push(() => toggle.removeEventListener("click", handler));
   });
 
-  const videos = $$(".vfx-project__video");
+  // Mobile video autoplay
+  const videos = $$(".vfx-mobile-stack .vfx-project__video");
   videos.forEach((video) => {
     ScrollTrigger.create({
       trigger: video,
@@ -409,6 +777,64 @@ export function initVfx() {
     });
   });
 
+  // Mobile video toggles (final/breakdown)
+  $$(".vfx-mobile-stack .vfx-project__video-wrap--toggle").forEach((wrap) => {
+    const btn = wrap.querySelector(".vfx-video-toggle");
+    const videoFinal = wrap.querySelector(".vfx-project__video--final");
+    const videoBreakdown = wrap.querySelector(".vfx-project__video--breakdown");
+
+    if (!btn || !videoFinal || !videoBreakdown) return;
+
+    const toggleHandler = (e) => {
+      e.stopPropagation();
+      const isFinal = btn.dataset.state === "final";
+
+      if (isFinal) {
+        btn.dataset.state = "breakdown";
+        btn.textContent = t("vfx.toggle.final", "View Final");
+        videoFinal.classList.add("is-hidden");
+        videoBreakdown.classList.remove("is-hidden");
+        videoBreakdown.currentTime = videoFinal.currentTime;
+        safePause(videoFinal);
+        safePlay(videoBreakdown);
+      } else {
+        btn.dataset.state = "final";
+        btn.textContent = t("vfx.toggle.solid", "View Solid");
+        videoBreakdown.classList.add("is-hidden");
+        videoFinal.classList.remove("is-hidden");
+        videoFinal.currentTime = videoBreakdown.currentTime;
+        safePause(videoBreakdown);
+        safePlay(videoFinal);
+      }
+    };
+
+    btn.addEventListener("click", toggleHandler);
+    cleanups.push(() => btn.removeEventListener("click", toggleHandler));
+  });
+
+  // Mobile fullscreen buttons
+  $$(".vfx-mobile-stack .video-fullscreen-btn").forEach((btn) => {
+    const fullHandler = () => {
+      const container =
+        btn.closest(".vfx-project__media") ||
+        btn.closest(".modeling-renders__video-wrap");
+      const video = container.querySelector("video:not(.is-hidden)") || container.querySelector("video");
+      if (video) {
+        if (video.requestFullscreen) {
+          video.requestFullscreen();
+        } else if (video.webkitEnterFullscreen) {
+          video.webkitEnterFullscreen();
+        }
+      }
+    };
+    btn.addEventListener("click", fullHandler);
+    cleanups.push(() => btn.removeEventListener("click", fullHandler));
+  });
+}
+
+/* ── Modeling Sub-section Init (unchanged) ────────────── */
+
+function initModeling(cleanups) {
   const modelingSubs = $$(".modeling-subsection");
   modelingSubs.forEach((sub) => {
     fadeInUp(sub, {
@@ -445,7 +871,7 @@ export function initVfx() {
         wrap.classList.remove("modeling-renders__video-wrap--playing");
       }
     };
-    
+
     const videoHandler = () => {
       videos.forEach((video) => safePause(video));
       wrap.classList.remove("modeling-renders__video-wrap--playing");
@@ -453,27 +879,26 @@ export function initVfx() {
 
     btn.addEventListener("click", btnHandler);
     primaryVideo.addEventListener("click", videoHandler);
-    
+
     cleanups.push(() => {
       btn.removeEventListener("click", btnHandler);
       primaryVideo.removeEventListener("click", videoHandler);
     });
   });
 
-  $$(".vfx-project__video-wrap--toggle, .modeling-renders__video-wrap--toggle").forEach((wrap) => {
+  $$(".modeling-renders__video-wrap--toggle").forEach((wrap) => {
     const btn = wrap.querySelector(".vfx-video-toggle");
-    const videoFinal = wrap.querySelector(".vfx-project__video--final, .modeling-renders__video--final");
-    const videoBreakdown = wrap.querySelector(".vfx-project__video--breakdown, .modeling-renders__video--breakdown");
-    
+    const videoFinal = wrap.querySelector(".modeling-renders__video--final");
+    const videoBreakdown = wrap.querySelector(".modeling-renders__video--breakdown");
+
     if (!btn || !videoFinal || !videoBreakdown) return;
 
     const toggleHandler = (e) => {
       e.stopPropagation();
       const isFinal = btn.dataset.state === "final";
-      
+
       if (isFinal) {
         btn.dataset.state = "breakdown";
-        const isVfxSection = wrap.classList.contains("vfx-project__video-wrap--toggle");
         btn.textContent = t("vfx.toggle.final", "View Final");
         videoFinal.classList.add("is-hidden");
         videoBreakdown.classList.remove("is-hidden");
@@ -482,8 +907,7 @@ export function initVfx() {
         safePlay(videoBreakdown);
       } else {
         btn.dataset.state = "final";
-        const isVfxSection = wrap.classList.contains("vfx-project__video-wrap--toggle");
-        btn.textContent = isVfxSection ? t("vfx.toggle.solid", "View Solid") : t("vfx.toggle.breakdown", "View Breakdown");
+        btn.textContent = t("vfx.toggle.breakdown", "View Breakdown");
         videoBreakdown.classList.add("is-hidden");
         videoFinal.classList.remove("is-hidden");
         videoFinal.currentTime = videoBreakdown.currentTime;
@@ -506,25 +930,4 @@ export function initVfx() {
       start: "top 85%",
     });
   });
-
-  $$(".video-fullscreen-btn").forEach((btn) => {
-    const fullHandler = () => {
-      const container =
-        btn.closest(".vfx-project__media") ||
-        btn.closest(".modeling-renders__video-wrap");
-      const video = container.querySelector("video");
-      if (container?.requestFullscreen) {
-        container.requestFullscreen();
-      } else if (video) {
-        if (video.requestFullscreen) video.requestFullscreen();
-        else if (video.webkitEnterFullscreen) video.webkitEnterFullscreen();
-      }
-    };
-    btn.addEventListener("click", fullHandler);
-    cleanups.push(() => btn.removeEventListener("click", fullHandler));
-  });
-
-  return () => {
-    cleanups.forEach((fn) => fn());
-  };
 }

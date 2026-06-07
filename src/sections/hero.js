@@ -26,13 +26,7 @@ export function renderHero() {
         <canvas class="hero__light"></canvas>
       </div>
 
-      <aside class="hero__rail" aria-hidden="true">
-        <span class="hero__rail-tick"></span>
-        <span class="hero__rail-text">${t("hero.rail", "Creative Developer & VFX Artist")}</span>
-      </aside>
-
       <div class="hero__content">
-        <p class="hero__kicker gs-reveal">[ ${t("hero.kicker", "Code × Cinema")} ]</p>
         <h1 class="hero__name gs-reveal"><span class="hero__name-word">Enzo</span> <span class="hero__name-word">Tedeschi</span></h1>
         <p class="hero__tagline gs-reveal">${renderTagline()}</p>
       </div>
@@ -211,7 +205,6 @@ function initTimecode(el) {
     unobserve();
   };
 }
-
 let stopNoise = null;
 let stopTimecode = null;
 let stopLight = null;
@@ -219,9 +212,7 @@ let stopLight = null;
 export function initHero() {
   const name = $(".hero__name");
   const tagline = $(".hero__tagline");
-  const kicker = $(".hero__kicker");
   const scrollIndicator = $(".hero__scroll-indicator");
-  const rail = $(".hero__rail");
   const canvas = $(".hero__noise");
   const timecodeRoot = $(".hero__timecode");
   const timecodeValue = $(".hero__timecode-value");
@@ -239,36 +230,24 @@ export function initHero() {
   });
 
   if (prefersReducedMotion()) {
-    [name, tagline, kicker].forEach((el) => {
+    [name, tagline].forEach((el) => {
       if (el) el.style.visibility = "visible";
     });
-    [scrollIndicator, rail, timecodeRoot].forEach((el) => {
+    [scrollIndicator, timecodeRoot].forEach((el) => {
       if (el) el.style.opacity = "1";
     });
     return;
   }
 
   gsap.set(canvas, { opacity: 0 });
-  gsap.set([rail, timecodeRoot, scrollIndicator], {
+  gsap.set([timecodeRoot, scrollIndicator], {
     opacity: 0,
   });
-  if (kicker) kicker.style.visibility = "hidden";
 
   const tl = gsap.timeline({ delay: 0.2 });
 
   // 1. Noise fades up
   tl.to(canvas, { opacity: 1, duration: 1.4, ease: "power2.out" });
-
-  // 3. Kicker
-  tl.add(() => {
-    animateHeroText(kicker, {
-      type: "chars",
-      duration: 0.7,
-      stagger: 0.015,
-      y: 8,
-      ease: "power3.out",
-    });
-  }, "-=1.3");
 
   tl.add(() => {
     animateHeroText(name, {
@@ -304,7 +283,7 @@ export function initHero() {
   }, "-=0.6");
 
   tl.to(
-    [rail, timecodeRoot, scrollIndicator],
+    [timecodeRoot, scrollIndicator],
     { opacity: 1, duration: 0.9, ease: "power2.out", stagger: 0.07 },
     "-=0.3",
   );
@@ -328,7 +307,6 @@ export function initHero() {
     const taglineWords = tagline
       ? tagline.querySelectorAll(".split-word-inner")
       : [];
-    const kickerChars = kicker ? kicker.querySelectorAll(".split-char") : [];
 
     const exitTl = gsap.timeline({
       scrollTrigger: {
@@ -352,9 +330,6 @@ export function initHero() {
         { y: 20, opacity: 0, stagger: 0.04, ease: "none" },
         0,
       );
-    }
-    if (kickerChars.length) {
-      exitTl.to(kickerChars, { opacity: 0, ease: "none" }, 0);
     }
   });
 

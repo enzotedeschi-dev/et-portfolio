@@ -96,6 +96,7 @@
 
 .vfx-project__media:hover .video-fullscreen-btn,
 .modeling-renders__video-wrap:hover .video-fullscreen-btn,
+.vfx-hscroll__panel-media:hover .video-fullscreen-btn,
 .modeling-renders__video-wrap--playing .video-fullscreen-btn {
   opacity: 1;
 }

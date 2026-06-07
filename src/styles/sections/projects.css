@@ -13,21 +13,6 @@
   padding-inline: clamp(1.5rem, 3vw, 4rem);
 }
 
-.vfx-section::before {
-  content: "";
-  position: absolute;
-  top: 8%;
-  right: -12%;
-  width: 46vw;
-  height: 46vw;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(240, 236, 228, 0.035) 0%,
-    transparent 68%
-  );
-  pointer-events: none;
-}
-
 .vfx-section__header {
   max-width: 920px;
 }
@@ -43,6 +28,278 @@
 .vfx-showcase {
   display: grid;
   gap: clamp(4rem, 7vw, 7rem);
+}
+
+/* ── Desktop: show horizontal scroll, hide mobile stack ── */
+.vfx-mobile-stack {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .vfx-hscroll {
+    display: none !important;
+  }
+
+  .vfx-mobile-stack {
+    display: block;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HORIZONTAL SCROLL SHOWCASE — Contained side-by-side panels
+   ═══════════════════════════════════════════════════════════ */
+
+.vfx-hscroll {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin-top: var(--space-md);
+}
+
+.vfx-hscroll__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+/* ── Panel ── */
+.vfx-hscroll__panel {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 4vw, 5rem) clamp(3rem, 5vw, 7rem);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.vfx-hscroll__panel-inner {
+  display: grid;
+  grid-template-columns: 1.35fr 0.65fr;
+  gap: clamp(2rem, 4vw, 5.5rem);
+  align-items: center;
+  max-width: 1640px;
+  width: 100%;
+}
+
+/* ── Panel Media (contained, not full-bleed) ── */
+.vfx-hscroll__panel-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid rgba(240, 236, 228, 0.14);
+  background: var(--color-bg-elevated);
+  transition:
+    border-color var(--duration-normal) var(--ease-out-expo),
+    box-shadow var(--duration-normal) ease;
+}
+
+.vfx-hscroll__panel-media::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: 1px solid rgba(240, 236, 228, 0.12);
+  transform: translate(8px, 8px);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.vfx-hscroll__panel-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent 40%);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.vfx-hscroll__panel-media:hover {
+  border-color: rgba(240, 236, 228, 0.3);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
+}
+
+.vfx-hscroll__video,
+.vfx-hscroll__placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.vfx-hscroll__video-wrap--toggle {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.vfx-hscroll__video--breakdown {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+
+.vfx-hscroll__video--final {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+
+.vfx-hscroll .vfx-video-toggle {
+  z-index: 10;
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ── Panel overlay (number badge — on the video) ── */
+.vfx-hscroll__panel-overlay {
+  position: absolute;
+  bottom: 14px;
+  left: 16px;
+  z-index: 3;
+}
+
+.vfx-hscroll__panel-number {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 241, 232, 0.65);
+}
+
+/* ── Panel info (right column — clean, no overlap) ── */
+.vfx-hscroll__panel-info {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.8vh, 20px);
+}
+
+.vfx-hscroll__panel-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(240, 236, 228, 0.4);
+}
+
+.vfx-hscroll__panel-sep {
+  color: rgba(240, 236, 228, 0.18);
+}
+
+.vfx-hscroll__panel-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 1.4rem + 2.8vw, 3.6rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  color: var(--color-text-primary);
+}
+
+.vfx-hscroll__panel-description {
+  max-width: 520px;
+  font-size: clamp(1rem, 0.95rem + 0.5vw, 1.15rem);
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+
+.vfx-hscroll__panel-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+/* ── Pipeline (compact label row) ── */
+.vfx-hscroll__pipeline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.vfx-hscroll__pipeline-step {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(240, 236, 228, 0.42);
+  padding: 4px 8px;
+  border: 1px solid rgba(240, 236, 228, 0.08);
+  background: rgba(240, 236, 228, 0.02);
+}
+
+.vfx-hscroll__pipeline-sep {
+  font-size: 10px;
+  color: rgba(240, 236, 228, 0.15);
+}
+
+/* ── Progress bar + counter ── */
+.vfx-hscroll__progress {
+  position: absolute;
+  bottom: clamp(20px, 3vh, 36px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.vfx-hscroll__progress-bar {
+  width: clamp(60px, 10vw, 120px);
+  height: 1px;
+  background: rgba(240, 236, 228, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.vfx-hscroll__progress-fill {
+  position: absolute;
+  inset: 0;
+  background: rgba(240, 236, 228, 0.6);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+.vfx-hscroll__progress-counter {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(240, 236, 228, 0.45);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 1100px) {
+  .vfx-hscroll__panel-inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .vfx-hscroll__panel-media {
+    max-height: 50vh;
+  }
 }
 
 .vfx-project {
