@@ -260,9 +260,7 @@ export async function initHeroScene(canvas, options = {}) {
     powerPreference: isMobile ? "low-power" : "default",
   });
   renderer.setClearColor(0x0a0a0a, 1);
-  renderer.setPixelRatio(
-    isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2),
-  );
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 
   /* ---- Scene & Camera ---- */
   const scene = new THREE.Scene();
@@ -377,13 +375,13 @@ export async function initHeroScene(canvas, options = {}) {
     currentH = h;
 
     const currentMobile = w < 768;
-    renderer.setPixelRatio(
-      currentMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2),
-    );
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(w, h, false);
 
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+
+    icoGroup.scale.setScalar(currentMobile ? 0.65 : 1.0);
 
     particleMaterial.uniforms.uPixelRatio.value = renderer.getPixelRatio();
   }
