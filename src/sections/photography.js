@@ -215,15 +215,16 @@ function initLightbox() {
     });
   };
 
-  const showImage = (index) => {
+  const showImage = (targetIndex) => {
     const total = flatList.length;
-    currentIndex = (index + total) % total;
+    const isNext = targetIndex > currentIndex;
+    currentIndex = (targetIndex + total) % total;
     const item = flatList[currentIndex];
 
     // Animate image swap
     gsap.to(imgEl, {
       opacity: 0,
-      x: index > currentIndex ? -30 : 30,
+      x: isNext ? -30 : 30,
       duration: 0.15,
       ease: "power2.in",
       onComplete: () => {
@@ -232,7 +233,7 @@ function initLightbox() {
         counter.textContent = `${currentIndex + 1} / ${total}`;
         gsap.fromTo(
           imgEl,
-          { opacity: 0, x: index > currentIndex ? 30 : -30 },
+          { opacity: 0, x: isNext ? 30 : -30 },
           { opacity: 1, x: 0, duration: 0.3, ease: "power2.out" },
         );
       },

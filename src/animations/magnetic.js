@@ -51,17 +51,10 @@ export function makeMagnetic(el, options = {}) {
     }
   };
 
-  const onLeave = () => {
-    xTo(0);
-    yTo(0);
-  };
-
-  el.addEventListener("mousemove", onMove);
-  el.addEventListener("mouseleave", onLeave);
+  window.addEventListener("mousemove", onMove);
 
   return () => {
-    el.removeEventListener("mousemove", onMove);
-    el.removeEventListener("mouseleave", onLeave);
+    window.removeEventListener("mousemove", onMove);
     gsap.set(el, { x: 0, y: 0 });
   };
 }

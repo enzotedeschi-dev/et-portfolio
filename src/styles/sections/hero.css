@@ -21,6 +21,15 @@
   pointer-events: none;
 }
 
+.hero__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(10, 10, 10, 0.5); /* Uniform dark overlay */
+  z-index: 5;
+  pointer-events: none;
+}
+
 /* Film grain noise (canvas) — fine, subtle, faded internally in JS. */
 .hero__noise {
   position: absolute;
@@ -109,7 +118,7 @@
 .hero__name {
   font-family: var(--font-heading);
   font-size: clamp(2.5rem, 1rem + 6.5vw, 6.5rem);
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: 0.22em;
   line-height: 1.15;
   text-transform: uppercase;
@@ -151,6 +160,9 @@
   gap: 10px;
   opacity: 0;
   z-index: 10;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
 }
 
 .hero__scroll-text {
@@ -161,23 +173,19 @@
   color: rgba(240, 236, 228, 0.6);
 }
 
-.hero__scroll-line {
-  width: 1px;
-  height: 32px;
-  background: linear-gradient(to bottom, rgba(240, 236, 228, 0.5), transparent);
-  animation: heroScrollPulse 2.4s ease-in-out infinite;
-  transform-origin: top;
+.hero__scroll-chevron {
+  color: rgba(240, 236, 228, 0.5);
+  animation: heroChevronPulse 2.4s ease-in-out infinite;
 }
 
-@keyframes heroScrollPulse {
-  0%,
-  100% {
+@keyframes heroChevronPulse {
+  0%, 100% {
     opacity: 0.3;
-    transform: scaleY(0.5);
+    transform: translateY(0);
   }
   50% {
     opacity: 1;
-    transform: scaleY(1);
+    transform: translateY(4px);
   }
 }
 

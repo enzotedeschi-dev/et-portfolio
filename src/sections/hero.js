@@ -3,8 +3,9 @@ import { animateHeroText } from "../animations/textReveal.js";
 import { $ } from "../utils/dom.js";
 import { t } from "../i18n/i18n.js";
 import { prefersReducedMotion } from "../utils/motion.js";
-import { initHeroLight } from "../animations/heroLight.js";
+import { initHeroScene } from "../animations/heroScene.js";
 import { observeVisibility } from "../utils/performanceManager.js";
+import { makeMagnetic } from "../animations/magnetic.js";
 
 function renderTagline() {
   const full = t("hero.tagline", "Where code meets cinema");
@@ -18,7 +19,6 @@ function renderTagline() {
 }
 
 export function renderHero() {
-  const year = new Date().getFullYear();
   return `
     <section class="hero" id="hero">
       <div class="hero__bg" aria-hidden="true">
@@ -31,17 +31,10 @@ export function renderHero() {
         <p class="hero__tagline gs-reveal">${renderTagline()}</p>
       </div>
 
-
-      <div class="hero__timecode" aria-hidden="true">
-        <span class="hero__timecode-label">REC</span>
-        <span class="hero__timecode-dot"></span>
-        <span class="hero__timecode-value">00:00:00:00</span>
-      </div>
-
-      <div class="hero__scroll-indicator">
+      <a href="#manifesto" class="hero__scroll-indicator">
         <span class="hero__scroll-text">${t("hero.scroll", "Scroll")}</span>
-        <div class="hero__scroll-line"></div>
-      </div>
+        <svg class="hero__scroll-chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>
+      </a>
     </section>
   `;
 }
@@ -165,67 +158,28 @@ function initNoise(canvas) {
   };
 }
 
-/**
- * Cinema-style timecode ticker at 24fps.
- * Format: HH:MM:SS:FF
- */
-function initTimecode(el) {
-  if (!el) return () => {};
-  const pad = (n) => String(n).padStart(2, "0");
-  const FPS = 24;
-  const start = performance.now();
-  let running = true;
-
-  let visible = true;
-
-  const tick = () => {
-    if (!running || !visible) return;
-    const elapsedMs = performance.now() - start;
-    const totalFrames = Math.floor((elapsedMs / 1000) * FPS);
-    const f = totalFrames % FPS;
-    const s = Math.floor(totalFrames / FPS) % 60;
-    const m = Math.floor(totalFrames / FPS / 60) % 60;
-    const h = Math.floor(totalFrames / FPS / 3600);
-    el.textContent = `${pad(h)}:${pad(m)}:${pad(s)}:${pad(f)}`;
-  };
-  gsap.ticker.add(tick);
-
-  // Pause when hero is off-screen
-  const heroSection = el.closest(".hero");
-  let unobserve = () => {};
-  if (heroSection) {
-    unobserve = observeVisibility(heroSection, (isVis) => {
-      visible = isVis;
-    });
-  }
-
-  return () => {
-    running = false;
-    gsap.ticker.remove(tick);
-    unobserve();
-  };
-}
 let stopNoise = null;
-let stopTimecode = null;
 let stopLight = null;
+let stopScrollMagnetic = null;
 
 export function initHero() {
   const name = $(".hero__name");
   const tagline = $(".hero__tagline");
   const scrollIndicator = $(".hero__scroll-indicator");
   const canvas = $(".hero__noise");
-  const timecodeRoot = $(".hero__timecode");
-  const timecodeValue = $(".hero__timecode-value");
-
   const lightCanvas = $(".hero__light");
+  const content = $(".hero__content");
 
+  // Cleanup istanze precedenti
   if (stopNoise) stopNoise();
-  if (stopTimecode) stopTimecode();
   if (stopLight) stopLight();
+  if (stopScrollMagnetic) stopScrollMagnetic();
+
   stopNoise = initNoise(canvas);
-  stopTimecode = initTimecode(timecodeValue);
   stopLight = null;
-  initHeroLight(lightCanvas).then((dispose) => {
+  stopScrollMagnetic = null;
+
+  initHeroScene(lightCanvas).then((dispose) => {
     stopLight = dispose;
   });
 
@@ -233,22 +187,20 @@ export function initHero() {
     [name, tagline].forEach((el) => {
       if (el) el.style.visibility = "visible";
     });
-    [scrollIndicator, timecodeRoot].forEach((el) => {
-      if (el) el.style.opacity = "1";
-    });
+    if (scrollIndicator) scrollIndicator.style.opacity = "1";
     return;
   }
 
+  // Initial states
   gsap.set(canvas, { opacity: 0 });
-  gsap.set([timecodeRoot, scrollIndicator], {
-    opacity: 0,
-  });
+  if (scrollIndicator) gsap.set(scrollIndicator, { opacity: 0 });
 
   const tl = gsap.timeline({ delay: 0.2 });
 
   // 1. Noise fades up
   tl.to(canvas, { opacity: 1, duration: 1.4, ease: "power2.out" });
 
+  // 2. Name chars reveal + blur
   tl.add(() => {
     animateHeroText(name, {
       type: "chars",
@@ -269,9 +221,11 @@ export function initHero() {
           ease: "power3.out",
         },
       );
+
     }
   }, "-=0.9");
 
+  // 3. Tagline reveal
   tl.add(() => {
     animateHeroText(tagline, {
       type: "words",
@@ -282,26 +236,41 @@ export function initHero() {
     });
   }, "-=0.6");
 
-  tl.to(
-    [timecodeRoot, scrollIndicator],
-    { opacity: 1, duration: 0.9, ease: "power2.out", stagger: 0.07 },
-    "-=0.3",
-  );
+  // 4. HUD elements fade in
+  if (scrollIndicator) {
+    tl.to(
+      scrollIndicator,
+      { opacity: 1, duration: 0.9, ease: "power2.out" },
+      "-=0.3",
+    );
+  }
 
-  tl.add(() => {
-    gsap.to(scrollIndicator, {
-      opacity: 0,
-      y: -30,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".hero",
-        start: "2% top",
-        end: "40% top",
-        scrub: true,
-      },
+  // 5. Magnetic scroll indicator
+  if (scrollIndicator) {
+    stopScrollMagnetic = makeMagnetic(scrollIndicator, {
+      strength: 0.25,
+      radius: 100,
     });
-  });
+  }
 
+  // 6. Scroll indicator fade-out on scroll
+  if (scrollIndicator) {
+    tl.add(() => {
+      gsap.to(scrollIndicator, {
+        opacity: 0,
+        y: -20,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ".hero",
+          start: "2% top",
+          end: "40% top",
+          scrub: true,
+        },
+      });
+    });
+  }
+
+  // 8. Exit animation con distorsione cinematografica
   tl.add(() => {
     const nameChars = name ? name.querySelectorAll(".split-char") : [];
     const taglineWords = tagline
@@ -318,16 +287,30 @@ export function initHero() {
     });
 
     if (nameChars.length) {
+      const count = nameChars.length;
+      const center = count / 2;
       exitTl.to(
         nameChars,
-        { y: 40, opacity: 0, stagger: 0.02, ease: "power2.in" },
+        {
+          y: 50,
+          opacity: 0,
+          skewY: (i) => {
+            const distFromCenter =
+              1 - Math.abs(i - center) / center;
+            return distFromCenter * 8;
+          },
+          scaleY: 1.3,
+          filter: "blur(4px)",
+          stagger: 0.015,
+          ease: "power2.in",
+        },
         0,
       );
     }
     if (taglineWords.length) {
       exitTl.to(
         taglineWords,
-        { y: 20, opacity: 0, stagger: 0.04, ease: "none" },
+        { y: 20, opacity: 0, scaleY: 0.7, stagger: 0.03, ease: "none" },
         0,
       );
     }
@@ -335,7 +318,7 @@ export function initHero() {
 
   return () => {
     if (stopNoise) stopNoise();
-    if (stopTimecode) stopTimecode();
     if (stopLight) stopLight();
+    if (stopScrollMagnetic) stopScrollMagnetic();
   };
 }
