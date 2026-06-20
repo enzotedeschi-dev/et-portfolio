@@ -145,7 +145,7 @@ function renderVideo(project) {
   }
   if (project.video) {
     return `
-      <video class="vfx-hscroll__video" src="${project.video}" muted loop playsinline poster="${project.poster || ""}"></video>
+      <video class="vfx-hscroll__video" src="${project.video}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
       <button class="video-fullscreen-btn" aria-label="Fullscreen" style="z-index: 10;">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3h5M3 3v5M17 3h-5M17 3v5M3 17h5M3 17v-5M17 17h-5M17 17v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
@@ -170,7 +170,7 @@ function renderVideoMobile(project) {
     `;
   }
   if (project.video) {
-    return `<video class="vfx-project__video" src="${project.video}" muted loop playsinline poster="${project.poster || ""}"></video>
+    return `<video class="vfx-project__video" src="${project.video}" muted loop playsinline preload="none" poster="${project.poster || ""}"></video>
        <button class="video-fullscreen-btn" aria-label="Fullscreen">
          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3h5M3 3v5M17 3h-5M17 3v5M3 17h5M3 17v-5M17 17h-5M17 17v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
        </button>`;

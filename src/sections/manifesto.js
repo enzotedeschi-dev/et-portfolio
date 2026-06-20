@@ -182,6 +182,8 @@ export function initManifesto() {
 
     gsap.set(words, { opacity: 0.15 });
 
+    let lastProgress = -1;
+
     ScrollTrigger.create({
       trigger: text,
       start: "top 75%",
@@ -189,13 +191,16 @@ export function initManifesto() {
       scrub: 0.5,
       onUpdate: (self) => {
         const progress = self.progress;
+        if (progress === lastProgress) return;
+        lastProgress = progress;
+
         const range = 0.15;
-        words.forEach((word, i) => {
-          const wordProgress = i / words.length;
-          const wordStart = wordProgress * (1 - range);
-          const t = Math.max(0, Math.min(1, (progress - wordStart) / range));
-          gsap.set(word, { opacity: 0.15 + t * 0.85 });
-        });
+        const total = words.length;
+        for (let i = 0; i < total; i++) {
+          const wordStart = (i / total) * (1 - range);
+          const p = Math.max(0, Math.min(1, (progress - wordStart) / range));
+          words[i].style.opacity = 0.15 + p * 0.85;
+        }
       },
     });
   }

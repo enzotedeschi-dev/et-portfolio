@@ -30,18 +30,7 @@
   pointer-events: none;
 }
 
-/* Film grain noise (canvas) — fine, subtle, faded internally in JS. */
-.hero__noise {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 3;
-  pointer-events: none;
-  opacity: 0.12;
-  mix-blend-mode: overlay;
-  image-rendering: pixelated;
-}
+
 
 /* ---------- Volumetric light (Three.js WebGL canvas) ---------- */
 .hero__light {

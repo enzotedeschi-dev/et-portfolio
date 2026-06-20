@@ -46,7 +46,6 @@
   height: 40px;
   border: 1.5px solid rgba(240, 236, 228, 0.35);
   background: transparent;
-  mix-blend-mode: difference;
 }
 
 /* Label — contextual text inside ring */
@@ -64,7 +63,6 @@
   transition:
     opacity 0.25s ease,
     transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  mix-blend-mode: difference;
 }
 
 .cursor-label--visible {

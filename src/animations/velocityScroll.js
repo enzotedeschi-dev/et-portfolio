@@ -2,6 +2,7 @@
  * Velocity-Aware Scroll Animations
  * Elements react to scroll speed: skew, stretch, parallax layers.
  * Uses Lenis velocity for smooth values.
+ * Performance: uses gsap.quickTo() to reuse tweens instead of creating new ones per frame.
  */
 
 import { gsap } from "gsap";
@@ -22,8 +23,11 @@ export function addVelocitySkew(els, opts = {}) {
   const { maxSkew = 3 } = opts;
   const elements = els.length !== undefined ? [...els] : [els];
   elements.forEach((el) => {
-    skewTargets.push({ el, maxSkew });
-    el.style.willChange = "transform";
+    skewTargets.push({
+      el,
+      maxSkew,
+      quickSkewY: gsap.quickTo(el, "skewY", { duration: 0.3, ease: "power2.out" }),
+    });
   });
 }
 
@@ -36,7 +40,12 @@ export function addVelocityStretch(els, opts = {}) {
   const { maxStretch = 0.03 } = opts;
   const elements = els.length !== undefined ? [...els] : [els];
   elements.forEach((el) => {
-    stretchTargets.push({ el, maxStretch });
+    stretchTargets.push({
+      el,
+      maxStretch,
+      quickScaleY: gsap.quickTo(el, "scaleY", { duration: 0.3, ease: "power2.out" }),
+      quickScaleX: gsap.quickTo(el, "scaleX", { duration: 0.3, ease: "power2.out" }),
+    });
   });
 }
 
@@ -51,27 +60,15 @@ function tick() {
   // Normalize to -1...1 range (clamped)
   const norm = Math.max(-1, Math.min(1, velocity / 1500));
 
-  // Apply skew
-  skewTargets.forEach(({ el, maxSkew }) => {
-    gsap.to(el, {
-      skewY: norm * maxSkew,
-      duration: 0.3,
-      ease: "power2.out",
-      overwrite: "auto",
-    });
+  // Apply skew via quickTo (reuses existing tween — zero allocation)
+  skewTargets.forEach(({ maxSkew, quickSkewY }) => {
+    quickSkewY(norm * maxSkew);
   });
 
-  // Apply stretch
-  stretchTargets.forEach(({ el, maxStretch }) => {
-    const scaleY = 1 + Math.abs(norm) * maxStretch;
-    const scaleX = 1 - Math.abs(norm) * maxStretch * 0.5;
-    gsap.to(el, {
-      scaleY,
-      scaleX,
-      duration: 0.3,
-      ease: "power2.out",
-      overwrite: "auto",
-    });
+  // Apply stretch via quickTo
+  stretchTargets.forEach(({ maxStretch, quickScaleY, quickScaleX }) => {
+    quickScaleY(1 + Math.abs(norm) * maxStretch);
+    quickScaleX(1 - Math.abs(norm) * maxStretch * 0.5);
   });
 }
 
@@ -93,7 +90,6 @@ export function disposeVelocityScroll() {
   stopVelocityScroll();
   [...skewTargets, ...stretchTargets].forEach(({ el }) => {
     gsap.set(el, { skewY: 0, scaleX: 1, scaleY: 1, clearProps: "skewY,scaleX,scaleY" });
-    el.style.willChange = "";
   });
   skewTargets.length = 0;
   stretchTargets.length = 0;
