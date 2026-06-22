@@ -175,16 +175,14 @@ const PARTICLE_VERTEX = /* glsl */ `
 
   varying float vAlpha;
 
-  ${NOISE_GLSL}
-
   void main() {
     vec3 pos = position;
 
-    // Noise-based drift — particelle che derivano lentamente
-    float t = uTime * 0.08 + aOffset;
-    pos.x += snoise(vec3(pos.y * 0.5, t, aOffset))          * 0.4;
-    pos.y += snoise(vec3(t, pos.z * 0.5, aOffset + 50.0))   * 0.4;
-    pos.z += snoise(vec3(aOffset + 100.0, pos.x * 0.5, t))  * 0.4;
+    // Trigonometric drift — particelle che derivano (molto più leggero di snoise)
+    float t = uTime * 0.15 + aOffset;
+    pos.x += sin(t + pos.y * 1.5) * 0.4;
+    pos.y += cos(t * 0.8 + pos.z * 1.2 + aOffset) * 0.4;
+    pos.z += sin(t * 1.2 + pos.x * 1.8 - aOffset) * 0.4;
 
     // Mouse repulsion (desktop — uMouse resta a 0,0 su touch)
     vec3  mousePos3D = vec3(uMouse * 2.5, 0.0);
@@ -392,8 +390,7 @@ export async function initHeroScene(canvas, options = {}) {
   /* ---- Mouse tracking con smoothing ---- */
   const targetMouse = { x: 0, y: 0 };
   const currentMouse = { x: 0, y: 0 };
-  const prevMouse = { x: 0, y: 0 };
-  const mouseVelocity = { x: 0, y: 0 };
+
 
   const onMouseMove = (e) => {
     targetMouse.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -437,18 +434,6 @@ export async function initHeroScene(canvas, options = {}) {
     currentMouse.y += (targetMouse.y - currentMouse.y) * smooth;
     sharedUniforms.uMouse.value.set(currentMouse.x, -currentMouse.y);
 
-    // Mouse velocity (smoothed safely to avoid spikes/black screens)
-    const dx = currentMouse.x - prevMouse.x;
-    const dy = currentMouse.y - prevMouse.y;
-    prevMouse.x = currentMouse.x;
-    prevMouse.y = currentMouse.y;
-    
-    const safeDelta = Math.max(delta, 0.005);
-    const instVel = Math.hypot(dx, dy) / safeDelta;
-    
-    // Smooth the magnitude directly into mouseVelocity.x to avoid NaN/flickering
-    const velSmooth = 1 - Math.exp(-10.0 * delta);
-    mouseVelocity.x += (instVel - mouseVelocity.x) * velSmooth;
 
     // Fade-in
     const elapsed = now - startTime - fadeInDelay;

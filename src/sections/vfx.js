@@ -340,7 +340,6 @@ function renderModeling() {
 
   const { renders } = modeling;
   const videoProjects = renders.filter((p) => p.video);
-  const stillsProject = renders.find((p) => p.images.length > 0);
 
   return `
     <section class="modeling-subsection" aria-labelledby="cg-commercials-title">
@@ -395,34 +394,7 @@ function renderModeling() {
           : ""
       }
 
-      ${
-        stillsProject
-          ? `
-        <div class="modeling-stills">
-          <div class="modeling-stills__header">
-            <span class="modeling-stills__label">${t("modeling.stills.label", "03 / Campaign Stills")}</span>
-            <h3 class="modeling-stills__title">${t("modeling.stills.title", "Campaign Stills")}</h3>
-            <p class="modeling-stills__description">${t(
-              "modeling.stills.description",
-              "Static CGI frames designed as supporting campaign visuals — focused on packaging, reflections, material detail and premium product presence.",
-            )}</p>
-          </div>
 
-          <div class="modeling-renders__grid">
-            ${stillsProject.images
-              .map(
-                (img, i) => `
-                  <div class="modeling-renders__item">
-                    <img src="${img}" alt="${stillsProject.title} — campaign still ${i + 1}" loading="lazy" decoding="async" />
-                  </div>
-                `,
-              )
-              .join("")}
-          </div>
-        </div>
-      `
-          : ""
-      }
     </section>
   `;
 }

@@ -1,10 +1,8 @@
 {
   "hero.kicker": "Codice × Cinema",
-  "hero.tagline": "Dove il codice incontra il cinema",
-  "hero.tagline.accent": "cinema",
   "hero.rail": "Creative Developer & VFX Artist",
   "hero.coords": "41.9028° N, 12.4964° E",
-  "hero.cta": "Esplora",
+  "hero.cta": "Esplora i progetti",
   "hero.scroll": "Scorri",
 
   "manifesto.kicker": "La Visione",
@@ -28,6 +26,7 @@
 
   "vfx.label": "01 / Effetti Visivi",
   "vfx.title": "VFX",
+  "vfx.lede": "Shot selezionati, breakdown e lavori CG costruiti attraverso luce, compositing e precisione tecnica.",
   "vfx.vfx-1.title": "Astronaut Live-Action",
   "vfx.vfx-1.description": "Integrazione live-action in greenscreen di un astronauta all'interno di un ambiente 3D interamente ricostruito.",
   "vfx.vfx-1.meta.role": "Compositing / Tracking",
@@ -92,9 +91,7 @@
   "vfx.toggle.solid": "Vedi Solid",
   "vfx.toggle.breakdown": "Vedi Breakdown",
   "vfx.toggle.final": "Vedi Finale",
-  "modeling.stills.label": "03 / Campaign Stills",
-  "modeling.stills.title": "Campaign Stills",
-  "modeling.stills.description": "Frame CGI statici pensati come visual di campagna — focalizzati su packaging, riflessi, dettaglio dei materiali e presenza premium del prodotto.",
+
 
   "dev.label": "02 / Codice",
   "dev.title": "Sviluppo",

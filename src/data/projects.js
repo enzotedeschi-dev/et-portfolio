@@ -1,10 +1,4 @@
-/**
- * Projects Data
- * Organized by category — each with its own schema
- * Replace placeholder content with your real work
- */
-
-import astronautaVideo from "../assets/breakdownastronauta.mp4";
+import astronautaVideo from "../assets/astronautavfxcompresso.mp4";
 import unrealVideo from "../assets/videos/progettounreal/FilmatoFinito.mp4";
 import cgEnvVideo from "../assets/FinishedCGEnvironment_CompressedDefinitivo.mp4";
 import autosortImg from "../assets/autosort/autosort.webp";
@@ -13,9 +7,7 @@ import imediatopImg from "../assets/dev/imediatop-site.webp";
 import trullidigiuliaImg from "../assets/dev/trullidigiulia_site.webp";
 import cgEnvSolidVideo from "../assets/solidcompressedoutput.mp4";
 
-import renderProfumo1 from "../assets/profumo/renderprofumo1.jpg";
-import renderProfumo2 from "../assets/profumo/renderprofumo2.jpg";
-import renderProfumo3 from "../assets/profumo/renderprofumo3.jpg";
+
 import profumoVideo from "../assets/videoprofumocompressodefinitivo.mp4";
 import leucaFinalVideo from "../assets/LEUCASIASPOTCOMPRESSED.mp4";
 
@@ -120,7 +112,7 @@ export const projects = {
         tags: ["Modeling", "Shading", "Lighting", "Rendering", "Compositing", "Lookdev"],
         video: profumoVideo,
         poster: profumoPoster,
-        images: [renderProfumo1, renderProfumo2, renderProfumo3],
+
       },
       {
         id: "3d-flipfluids",

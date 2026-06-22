@@ -6,16 +6,6 @@ import { prefersReducedMotion } from "../utils/motion.js";
 import { initHeroScene } from "../animations/heroScene.js";
 import { makeMagnetic } from "../animations/magnetic.js";
 
-function renderTagline() {
-  const full = t("hero.tagline", "Where code meets cinema");
-  const accent = t("hero.tagline.accent", "cinema");
-  const idx = full.toLowerCase().lastIndexOf(accent.toLowerCase());
-  if (idx < 0) return full;
-  const before = full.slice(0, idx);
-  const match = full.slice(idx, idx + accent.length);
-  const after = full.slice(idx + accent.length);
-  return `${before}<span class="hero__tagline-accent">${match}</span>${after}`;
-}
 
 export function renderHero() {
   return `
@@ -26,7 +16,10 @@ export function renderHero() {
 
       <div class="hero__content">
         <h1 class="hero__name gs-reveal"><span class="hero__name-word">Enzo</span> <span class="hero__name-word">Tedeschi</span></h1>
-        <p class="hero__tagline gs-reveal">${renderTagline()}</p>
+
+        <div class="hero__cta-wrapper gs-reveal">
+          <a href="#vfx" class="btn btn--outline">${t("hero.cta", "Explore Projects")} <span class="btn__arrow">&rarr;</span></a>
+        </div>
       </div>
 
       <a href="#manifesto" class="hero__scroll-indicator">
@@ -42,8 +35,8 @@ let stopScrollMagnetic = null;
 
 export function initHero() {
   const name = $(".hero__name");
-  const tagline = $(".hero__tagline");
   const scrollIndicator = $(".hero__scroll-indicator");
+  const ctaWrapper = $(".hero__cta-wrapper");
   const lightCanvas = $(".hero__light");
 
   // Cleanup istanze precedenti
@@ -58,7 +51,7 @@ export function initHero() {
   });
 
   if (prefersReducedMotion()) {
-    [name, tagline].forEach((el) => {
+    [name, ctaWrapper].forEach((el) => {
       if (el) el.style.visibility = "visible";
     });
     if (scrollIndicator) scrollIndicator.style.opacity = "1";
@@ -67,6 +60,7 @@ export function initHero() {
 
   // Initial states
   if (scrollIndicator) gsap.set(scrollIndicator, { opacity: 0 });
+  if (ctaWrapper) gsap.set(ctaWrapper, { autoAlpha: 0 });
 
   const tl = gsap.timeline({ delay: 0.2 });
 
@@ -94,23 +88,21 @@ export function initHero() {
     }
   }, 0);
 
-  // 2. Tagline reveal
-  tl.add(() => {
-    animateHeroText(tagline, {
-      type: "words",
-      duration: 0.9,
-      stagger: 0.06,
-      y: 14,
-      ease: "power3.out",
-    });
-  }, 0.4);
 
-  // 3. HUD elements fade in
+  // 3. HUD elements and CTA fade in
   if (scrollIndicator) {
     tl.to(
       scrollIndicator,
       { opacity: 1, duration: 0.9, ease: "power2.out" },
       1.0,
+    );
+  }
+  if (ctaWrapper) {
+    tl.fromTo(
+      ctaWrapper,
+      { autoAlpha: 0, y: 10 },
+      { autoAlpha: 1, y: 0, duration: 0.9, ease: "power2.out" },
+      0.8,
     );
   }
 

@@ -66,11 +66,6 @@ export function initCustomCursor() {
       cls: "cursor--view",
     },
     {
-      selector: ".modeling-viewer--desktop",
-      label: "Drag",
-      cls: "cursor--drag",
-    },
-    {
       selector: 'a[target="_blank"]',
       label: "Open ↗",
       cls: "cursor--link",

@@ -1,6 +1,6 @@
 /**
  * Velocity-Aware Scroll Animations
- * Elements react to scroll speed: skew, stretch, parallax layers.
+ * Elements react to scroll speed: skew.
  * Uses Lenis velocity for smooth values.
  * Performance: uses gsap.quickTo() to reuse tweens instead of creating new ones per frame.
  */
@@ -12,7 +12,6 @@ let running = false;
 
 // Registered targets
 const skewTargets = [];
-const stretchTargets = [];
 
 /**
  * Register elements for scroll-velocity skew
@@ -27,24 +26,6 @@ export function addVelocitySkew(els, opts = {}) {
       el,
       maxSkew,
       quickSkewY: gsap.quickTo(el, "skewY", { duration: 0.3, ease: "power2.out" }),
-    });
-  });
-}
-
-/**
- * Register elements for scroll-velocity stretch (scaleY)
- * @param {HTMLElement|HTMLElement[]} els
- * @param {object} opts - { maxStretch: number }
- */
-export function addVelocityStretch(els, opts = {}) {
-  const { maxStretch = 0.03 } = opts;
-  const elements = els.length !== undefined ? [...els] : [els];
-  elements.forEach((el) => {
-    stretchTargets.push({
-      el,
-      maxStretch,
-      quickScaleY: gsap.quickTo(el, "scaleY", { duration: 0.3, ease: "power2.out" }),
-      quickScaleX: gsap.quickTo(el, "scaleX", { duration: 0.3, ease: "power2.out" }),
     });
   });
 }
@@ -64,12 +45,6 @@ function tick() {
   skewTargets.forEach(({ maxSkew, quickSkewY }) => {
     quickSkewY(norm * maxSkew);
   });
-
-  // Apply stretch via quickTo
-  stretchTargets.forEach(({ maxStretch, quickScaleY, quickScaleX }) => {
-    quickScaleY(1 + Math.abs(norm) * maxStretch);
-    quickScaleX(1 - Math.abs(norm) * maxStretch * 0.5);
-  });
 }
 
 export function startVelocityScroll() {
@@ -88,9 +63,8 @@ export function stopVelocityScroll() {
  */
 export function disposeVelocityScroll() {
   stopVelocityScroll();
-  [...skewTargets, ...stretchTargets].forEach(({ el }) => {
-    gsap.set(el, { skewY: 0, scaleX: 1, scaleY: 1, clearProps: "skewY,scaleX,scaleY" });
+  skewTargets.forEach(({ el }) => {
+    gsap.set(el, { skewY: 0, clearProps: "skewY" });
   });
   skewTargets.length = 0;
-  stretchTargets.length = 0;
 }

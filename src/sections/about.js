@@ -41,6 +41,8 @@ export function renderAbout() {
 }
 
 export function initAbout() {
+  const cleanups = [];
+
   const header = $(".about .section-header");
   if (header) cinematicHeader(header);
 
@@ -98,4 +100,8 @@ export function initAbout() {
       },
     });
   }
+
+  return () => {
+    cleanups.forEach((fn) => fn());
+  };
 }

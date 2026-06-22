@@ -7,28 +7,14 @@ import { gsap } from "gsap";
  * - Shared IntersectionObserver pool
  */
 
-let fpsHistory = [];
 let lastFrameTime = performance.now();
 let running = false;
-let degraded = false;
 
 const FPS_SAMPLE_SIZE = 30;
 const FPS_THRESHOLD = 28;
 
-const callbacks = new Set();
-
-/**
- * Register a callback that receives { fps, degraded }
- */
-export function onPerformanceChange(cb) {
-  callbacks.add(cb);
-  return () => callbacks.delete(cb);
-}
-
-function notifyAll() {
-  const data = { fps: getAvgFps(), degraded };
-  callbacks.forEach((cb) => cb(data));
-}
+let fpsHistory = [];
+let degraded = false;
 
 function getAvgFps() {
   if (fpsHistory.length === 0) return 60;
@@ -48,17 +34,14 @@ function tick() {
   }
 
   const avg = getAvgFps();
-  const wasDegraded = degraded;
 
   if (avg < FPS_THRESHOLD && !degraded) {
     degraded = true;
     document.documentElement.classList.add("perf-degraded");
-    notifyAll();
   } else if (avg > FPS_THRESHOLD + 10 && degraded) {
     // Hysteresis: recover only if well above threshold
     degraded = false;
     document.documentElement.classList.remove("perf-degraded");
-    notifyAll();
   }
 }
 
@@ -67,15 +50,6 @@ export function startMonitoring() {
   running = true;
   lastFrameTime = performance.now();
   gsap.ticker.add(tick);
-}
-
-export function stopMonitoring() {
-  running = false;
-  gsap.ticker.remove(tick);
-}
-
-export function isDegraded() {
-  return degraded;
 }
 
 /**

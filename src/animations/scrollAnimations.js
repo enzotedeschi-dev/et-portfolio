@@ -62,60 +62,6 @@ export function staggerIn(parent, childSelector, options = {}) {
 }
 
 /**
- * Parallax effect on scroll
- */
-export function parallax(element, options = {}) {
-  const { y = -80, start = "top bottom", end = "bottom top" } = options;
-
-  gsap.to(element, {
-    y,
-    ease: "none",
-    scrollTrigger: {
-      trigger: element,
-      start,
-      end,
-      scrub: true,
-    },
-  });
-}
-
-/**
- * Horizontal line grow animation
- */
-export function lineGrow(element, options = {}) {
-  const { duration = 1.2, ease = "power3.inOut", start = "top 90%" } = options;
-
-  gsap.from(element, {
-    scaleX: 0,
-    transformOrigin: "left center",
-    duration,
-    ease,
-    scrollTrigger: {
-      trigger: element,
-      start,
-      once: true,
-    },
-  });
-}
-
-/**
- * Lazy video autoplay
- */
-export function lazyVideoPlay(videoElements) {
-  videoElements.forEach((video) => {
-    ScrollTrigger.create({
-      trigger: video,
-      start: "top 90%",
-      end: "bottom 10%",
-      onEnter: () => video.play(),
-      onLeave: () => video.pause(),
-      onEnterBack: () => video.play(),
-      onLeaveBack: () => video.pause(),
-    });
-  });
-}
-
-/**
  * Cinematic section header entrance
  */
 export function cinematicHeader(headerEl, options = {}) {
@@ -156,39 +102,6 @@ export function cinematicHeader(headerEl, options = {}) {
   }
 
   return tl;
-}
-
-/**
- * Scrub-based parallax on elements
- */
-export function scrubParallax(elements, options = {}) {
-  const { yPercent = -15, start = "top bottom", end = "bottom top" } = options;
-
-  if (elements.length !== undefined) {
-    elements.forEach((el) => {
-      gsap.to(el, {
-        yPercent,
-        ease: "none",
-        scrollTrigger: {
-          trigger: el,
-          start,
-          end,
-          scrub: true,
-        },
-      });
-    });
-  } else {
-    gsap.to(elements, {
-      yPercent,
-      ease: "none",
-      scrollTrigger: {
-        trigger: elements,
-        start,
-        end,
-        scrub: true,
-      },
-    });
-  }
 }
 
 /**
@@ -280,61 +193,4 @@ export function clipReveal(element, options = {}) {
       },
     );
   }
-}
-
-/**
- * Horizontal marquee — text scrolls horizontally tied to scroll position
- */
-export function horizontalMarquee(element, options = {}) {
-  const {
-    speed = -150, // negative = left, positive = right
-    start = "top bottom",
-    end = "bottom top",
-  } = options;
-
-  gsap.to(element, {
-    x: speed,
-    ease: "none",
-    scrollTrigger: {
-      trigger: element,
-      start,
-      end,
-      scrub: 0.5,
-    },
-  });
-}
-
-/**
- * Counter reveal — animates a number from 0 to its value
- */
-export function counterReveal(element, options = {}) {
-  const {
-    duration = 1.5,
-    ease = "power2.out",
-    start = "top 85%",
-  } = options;
-
-  const finalText = element.textContent;
-  const finalNum = parseInt(finalText, 10);
-  if (isNaN(finalNum)) return;
-
-  const prefix = finalText.replace(/\d+/, "");
-  const padLength = finalText.match(/\d+/)?.[0]?.length || 0;
-
-  const obj = { val: 0 };
-
-  gsap.to(obj, {
-    val: finalNum,
-    duration,
-    ease,
-    scrollTrigger: {
-      trigger: element,
-      start,
-      once: true,
-    },
-    onUpdate: () => {
-      element.textContent =
-        String(Math.round(obj.val)).padStart(padLength, "0") + prefix.trim();
-    },
-  });
 }

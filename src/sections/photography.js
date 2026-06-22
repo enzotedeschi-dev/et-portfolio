@@ -126,7 +126,6 @@ export function initPhotography() {
     });
 
     const items = cat.querySelectorAll(".photo-mosaic__item");
-    const totalStaggerTime = 0.7 + 0.08 * items.length; // duration + stagger * count
 
     // Phase 1: Animate empty cards in (no heavy images = buttery 60fps)
     gsap.from(items, {

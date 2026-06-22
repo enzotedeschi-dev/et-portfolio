@@ -131,7 +131,7 @@ export function initNavbar() {
   });
 
   const linkHandlers = [];
-  links.forEach((link, i) => {
+  links.forEach((link) => {
     const handler = () => {
       if (isOpen) {
         closeMenu();

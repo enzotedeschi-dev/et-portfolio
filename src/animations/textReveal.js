@@ -12,7 +12,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
  * @param {'chars' | 'words' | 'lines'} type
  * @returns {HTMLElement[]} array of created spans
  */
-export function splitText(element, type = "chars") {
+function splitText(element, type = "chars") {
   const text = element.textContent.replace(/\s+/g, " ").trim();
   element.setAttribute("aria-label", text);
   element.innerHTML = "";
@@ -117,35 +117,5 @@ export function animateHeroText(element, options = {}) {
     stagger,
     delay,
     ease,
-  });
-}
-
-/**
- * Animate text on scroll
- */
-export function animateScrollText(element, options = {}) {
-  const {
-    type = "words",
-    duration = 0.8,
-    stagger = 0.05,
-    y = 30,
-    ease = "power3.out",
-    start = "top 80%",
-  } = options;
-
-  const targets = splitText(element, type);
-  element.style.visibility = "visible";
-
-  return gsap.from(targets, {
-    y,
-    opacity: 0,
-    duration,
-    stagger,
-    ease,
-    scrollTrigger: {
-      trigger: element,
-      start,
-      once: true,
-    },
   });
 }

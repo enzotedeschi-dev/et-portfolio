@@ -146,4 +146,6 @@ export function initDisciplines() {
       },
     });
   });
+
+  return () => {};
 }

@@ -58,19 +58,3 @@ export function makeMagnetic(el, options = {}) {
     gsap.set(el, { x: 0, y: 0 });
   };
 }
-
-/**
- * Auto-init all elements with data-magnetic attribute
- */
-export function initMagnetics() {
-  const els = document.querySelectorAll("[data-magnetic]");
-  const cleanups = [];
-
-  els.forEach((el) => {
-    const strength = parseFloat(el.dataset.magneticStrength) || undefined;
-    const radius = parseFloat(el.dataset.magneticRadius) || undefined;
-    cleanups.push(makeMagnetic(el, { strength, radius }));
-  });
-
-  return () => cleanups.forEach((fn) => fn());
-}

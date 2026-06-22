@@ -114,16 +114,3 @@ export function addTilt(el, options = {}) {
     gsap.set(el, { rotateX: 0, rotateY: 0, scale: 1, clearProps: "all" });
   };
 }
-
-/**
- * Auto-init all [data-tilt] elements
- */
-export function initTilts() {
-  const els = document.querySelectorAll("[data-tilt]");
-  const cleanups = [];
-  els.forEach((el) => {
-    const maxTilt = parseFloat(el.dataset.tiltMax) || undefined;
-    cleanups.push(addTilt(el, { maxTilt }));
-  });
-  return () => cleanups.forEach((fn) => fn());
-}
