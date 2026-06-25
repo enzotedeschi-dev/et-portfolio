@@ -134,9 +134,6 @@ export function initHero() {
   // 6. Exit animation con distorsione cinematografica
   tl.add(() => {
     const nameChars = name ? name.querySelectorAll(".split-char") : [];
-    const taglineWords = tagline
-      ? tagline.querySelectorAll(".split-word-inner")
-      : [];
 
     const exitTl = gsap.timeline({
       scrollTrigger: {
@@ -165,13 +162,6 @@ export function initHero() {
           stagger: 0.015,
           ease: "power2.in",
         },
-        0,
-      );
-    }
-    if (taglineWords.length) {
-      exitTl.to(
-        taglineWords,
-        { y: 20, opacity: 0, scaleY: 0.7, stagger: 0.03, ease: "none" },
         0,
       );
     }
