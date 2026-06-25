@@ -1,6 +1,9 @@
 import astronautaVideo from "../assets/astronautavfxcompresso.mp4";
 import unrealVideo from "../assets/videos/progettounreal/FilmatoFinito.mp4";
 import cgEnvVideo from "../assets/FinishedCGEnvironment_CompressedDefinitivo.mp4";
+import posterVfx1 from "../assets/astronauta_secondo_4.png";
+import posterVfx2 from "../assets/videos/progettounreal/unreal_secondo_13.png";
+import posterVfx3 from "../assets/cgenvironment_secondo_1.png";
 import autosortImg from "../assets/autosort/autosort.webp";
 import legrandtabouImg from "../assets/dev/legrandtabou-site.webp";
 import imediatopImg from "../assets/dev/imediatop-site.webp";
@@ -32,7 +35,7 @@ export const projects = {
         "Live-action greenscreen integration of an astronaut into a fully crafted CG environment.",
       tags: ["Nuke", "Blender", "DaVinci Resolve", "PFTrack"],
       video: astronautaVideo,
-      poster: null,
+      poster: posterVfx1,
       breakdown: null,
     },
     {
@@ -42,7 +45,7 @@ export const projects = {
         "Real-time cinematic environment built in Unreal Engine with compositing in Nuke and final edit in Premiere.",
       tags: ["Unreal Engine", "Nuke", "Premiere Pro"],
       video: unrealVideo,
-      poster: null,
+      poster: posterVfx2,
       breakdown: null,
     },
     {
@@ -53,7 +56,7 @@ export const projects = {
       tags: ["Blender", "DaVinci Resolve"],
       video: cgEnvSolidVideo,
       finalVideo: cgEnvVideo,
-      poster: null,
+      poster: posterVfx3,
       breakdown: null,
     },
   ],

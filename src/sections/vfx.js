@@ -567,6 +567,21 @@ function initHorizontalScroll() {
           const visibleVideo = activePanel.querySelector(".vfx-hscroll__video:not(.is-hidden)");
           if (visibleVideo) safePlay(visibleVideo);
         }
+
+        // Preload ALL videos in current panel (including hidden toggle videos)
+        if (activePanel) {
+          activePanel.querySelectorAll(".vfx-hscroll__video").forEach((v) => {
+            if (v.preload === "none") v.preload = "auto";
+          });
+        }
+
+        // Preload next panel's videos so they're ready when the user scrolls
+        const nextPanel = panels[activeIndex + 1];
+        if (nextPanel) {
+          nextPanel.querySelectorAll(".vfx-hscroll__video").forEach((v) => {
+            if (v.preload === "none") v.preload = "auto";
+          });
+        }
       }
     },
     onLeave: () => {
@@ -737,12 +752,17 @@ function initMobileVfx(cleanups) {
 
   // Mobile video autoplay
   const videos = $$(".vfx-mobile-stack .vfx-project__video");
-  videos.forEach((video) => {
+  videos.forEach((video, i) => {
     ScrollTrigger.create({
       trigger: video,
       start: "top 90%",
       end: "bottom 10%",
-      onEnter: () => safePlay(video),
+      onEnter: () => {
+        safePlay(video);
+        // Preload next video so it's ready when the user scrolls down
+        const nextVideo = videos[i + 1];
+        if (nextVideo && nextVideo.preload === "none") nextVideo.preload = "auto";
+      },
       onLeave: () => safePause(video),
       onEnterBack: () => safePlay(video),
       onLeaveBack: () => safePause(video),
